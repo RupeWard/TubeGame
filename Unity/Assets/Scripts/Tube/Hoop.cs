@@ -45,6 +45,7 @@ namespace RJWard.Tube
 		public void Init( SpinePoint sp, int np, float r )
 		{
 			transform.parent = sp.transform;
+			transform.localPosition = Vector3.zero;
 
 			spinePoint_ = sp;
 			numPoints = np;
@@ -74,7 +75,7 @@ namespace RJWard.Tube
 			GameObject firstHoopPoint = new GameObject( "HP_0" );
 			firstHoopPoint.AddComponent<HoopPoint>( );
 			firstHoopPoint.transform.parent = this.transform;
-			firstHoopPoint.transform.position = new Vector3( radius_, 0f, 0f );
+			firstHoopPoint.transform.localPosition = new Vector3( radius_, 0f, 0f );
 			if (DEBUG_HOOP)
 			{
 				debugSb.Append( "\n - added first " );
@@ -84,9 +85,10 @@ namespace RJWard.Tube
 
 			for (int i = 1; i < numPoints; i++)
 			{
-				GameObject nextHoopPoint = Instantiate( firstHoopPoint ) as GameObject;
-				nextHoopPoint.name = "HP_" + i.ToString( );
+				GameObject nextHoopPoint = new GameObject( "HP_"+i.ToString() );
+				nextHoopPoint.AddComponent<HoopPoint>( );
 				nextHoopPoint.transform.parent = this.transform;
+				nextHoopPoint.transform.localPosition = new Vector3( radius_, 0f, 0f );
 				nextHoopPoint.transform.RotateAround( Vector3.zero, Vector3.forward, i * (360f / numPoints) );
 				hoopPoints_.Add( nextHoopPoint );
 

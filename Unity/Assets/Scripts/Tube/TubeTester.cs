@@ -9,14 +9,21 @@ namespace RJWard.Tube
 		// Use this for initialization
 		void Start( )
 		{
-			GameObject spGo = new GameObject( "SpinePoint" );
-			SpinePoint spinePoint = spGo.AddComponent< SpinePoint >( );
-			spGo.transform.position = Vector3.zero;
-			DebugBlob.AddToObject( spGo, 0.15f, Color.green );
-			GameObject hoopGo = new GameObject( "Hoop" );
-			Hoop hoop = hoopGo.AddComponent<Hoop>( );
-			hoop.Init( spinePoint, 10, 1 );
-			
+			StartCoroutine( TestCR( ) );
+
+		}
+
+		private IEnumerator TestCR()
+		{
+			GameObject spineGO = new GameObject( "Spine" );
+			Spine spine = spineGO.AddComponent<Spine>( );
+			yield return null;
+
+			for (int i = 0; i < 5; i++)
+			{
+				spine.AddSpinePoint( new Vector3( 0f, 0f, i * 0.5f ), new Vector3( 0f, 0f, 1f ) );
+				yield return null;
+			}
 		}
 
 		// Update is called once per frame
