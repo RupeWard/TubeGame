@@ -10,6 +10,8 @@ namespace RJWard.Tube
 		public int num = 5;
 		public float radius = 5f;
 
+		public Material tubeWallMaterial;
+
 		// Use this for initialization
 		void Start( )
 		{
@@ -20,7 +22,7 @@ namespace RJWard.Tube
 		private IEnumerator TestCR()
 		{
 			yield return null;
-			TubeSection TS = TubeSection.CreateLinear( pos1.position, null, pos2.position, null, num, radius ); 
+			TubeSection TS = TubeSection.CreateLinear( pos1.position, null, pos2.position, null, num, radius, tubeWallMaterial ); 
 		}
 
 		// Update is called once per frame

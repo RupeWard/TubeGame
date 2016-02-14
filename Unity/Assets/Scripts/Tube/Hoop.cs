@@ -112,12 +112,13 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void AddAllVertices( List<Vector3> verts )
+		public void AddAllVertices( List<Vector3> verts, List<Vector2> uvs, float v )
 		{
 			for (int i = 0; i < hoopPoints_.Count; i++)
 			{
 				hoopPoints_[i].vertexNumber = verts.Count;
 				verts.Add( hoopPoints_[i].transform.position );
+				uvs.Add( new Vector2( (float)i/(hoopPoints_.Count-1),v  ) );
 			}
 		}
 

@@ -51,11 +51,11 @@ namespace RJWard.Tube
 			hoop_.Init( this, 10, radius_ );
 		}
 
-		public void AddAllVertices( List<Vector3> verts )
+		public void AddAllVertices( List<Vector3> verts, List<Vector2> uvs, float v )
 		{
 			if (hoop_ != null)
 			{
-				hoop_.AddAllVertices( verts );
+				hoop_.AddAllVertices( verts, uvs, v );
 			}
 		}
 

@@ -6,11 +6,14 @@ namespace RJWard.Tube
 	public class TubeSection : MonoBehaviour
 	{
 		public Spine spine = null;
+		private Material tubeWallMaterial_;
 
-		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float radius )
+		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float radius, Material mat )
 		{
+			
 			GameObject tsGo = new GameObject( "TubeSection" );
 			TubeSection result = tsGo.AddComponent<TubeSection>( );
+			result.tubeWallMaterial_ = mat;
 
 			GameObject spineGO = new GameObject( "Spine" );
 			spineGO.transform.parent = tsGo.transform;
@@ -43,6 +46,8 @@ namespace RJWard.Tube
 			{
 				meshRenderer = gameObject.AddComponent<MeshRenderer>( );
 			}
+			meshRenderer.sharedMaterial = tubeWallMaterial_;
+
 			MeshFilter meshFilter = GetComponent<MeshFilter>( );
 			if (meshFilter == null)
 			{
@@ -56,11 +61,13 @@ namespace RJWard.Tube
 			}
 			mesh.Clear( );
 
-			List<Vector3> verts = new List<Vector3>( );
 			
 			if (spine != null)
 			{
-				spine.AddAllVertices( verts );
+				List<Vector3> verts = new List<Vector3>( );
+				List<Vector2> uvs = new List<Vector2>( );
+
+				spine.AddAllVertices( verts, uvs );
 				Debug.Log( "Verts count = " + verts.Count );
 
 				List<int> triVerts = new List<int>( );
@@ -68,7 +75,7 @@ namespace RJWard.Tube
 
 				mesh.vertices = verts.ToArray( );
 				mesh.triangles = triVerts.ToArray( );
-				mesh.uv = new Vector2[verts.Count];
+				mesh.uv = uvs.ToArray();
 
 				mesh.RecalculateNormals( );
 				mesh.RecalculateBounds( );
