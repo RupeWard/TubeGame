@@ -12,7 +12,7 @@ namespace RJWard.Tube
 			GameObject spGo = new GameObject( "SpinePoint" );
 			SpinePoint spinePoint = spGo.AddComponent< SpinePoint >( );
 			spGo.transform.position = Vector3.zero;
-			
+			DebugBlob.AddToObject( spGo, 0.15f, Color.green );
 			GameObject hoopGo = new GameObject( "Hoop" );
 			Hoop hoop = hoopGo.AddComponent<Hoop>( );
 			hoop.Init( spinePoint, 10, 1 );

@@ -88,6 +88,8 @@ namespace RJWard.Tube
 				nextHoopPoint.name = "HP_" + i.ToString( );
 				nextHoopPoint.transform.parent = this.transform;
 				nextHoopPoint.transform.RotateAround( Vector3.zero, Vector3.forward, i * (360f / numPoints) );
+				hoopPoints_.Add( nextHoopPoint );
+
 				if (DEBUG_HOOP)
 				{
 					debugSb.Append( "\n - added " +i );
@@ -97,6 +99,10 @@ namespace RJWard.Tube
 			if (DEBUG_HOOP)
 			{
 				Debug.Log( debugSb.ToString( ) );
+			}
+			foreach (GameObject hp in hoopPoints_)
+			{
+				DebugBlob.AddToObject( hp, 0.1f, Color.yellow );
 			}
 		}
 	}
