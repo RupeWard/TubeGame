@@ -46,6 +46,7 @@ namespace RJWard.Tube
 		{
 			transform.parent = sp.transform;
 			transform.localPosition = Vector3.zero;
+			transform.localRotation = Quaternion.identity;
 
 			spinePoint_ = sp;
 			numPoints = np;
@@ -76,6 +77,7 @@ namespace RJWard.Tube
 			firstHoopPoint.AddComponent<HoopPoint>( );
 			firstHoopPoint.transform.parent = this.transform;
 			firstHoopPoint.transform.localPosition = new Vector3( radius_, 0f, 0f );
+			firstHoopPoint.transform.localRotation = Quaternion.identity;
 			if (DEBUG_HOOP)
 			{
 				debugSb.Append( "\n - added first " );
@@ -89,7 +91,9 @@ namespace RJWard.Tube
 				nextHoopPoint.AddComponent<HoopPoint>( );
 				nextHoopPoint.transform.parent = this.transform;
 				nextHoopPoint.transform.localPosition = new Vector3( radius_, 0f, 0f );
-				nextHoopPoint.transform.RotateAround( Vector3.zero, Vector3.forward, i * (360f / numPoints) );
+				nextHoopPoint.transform.localRotation = Quaternion.identity;
+				Vector3 forwardAxis = nextHoopPoint.transform.TransformDirection( Vector3.forward );
+				nextHoopPoint.transform.RotateAround( spinePoint.transform.position, forwardAxis, i * (360f / numPoints) );
 				hoopPoints_.Add( nextHoopPoint );
 
 				if (DEBUG_HOOP)
@@ -104,7 +108,7 @@ namespace RJWard.Tube
 			}
 			foreach (GameObject hp in hoopPoints_)
 			{
-				DebugBlob.AddToObject( hp, 0.1f, Color.yellow );
+				RJWard.Core.Test.DebugBlob.AddToObject( hp, 0.1f, Color.yellow );
 			}
 		}
 	}

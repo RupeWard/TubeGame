@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace RJWard.Core.Test
+{
 public class DebugBlob : MonoBehaviour
 {
 	static private GameObject s_cachedPrefab_ = null;
@@ -15,7 +17,7 @@ public class DebugBlob : MonoBehaviour
 			return s_cachedPrefab_;
 		}
 	}
-	public static DebugBlob AddToObject( GameObject go, float s, Color c)
+	public static DebugBlob AddToObject( GameObject go, float s, Color c )
 	{
 		GameObject dbGo = Instantiate( s_prefab ) as GameObject;
 		DebugBlob result = dbGo.GetComponent<DebugBlob>( );
@@ -26,16 +28,18 @@ public class DebugBlob : MonoBehaviour
 	}
 
 	private Material mat_ = null;
-	private void Awake()
+	private void Awake( )
 	{
 		mat_ = GetComponent<MeshRenderer>( ).material;
 	}
 
-	private void Init( float s, Color c)
+	private void Init( float s, Color c )
 	{
 		transform.localScale = s * Vector3.one;
 		mat_.color = c;
 		mat_.SetColor( "_EmissionColor", c );
 	}
+}
 
 }
+
