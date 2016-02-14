@@ -7,7 +7,7 @@ namespace RJWard.Tube
 	{
 		public Spine spine = null;
 
-		public static TubeSection CreateLinear( Vector3 start, Vector3 end, int num, float radius )
+		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float radius )
 		{
 			GameObject tsGo = new GameObject( "TubeSection" );
 			TubeSection result = tsGo.AddComponent<TubeSection>( );
@@ -17,7 +17,16 @@ namespace RJWard.Tube
 
 			for (int i = 0; i < num; i++)
 			{
-				result.spine.AddSpinePoint( Vector3.Lerp(start, end, (float)i/(num-1) ) , new Vector3( 0f, 0f, 1f ), radius );
+				Vector3? rot = null;
+				if (i == 0)
+				{
+					rot = startRotation;
+				}
+				else if (i == num-1)
+				{
+					rot = endRotation;
+				}
+				result.spine.AddSpinePoint( Vector3.Lerp(start, end, (float)i/(num-1) ) , rot, radius );
 			}
 
 			return result;

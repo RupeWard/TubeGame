@@ -20,7 +20,7 @@ namespace RJWard.Tube
 		private IEnumerator TestCR()
 		{
 			yield return null;
-			TubeSection TS = TubeSection.CreateLinear( pos1.position, pos2.position, num, radius ); 
+			TubeSection TS = TubeSection.CreateLinear( pos1.position, null, pos2.position, null, num, radius ); 
 		}
 
 		// Update is called once per frame
