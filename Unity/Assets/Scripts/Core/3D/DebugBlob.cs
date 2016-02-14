@@ -3,43 +3,54 @@ using System.Collections;
 
 namespace RJWard.Core.Test
 {
-public class DebugBlob : MonoBehaviour
-{
-	static private GameObject s_cachedPrefab_ = null;
-	static private GameObject s_prefab
+	public class DebugBlob : MonoBehaviour
 	{
-		get
+		static private GameObject s_cachedPrefab_ = null;
+		static private GameObject s_prefab
 		{
-			if (s_cachedPrefab_ == null)
+			get
 			{
-				s_cachedPrefab_ = Resources.Load( "Prefabs/DebugBlob" ) as GameObject;
+				if (s_cachedPrefab_ == null)
+				{
+					s_cachedPrefab_ = Resources.Load( "Prefabs/DebugBlob" ) as GameObject;
+				}
+				return s_cachedPrefab_;
 			}
-			return s_cachedPrefab_;
+		}
+		public static DebugBlob AddToObject( GameObject go, float s, Color c )
+		{
+			GameObject dbGo = Instantiate( s_prefab ) as GameObject;
+			DebugBlob result = dbGo.GetComponent<DebugBlob>( );
+			result.transform.parent = go.transform;
+			result.transform.localPosition = Vector3.zero;
+			result.Init( s, c );
+
+			return result;
+		}
+
+
+		private Material mat_ = null;
+		public MeshRenderer pointerMesh;
+
+		private void Awake( )
+		{
+			mat_ = GetComponent<MeshRenderer>( ).sharedMaterial;
+			pointerMesh.gameObject.SetActive( false );
+		}
+
+		private void Init( float s, Color c )
+		{
+			transform.localScale = s * Vector3.one;
+			mat_.color = c;
+			mat_.SetColor( "_EmissionColor", c );
+			pointerMesh.gameObject.SetActive( false );
+		}
+
+		public void ActivateDirectionPointer( bool active )
+		{
+			pointerMesh.gameObject.SetActive( active );
 		}
 	}
-	public static DebugBlob AddToObject( GameObject go, float s, Color c )
-	{
-		GameObject dbGo = Instantiate( s_prefab ) as GameObject;
-		DebugBlob result = dbGo.GetComponent<DebugBlob>( );
-		result.transform.parent = go.transform;
-		result.transform.localPosition = Vector3.zero;
-		result.Init( s, c );
-		return result;
-	}
-
-	private Material mat_ = null;
-	private void Awake( )
-	{
-		mat_ = GetComponent<MeshRenderer>( ).material;
-	}
-
-	private void Init( float s, Color c )
-	{
-		transform.localScale = s * Vector3.one;
-		mat_.color = c;
-		mat_.SetColor( "_EmissionColor", c );
-	}
-}
 
 }
 

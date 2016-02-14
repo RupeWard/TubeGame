@@ -108,7 +108,7 @@ namespace RJWard.Tube
 			}
 			foreach (HoopPoint hp in hoopPoints_)
 			{
-				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, Color.yellow );
+				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.5f, Color.yellow );
 			}
 		}
 
@@ -123,7 +123,10 @@ namespace RJWard.Tube
 				uvs.Add( new Vector2( (float)i/(hoopPoints_.Count),v  ) );
 				
 				dirn = spinePoint.transform.position - hoopPoints_[i].transform.position;
-				normals.Add( dirn.normalized );
+				Vector3 normedDirn = dirn.normalized;
+
+				normals.Add( normedDirn);
+				hoopPoints_[i].normal = normedDirn;
 			}
 			hoopPoints_[0].altVertexNumber = verts.Count;
 			verts.Add( hoopPoints_[0].transform.position );
