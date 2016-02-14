@@ -20,6 +20,27 @@ namespace RJWard.Tube
 				vertexNumber_ = value;
 			}
 		}
-		
+
+		private int altVertexNumber_ = int.MaxValue;
+		public int altVertexNumber
+		{
+			get { return altVertexNumber_; }
+			set
+			{
+#if UNITY_EDITOR
+				if (altVertexNumber_ != int.MaxValue)
+				{
+					Debug.LogWarning( "AltVertexNumber already " + altVertexNumber_ + " on being set to " + value );
+				}
+#endif
+				altVertexNumber_ = value;
+			}
+		}
+
+		public int getVertexNumber(bool useAlt)
+		{
+			return (useAlt) ? (altVertexNumber) : (vertexNumber);
+		}
+
 	}
 }

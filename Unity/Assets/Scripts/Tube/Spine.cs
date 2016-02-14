@@ -26,12 +26,12 @@ namespace RJWard.Tube
 			
 		}
 
-		public void AddAllVertices( List< Vector3 > verts, List <Vector2> uvs)
+		public void AddAllVertices( List< Vector3 > verts, List< Vector3 > normals, List <Vector2> uvs)
 		{
 			for (int i = 0; i< spinePoints_.Count; i++)
 			{
 				float v = (float)i / (spinePoints_.Count - 1);
-				spinePoints_[i].AddAllVertices( verts, uvs, v );
+				spinePoints_[i].AddAllVertices( verts, normals, uvs, v );
 			}
 		}
 

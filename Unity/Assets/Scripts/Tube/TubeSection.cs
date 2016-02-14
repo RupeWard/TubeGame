@@ -8,7 +8,7 @@ namespace RJWard.Tube
 		public Spine spine = null;
 		private Material tubeWallMaterial_;
 
-		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float radius, Material mat )
+		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, Material mat )
 		{
 			
 			GameObject tsGo = new GameObject( "TubeSection" );
@@ -31,7 +31,8 @@ namespace RJWard.Tube
 				{
 					rot = endRotation;
 				}
-				result.spine.AddSpinePoint( Vector3.Lerp(start, end, (float)i/(num-1) ) , rot, radius );
+				float interpolator = (float)i / (num - 1);
+                result.spine.AddSpinePoint( Vector3.Lerp(start, end,  interpolator) , rot, Mathf.Lerp(startRadius, endRadius,  interpolator));
 			}
 
 			result.MakeMesh( );
@@ -66,8 +67,9 @@ namespace RJWard.Tube
 			{
 				List<Vector3> verts = new List<Vector3>( );
 				List<Vector2> uvs = new List<Vector2>( );
+				List<Vector3> normals = new List<Vector3>( );
 
-				spine.AddAllVertices( verts, uvs );
+				spine.AddAllVertices( verts, normals, uvs );
 				Debug.Log( "Verts count = " + verts.Count );
 
 				List<int> triVerts = new List<int>( );
@@ -76,13 +78,18 @@ namespace RJWard.Tube
 				mesh.vertices = verts.ToArray( );
 				mesh.triangles = triVerts.ToArray( );
 				mesh.uv = uvs.ToArray();
+				mesh.normals = normals.ToArray();
 
-				mesh.RecalculateNormals( );
+//				mesh.RecalculateNormals( );
 				mesh.RecalculateBounds( );
 				mesh.Optimize( );
 
-
-
+				RJWard.Core.ReverseNormals reverseNormals = GetComponent<RJWard.Core.ReverseNormals>( );
+				if (reverseNormals == null)
+				{
+					reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
+                }
+				reverseNormals.Init( Core.ReverseNormals.EState.Inside );
 			} 
 		}
 

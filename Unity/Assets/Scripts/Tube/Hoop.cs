@@ -112,14 +112,25 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void AddAllVertices( List<Vector3> verts, List<Vector2> uvs, float v )
+		public void AddAllVertices( List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, float v )
 		{
-			for (int i = 0; i < hoopPoints_.Count; i++)
+			Vector3 dirn;
+
+            for (int i = 0; i < hoopPoints_.Count; i++)
 			{
 				hoopPoints_[i].vertexNumber = verts.Count;
 				verts.Add( hoopPoints_[i].transform.position );
-				uvs.Add( new Vector2( (float)i/(hoopPoints_.Count-1),v  ) );
+				uvs.Add( new Vector2( (float)i/(hoopPoints_.Count),v  ) );
+				
+				dirn = spinePoint.transform.position - hoopPoints_[i].transform.position;
+				normals.Add( dirn.normalized );
 			}
+			hoopPoints_[0].altVertexNumber = verts.Count;
+			verts.Add( hoopPoints_[0].transform.position );
+			uvs.Add( new Vector2( 1f, v ) );
+
+			dirn = spinePoint.transform.position - hoopPoints_[0].transform.position;
+			normals.Add( dirn.normalized );
 		}
 
 		public static void AddConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts)
@@ -138,6 +149,7 @@ namespace RJWard.Tube
 					{
 						nextIndex = 0;
 					}
+					/*
 					triVerts.Add( A.hoopPoints_[i].vertexNumber );
 					triVerts.Add( B.hoopPoints_[i].vertexNumber );
 					triVerts.Add( A.hoopPoints_[nextIndex].vertexNumber );
@@ -145,6 +157,15 @@ namespace RJWard.Tube
 					triVerts.Add( A.hoopPoints_[nextIndex].vertexNumber );
 					triVerts.Add( B.hoopPoints_[i].vertexNumber );
 					triVerts.Add( B.hoopPoints_[nextIndex].vertexNumber );
+					*/
+
+					triVerts.Add( A.hoopPoints_[i].vertexNumber );
+					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber(nextIndex == 0) );
+					triVerts.Add( B.hoopPoints_[i].vertexNumber );
+
+					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
+					triVerts.Add( B.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
+					triVerts.Add( B.hoopPoints_[i].vertexNumber );
 				}
 			}
 		}
