@@ -26,6 +26,27 @@ namespace RJWard.Tube
 			
 		}
 
+		public void AddAllVertices( List< Vector3 > verts)
+		{
+			for (int i = 0; i< spinePoints_.Count; i++)
+			{
+				spinePoints_[i].AddAllVertices( verts );
+			}
+		}
+
+		public void AddAllTriVerts( List<int> triVerts)
+		{
+			if (spinePoints_.Count > 1)
+			{
+				for (int i = 0; i < (spinePoints_.Count - 1); i++)
+				{
+					Hoop hoopA = spinePoints_[i].hoop;
+					Hoop hoopB = spinePoints_[i + 1].hoop;
+
+					Hoop.AddConnectingTriVerts( hoopA, hoopB, triVerts );
+				}
+			}
+		}
 	}
 
 

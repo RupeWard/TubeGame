@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
 	public class SpinePoint : MonoBehaviour
 	{
 		private Hoop hoop_ = null;
+		public Hoop hoop
+		{
+			get { return hoop_; }
+		}
+
 		private float radius_ = 0f;
 
 		private bool fixedRotation_ = false;
 
-		public void Init(Vector3 pos, Vector3? rot, float rad)
+		public void Init( Vector3 pos, Vector3? rot, float rad )
 		{
 			radius_ = rad;
 			transform.localPosition = pos;
@@ -25,7 +30,7 @@ namespace RJWard.Tube
 			MakeHoop( );
 		}
 
-		public void HandleNextPointAdded( SpinePoint spinePoint)
+		public void HandleNextPointAdded( SpinePoint spinePoint )
 		{
 			if (!fixedRotation_)
 			{
@@ -34,7 +39,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		private void MakeHoop()
+		private void MakeHoop( )
 		{
 			if (hoop_ != null)
 			{
@@ -43,9 +48,16 @@ namespace RJWard.Tube
 			}
 			GameObject hoopGo = new GameObject( "Hoop" );
 			hoop_ = hoopGo.AddComponent<Hoop>( );
-			hoop_.Init( this, 10, radius_);
+			hoop_.Init( this, 10, radius_ );
+		}
+
+		public void AddAllVertices( List<Vector3> verts )
+		{
+			if (hoop_ != null)
+			{
+				hoop_.AddAllVertices( verts );
+			}
 		}
 
 	}
-
 }
