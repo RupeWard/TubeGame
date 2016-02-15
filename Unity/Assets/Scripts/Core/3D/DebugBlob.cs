@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace RJWard.Core.Test
 {
@@ -41,9 +42,31 @@ namespace RJWard.Core.Test
 		private void Init( float s, Color c )
 		{
 			transform.localScale = s * Vector3.one;
-			mat_.color = c;
-			mat_.SetColor( "_EmissionColor", c );
+			if (mat_.color != c)
+			{
+				mat_ = GetMaterialForColor( c );
+				GetComponent<MeshRenderer>( ).sharedMaterial = mat_;
+				pointerMesh.sharedMaterial = mat_;
+			}
 			pointerMesh.gameObject.SetActive( false );
+		}
+
+		static Dictionary<Color, Material> s_materials_ = new Dictionary<Color, Material>( );
+		Material GetMaterialForColor( Color c)
+		{
+			Material result = null;
+			if (s_materials_.ContainsKey( c ))
+			{
+				result = s_materials_[c];
+			}
+			else
+			{
+				result = new Material( mat_ );
+				result.color = c;
+				result.SetColor( "_EmissionColor", c );
+				s_materials_.Add( c, result );
+			}
+			return result;
 		}
 
 		public void ActivateDirectionPointer( bool active )
