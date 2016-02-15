@@ -126,7 +126,7 @@ namespace RJWard.Tube
 				Vector3 normedDirn = dirn.normalized;
 
 				normals.Add( normedDirn);
-				hoopPoints_[i].normal = normedDirn;
+				hoopPoints_[i].normalDirection = normedDirn;
 			}
 			hoopPoints_[0].altVertexNumber = verts.Count;
 			verts.Add( hoopPoints_[0].transform.position );
