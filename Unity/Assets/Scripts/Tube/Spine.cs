@@ -7,6 +7,11 @@ namespace RJWard.Tube
 	{
 		private List< SpinePoint > spinePoints_ = new List< SpinePoint >( );
 
+		public void AddSpinePoint(SpinePointDefinition spd)
+		{
+			AddSpinePoint( spd.position, spd.rotation, spd.radius);
+		}
+
 		public void AddSpinePoint( Vector3 pos, Vector3? rot, float radius )
 		{
 			GameObject spGo = new GameObject( "SP_"+spinePoints_.Count.ToString() );

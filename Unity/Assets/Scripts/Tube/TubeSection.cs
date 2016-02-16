@@ -8,9 +8,33 @@ namespace RJWard.Tube
 		public Spine spine = null;
 		private Material tubeWallMaterial_;
 
-		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, Material mat )
+		public static TubeSection Create( TubeSectionDefinition tsd, Material mat )
 		{
-			
+			GameObject tsGo = new GameObject( "TubeSection" );
+			TubeSection result = tsGo.AddComponent<TubeSection>( );
+			result.tubeWallMaterial_ = mat;
+
+			GameObject spineGO = new GameObject( "Spine" );
+			spineGO.transform.parent = tsGo.transform;
+
+			result.spine = spineGO.AddComponent<Spine>( );
+
+			for (int i=0; i< tsd.NumSpinePoints; i++)
+			{
+				SpinePointDefinition spd = tsd.GetSpinePointDefn( i );
+				if (spd != null)
+				{
+					result.spine.AddSpinePoint( spd );
+				}
+			}
+
+			result.MakeMesh( );
+
+			return result;
+		}
+
+		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, Material mat )
+		{			
 			GameObject tsGo = new GameObject( "TubeSection" );
 			TubeSection result = tsGo.AddComponent<TubeSection>( );
 			result.tubeWallMaterial_ = mat;
