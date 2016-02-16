@@ -59,7 +59,12 @@ namespace RJWard.Tube
 		{
 			if (DEBUG_HOOP)
 			{
-				debugSb.Append( "Creating Hoop Points" );
+				debugSb.Length = 0;
+				if (hoopPoints_.Count > 0)
+				{
+					debugSb.Append( "Re-" );
+				}
+				debugSb.Append( "Creating Hoop Points " );
 			}
 			if (hoopPoints_.Count > 0)
 			{
@@ -92,6 +97,7 @@ namespace RJWard.Tube
 				nextHoopPointGO.transform.parent = this.transform;
 				nextHoopPointGO.transform.localPosition = new Vector3( radius_, 0f, 0f );
 				nextHoopPointGO.transform.localRotation = Quaternion.identity;
+
 				Vector3 forwardAxis = nextHoopPointGO.transform.TransformDirection( Vector3.forward );
 				nextHoopPointGO.transform.RotateAround( spinePoint.transform.position, forwardAxis, i * (360f / numPoints) );
 				hoopPoints_.Add( nextHoopPoint );
@@ -126,7 +132,7 @@ namespace RJWard.Tube
 				Vector3 normedDirn = dirn.normalized;
 
 				normals.Add( normedDirn);
-				hoopPoints_[i].normalDirection = normedDirn;
+				hoopPoints_[i].LookAt(spinePoint.transform);
 			}
 			hoopPoints_[0].altVertexNumber = verts.Count;
 			verts.Add( hoopPoints_[0].transform.position );

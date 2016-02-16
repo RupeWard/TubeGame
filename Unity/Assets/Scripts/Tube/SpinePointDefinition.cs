@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace RJWard.Tube
 {
-	public class SpinePointDefinition
+	public class SpinePointDefinition : RJWard.Core.IDebugDescribable
 	{
 		private Vector3 position_ = Vector3.zero;
 		private Vector3? rotation_ = null;
@@ -32,6 +32,21 @@ namespace RJWard.Tube
 		}
 
 		private SpinePointDefinition( ) { }
-	}
 
+		public void DebugDescribe(System.Text.StringBuilder sb)
+		{
+			sb.Append( "SPD @" ).Append( position ).Append( " RO=" );
+			if (rotation != null)
+			{
+				sb.Append( rotation );
+			}
+			else
+			{
+				sb.Append( "free" );
+			}
+			sb.Append( " RA=" ).Append( radius );
+		}
+
+	}
 }
+

@@ -91,6 +91,7 @@ namespace RJWard.Core
 
 		#endregion Numeric
 
+		/*
 		#region StringBuilder
 
 		public static void DebugDescribe( this System.Text.StringBuilder sb, IDebugDescribable dd )
@@ -106,8 +107,9 @@ namespace RJWard.Core
 		}
 
 #endregion StringBuilder
+		*/
 
-#region Vector
+		#region Vector
 
 		public static void Set( this Vector2 v, Vector2 other )
 		{

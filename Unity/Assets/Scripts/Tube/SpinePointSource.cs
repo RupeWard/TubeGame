@@ -1,15 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpinePointSource : MonoBehaviour {
+namespace RJWard.Tube
+{
+	public class SpinePointSource : MonoBehaviour, RJWard.Core.IDebugDescribable
+	{
+		public bool fixRotation = false;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+		public float radius
+		{
+			get { return transform.localScale.magnitude;  }
+		}
+
+		public void DebugDescribe( System.Text.StringBuilder sb)
+		{
+			sb.Append( "SPS ").Append(gameObject.name).Append(" @" ).Append( transform.position ).Append( " RO=" );
+			if (fixRotation)
+			{
+				sb.Append( transform.rotation.eulerAngles );
+			}
+			else
+			{
+				sb.Append( "free" );
+			}
+			sb.Append( " RA=" ).Append( radius );
+		}
 	}
 }

@@ -24,6 +24,7 @@ namespace RJWard.Core.Test
 			DebugBlob result = dbGo.GetComponent<DebugBlob>( );
 			result.transform.parent = go.transform;
 			result.transform.localPosition = Vector3.zero;
+			result.transform.localRotation = Quaternion.identity;
 			result.Init( s, c );
 
 			return result;

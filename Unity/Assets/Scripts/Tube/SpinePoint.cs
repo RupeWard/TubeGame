@@ -39,15 +39,23 @@ namespace RJWard.Tube
 			}
 		}
 
+		public void HandlePreviousPointAdded( SpinePoint spinePoint )
+		{
+			if (!fixedRotation_)
+			{
+				transform.LookAt( spinePoint.transform );
+				transform.forward = -1f * transform.forward;
+				MakeHoop( );
+			}
+		}
+
 		private void MakeHoop( )
 		{
-			if (hoop_ != null)
+			if (hoop_ == null)
 			{
-				GameObject.Destroy( hoop_.gameObject );
-				hoop_ = null;
+				GameObject hoopGo = new GameObject( "Hoop" );
+				hoop_ = hoopGo.AddComponent<Hoop>( );
 			}
-			GameObject hoopGo = new GameObject( "Hoop" );
-			hoop_ = hoopGo.AddComponent<Hoop>( );
 			hoop_.Init( this, 10, radius_ );
 		}
 

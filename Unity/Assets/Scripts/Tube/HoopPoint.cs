@@ -42,31 +42,16 @@ namespace RJWard.Tube
 			return (useAlt) ? (altVertexNumber) : (vertexNumber);
 		}
 
-//		private Vector3 normalDirection_ = Vector3.zero;
-
-		public Vector3 normalDirection
+		public void LookAt(Transform t)
 		{
-			/*
-			get
+			if (t != null)
 			{
-				return transform.rotation * Vector3.forward;
-//				return normalDirection_;
-			}*/
-			set
+				transform.LookAt( t );
+			}
+			RJWard.Core.Test.DebugBlob debugBlob = transform.GetComponentInChildren<RJWard.Core.Test.DebugBlob>( );
+			if (debugBlob != null)
 			{
-//				normalDirection_ = value;
-				if (value.magnitude > 0f)
-				{
-					transform.rotation = Quaternion.LookRotation( value, Vector3.forward );
-
-				}
-				RJWard.Core.Test.DebugBlob debugBlob = transform.GetComponentInChildren<RJWard.Core.Test.DebugBlob>( );
-				if (debugBlob != null)
-				{
-					debugBlob.ActivateDirectionPointer( value.magnitude > 0f );
-				}
-
-
+				debugBlob.ActivateDirectionPointer( t != null );
 			}
 		}
 	}

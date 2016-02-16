@@ -8,8 +8,13 @@ namespace RJWard.Tube
 		public Spine spine = null;
 		private Material tubeWallMaterial_;
 
+		private static System.Text.StringBuilder debugSb = new System.Text.StringBuilder( );
+
 		public static TubeSection Create( TubeSectionDefinition tsd, Material mat )
 		{
+			debugSb.Length = 0;
+			debugSb.Append( "Creating TubeSection" );
+
 			GameObject tsGo = new GameObject( "TubeSection" );
 			TubeSection result = tsGo.AddComponent<TubeSection>( );
 			result.tubeWallMaterial_ = mat;
@@ -19,14 +24,26 @@ namespace RJWard.Tube
 
 			result.spine = spineGO.AddComponent<Spine>( );
 
+			debugSb.Append( "\n Created spine, adding " ).Append( tsd.NumSpinePoints ).Append( " spinepoints" );
+
 			for (int i=0; i< tsd.NumSpinePoints; i++)
 			{
 				SpinePointDefinition spd = tsd.GetSpinePointDefn( i );
 				if (spd != null)
 				{
 					result.spine.AddSpinePoint( spd );
+					debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( spd );
+				}
+				else
+				{
+					Debug.LogError( "NULL SPD" );
+					debugSb.Append( "\n  " ).Append( i ).Append( ": NULL" );
 				}
 			}
+
+			result.spine.MakeLastLookBack( );
+
+			Debug.Log( debugSb.ToString());
 
 			result.MakeMesh( );
 

@@ -7,9 +7,37 @@ namespace RJWard.Tube
 	{
 		private List< SpinePoint > spinePoints_ = new List< SpinePoint >( );
 
+		public int NumSpinePoints
+		{
+			get { return spinePoints_.Count;  }
+		}
+
+		public SpinePoint GetSpinePoint(int index)
+		{
+			SpinePoint result = null;
+			if (index >= 0  && index < NumSpinePoints)
+			{
+				result = spinePoints_[index];
+			}
+			return result;
+		}
+
+		public void MakeLastLookBack()
+		{
+			if (NumSpinePoints > 1)
+			{
+				spinePoints_[NumSpinePoints - 1].HandlePreviousPointAdded( spinePoints_[NumSpinePoints - 2] );
+			}
+		}
+
 		public void AddSpinePoint(SpinePointDefinition spd)
 		{
 			AddSpinePoint( spd.position, spd.rotation, spd.radius);
+		}
+
+		public void AddSpinePoints(List < SpinePointDefinition > spinePoints)
+		{
+
 		}
 
 		public void AddSpinePoint( Vector3 pos, Vector3? rot, float radius )

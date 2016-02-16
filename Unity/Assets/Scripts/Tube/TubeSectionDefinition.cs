@@ -16,11 +16,16 @@ namespace RJWard.Tube
 		public SpinePointDefinition GetSpinePointDefn(int index)
 		{
 			SpinePointDefinition result = null;
-			if (index > 0 && index < NumSpinePoints)
+			if (index >= 0 && index < NumSpinePoints)
 			{
 				result = spinePointDefns_[index];
 			}
 			return result;
+		}
+
+		public void AddSpinePointDefn( SpinePointDefinition spd )
+		{
+			spinePointDefns_.Add( spd );
 		}
 	}
 
