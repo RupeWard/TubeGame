@@ -7,9 +7,19 @@ namespace RJWard.Tube
 	{
 		public bool fixRotation = false;
 
+		private void Awake()
+		{
+			if (	transform.localScale.x != transform.localScale.y 
+				||	transform.localScale.y != transform.localScale.z 
+				||	transform.localScale.z != transform.localScale.z)
+			{
+				Debug.LogWarning( "SpinePointSource " + gameObject.name + " distorted with scale = " + transform.localScale );
+			}
+		}
+
 		public float radius
 		{
-			get { return transform.localScale.magnitude;  }
+			get { return 0.5f * (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3f;  }
 		}
 
 		public void DebugDescribe( System.Text.StringBuilder sb)

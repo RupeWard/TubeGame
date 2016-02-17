@@ -51,7 +51,7 @@ namespace RJWard.Core
 #if UNITY_EDITOR
 			if (cachedState != state)
 			{
-				Debug.LogError( "Detecetd state change" );
+				Debug.LogWarning( "ReverseNormals Detected state change on "+gameObject.name );
 				SetState( state );
 			}
 #endif

@@ -41,8 +41,6 @@ namespace RJWard.Tube
 				}
 			}
 
-			result.spine.MakeLastLookBack( );
-
 			Debug.Log( debugSb.ToString());
 
 			result.MakeMesh( );

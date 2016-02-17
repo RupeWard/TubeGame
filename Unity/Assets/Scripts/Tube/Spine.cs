@@ -22,6 +22,7 @@ namespace RJWard.Tube
 			return result;
 		}
 
+		/*
 		public void MakeLastLookBack()
 		{
 			if (NumSpinePoints > 1)
@@ -29,15 +30,11 @@ namespace RJWard.Tube
 				spinePoints_[NumSpinePoints - 1].HandlePreviousPointAdded( spinePoints_[NumSpinePoints - 2] );
 			}
 		}
+		*/
 
 		public void AddSpinePoint(SpinePointDefinition spd)
 		{
 			AddSpinePoint( spd.position, spd.rotation, spd.radius);
-		}
-
-		public void AddSpinePoints(List < SpinePointDefinition > spinePoints)
-		{
-
 		}
 
 		public void AddSpinePoint( Vector3 pos, Vector3? rot, float radius )
@@ -45,18 +42,16 @@ namespace RJWard.Tube
 			GameObject spGo = new GameObject( "SP_"+spinePoints_.Count.ToString() );
 			SpinePoint spinePoint = spGo.AddComponent<SpinePoint>( );
 			spGo.transform.parent = this.transform;
-			spinePoint.Init( pos, rot, radius );
-
+			spinePoint.Init( this, pos, rot, radius );
 			if (spinePoints_.Count > 0)
 			{
-				spinePoints_[spinePoints_.Count - 1].HandleNextPointAdded(spinePoint);
-			}
+				spinePoints_[spinePoints_.Count - 1].nextSpinePoint = spinePoint;
+				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 1];
+            }
 		
 			spinePoints_.Add( spinePoint );
 
 			RJWard.Core.Test.DebugBlob.AddToObject( spGo, 0.15f, Color.green );
-			
-			
 		}
 
 		public void AddAllVertices( List< Vector3 > verts, List< Vector3 > normals, List <Vector2> uvs)

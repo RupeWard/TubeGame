@@ -6,6 +6,8 @@ namespace RJWard.Tube
 	public class HoopPoint : MonoBehaviour
 	{
 		private int vertexNumber_ = int.MaxValue;
+		private int altVertexNumber_ = int.MaxValue; // when being considered as last instead of first. Only differs from default for that one point in hoop
+		
 		public int vertexNumber
 		{
 			get { return vertexNumber_; }
@@ -21,7 +23,6 @@ namespace RJWard.Tube
 			}
 		}
 
-		private int altVertexNumber_ = int.MaxValue;
 		public int altVertexNumber
 		{
 			get { return altVertexNumber_; }
