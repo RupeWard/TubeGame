@@ -17,6 +17,11 @@ namespace RJWard.Tube
 
 		private bool fixedRotation_ = false;
 
+		public void SetDirty()
+		{
+			spine_.SetDirty( );
+		}
+
 		private SpinePoint nextSpinePoint_ = null;
 		public SpinePoint nextSpinePoint
 		{
@@ -196,6 +201,7 @@ namespace RJWard.Tube
 					}
 
 				}
+				spine_.SetDirty( );
 			}
 		}
 
@@ -255,6 +261,7 @@ namespace RJWard.Tube
 			{
 				sb.Append( nextSpinePoint_.gameObject.name );
 			}
+			sb.Append( ")" );
 		}
 	}
 }

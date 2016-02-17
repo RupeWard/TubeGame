@@ -18,6 +18,15 @@ namespace RJWard.Tube
 				return debugSb_;
 			}
 		}
+
+		public void SetDirty()
+		{
+			if (spinePoint_ != null)
+			{
+				spinePoint_.SetDirty( );
+			}
+		}
+
 		private Hoop nextHoop_ = null;
 		public Hoop nextHoop
 		{
@@ -116,6 +125,7 @@ namespace RJWard.Tube
 			{
 				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.5f, Color.yellow );
 			}
+			spinePoint_.SetDirty( );
 		}
 
 		public void AddAllVertices( List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, float v )

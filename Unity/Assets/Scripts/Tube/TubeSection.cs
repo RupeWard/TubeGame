@@ -5,33 +5,45 @@ namespace RJWard.Tube
 {
 	public class TubeSection : MonoBehaviour
 	{
-		public Spine spine = null;
+		private Spine spine_ = null;
 		private Material tubeWallMaterial_;
 
 		private static System.Text.StringBuilder debugSb = new System.Text.StringBuilder( );
 
+		private bool isMeshDirty_ = false;
+		public void SetMeshDirty ()
+		{
+			isMeshDirty_ = true;
+		}
+
 		public static TubeSection Create( TubeSectionDefinition tsd, Material mat )
+		{
+			GameObject tsGo = new GameObject( "TubeSection" );
+			TubeSection result = tsGo.AddComponent<TubeSection>( );
+			result.Init( tsd, mat );
+
+			return result;
+		}
+
+		private void Init( TubeSectionDefinition tsd, Material mat )
 		{
 			debugSb.Length = 0;
 			debugSb.Append( "Creating TubeSection" );
 
-			GameObject tsGo = new GameObject( "TubeSection" );
-			TubeSection result = tsGo.AddComponent<TubeSection>( );
-			result.tubeWallMaterial_ = mat;
+			tubeWallMaterial_ = mat;
 
 			GameObject spineGO = new GameObject( "Spine" );
-			spineGO.transform.parent = tsGo.transform;
-
-			result.spine = spineGO.AddComponent<Spine>( );
+			spine_ = spineGO.AddComponent<Spine>( );
+			spine_.Init( this );
 
 			debugSb.Append( "\n Created spine, adding " ).Append( tsd.NumSpinePoints ).Append( " spinepoints" );
 
-			for (int i=0; i< tsd.NumSpinePoints; i++)
+			for (int i = 0; i < tsd.NumSpinePoints; i++)
 			{
 				SpinePointDefinition spd = tsd.GetSpinePointDefn( i );
 				if (spd != null)
 				{
-					result.spine.AddSpinePoint( spd );
+					spine_.AddSpinePoint( spd );
 					debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( spd );
 				}
 				else
@@ -41,11 +53,15 @@ namespace RJWard.Tube
 				}
 			}
 
-			Debug.Log( debugSb.ToString());
+			Debug.Log( debugSb.ToString( ) );
+		}
 
-			result.MakeMesh( );
-
-			return result;
+		private void Update()
+		{
+			if (isMeshDirty_)
+			{
+				MakeMesh( );
+			}
 		}
 
 		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, Material mat )
@@ -57,7 +73,7 @@ namespace RJWard.Tube
 			GameObject spineGO = new GameObject( "Spine" );
 			spineGO.transform.parent = tsGo.transform;
 
-			result.spine = spineGO.AddComponent<Spine>( );
+			result.spine_ = spineGO.AddComponent<Spine>( );
 
 			for (int i = 0; i < num; i++)
 			{
@@ -71,10 +87,8 @@ namespace RJWard.Tube
 					rot = endRotation;
 				}
 				float interpolator = (float)i / (num - 1);
-                result.spine.AddSpinePoint( Vector3.Lerp(start, end,  interpolator) , rot, Mathf.Lerp(startRadius, endRadius,  interpolator));
+                result.spine_.AddSpinePoint( Vector3.Lerp(start, end,  interpolator) , rot, Mathf.Lerp(startRadius, endRadius,  interpolator));
 			}
-
-			result.MakeMesh( );
 
 			return result;
 		}
@@ -102,24 +116,23 @@ namespace RJWard.Tube
 			mesh.Clear( );
 
 			
-			if (spine != null)
+			if (spine_ != null)
 			{
 				List<Vector3> verts = new List<Vector3>( );
 				List<Vector2> uvs = new List<Vector2>( );
 				List<Vector3> normals = new List<Vector3>( );
 
-				spine.AddAllVertices( verts, normals, uvs );
+				spine_.AddAllVertexInfoToLists( verts, normals, uvs );
 				Debug.Log( "Verts count = " + verts.Count );
 
 				List<int> triVerts = new List<int>( );
-				spine.AddAllTriVerts( triVerts );
+				spine_.AddAllTriInfoToList( triVerts );
 
 				mesh.vertices = verts.ToArray( );
 				mesh.triangles = triVerts.ToArray( );
 				mesh.uv = uvs.ToArray();
 				mesh.normals = normals.ToArray();
 
-//				mesh.RecalculateNormals( );
 				mesh.RecalculateBounds( );
 				mesh.Optimize( );
 
@@ -129,7 +142,8 @@ namespace RJWard.Tube
 					reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
                 }
 				reverseNormals.Init( Core.ReverseNormals.EState.Inside );
-			} 
+			}
+			isMeshDirty_ = false;
 		}
 
 

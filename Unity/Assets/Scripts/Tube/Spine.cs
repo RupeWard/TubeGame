@@ -5,11 +5,24 @@ namespace RJWard.Tube
 {
 	public class Spine : MonoBehaviour
 	{
+		private TubeSection tubeSection_ = null;
+
 		private List< SpinePoint > spinePoints_ = new List< SpinePoint >( );
 
 		public int NumSpinePoints
 		{
 			get { return spinePoints_.Count;  }
+		}
+
+		public void Init(TubeSection ts)
+		{
+			tubeSection_ = ts;
+			transform.parent = tubeSection_.transform;
+		}
+
+		public void SetDirty()
+		{
+			tubeSection_.SetMeshDirty( );
 		}
 
 		public SpinePoint GetSpinePoint(int index)
@@ -54,7 +67,7 @@ namespace RJWard.Tube
 			RJWard.Core.Test.DebugBlob.AddToObject( spGo, 0.15f, Color.green );
 		}
 
-		public void AddAllVertices( List< Vector3 > verts, List< Vector3 > normals, List <Vector2> uvs)
+		public void AddAllVertexInfoToLists( List< Vector3 > verts, List< Vector3 > normals, List <Vector2> uvs)
 		{
 			for (int i = 0; i< spinePoints_.Count; i++)
 			{
@@ -63,7 +76,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void AddAllTriVerts( List<int> triVerts)
+		public void AddAllTriInfoToList( List<int> triVerts)
 		{
 			if (spinePoints_.Count > 1)
 			{
