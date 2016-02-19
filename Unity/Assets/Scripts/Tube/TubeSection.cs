@@ -95,6 +95,13 @@ namespace RJWard.Tube
 
 		private void MakeMesh()
 		{
+			RJWard.Core.ReverseNormals reverseNormals = GetComponent<RJWard.Core.ReverseNormals>( );
+			if (reverseNormals != null)
+			{
+				Component.Destroy( reverseNormals );
+				reverseNormals = null;
+			}
+
 			MeshRenderer meshRenderer = GetComponent<MeshRenderer>( );
 			if (meshRenderer == null)
 			{
@@ -136,11 +143,7 @@ namespace RJWard.Tube
 				mesh.RecalculateBounds( );
 				mesh.Optimize( );
 
-				RJWard.Core.ReverseNormals reverseNormals = GetComponent<RJWard.Core.ReverseNormals>( );
-				if (reverseNormals == null)
-				{
-					reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
-                }
+				reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
 				reverseNormals.Init( Core.ReverseNormals.EState.Inside );
 			}
 			isMeshDirty_ = false;

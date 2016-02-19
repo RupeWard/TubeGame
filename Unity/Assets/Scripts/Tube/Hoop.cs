@@ -123,7 +123,7 @@ namespace RJWard.Tube
 			}
 			foreach (HoopPoint hp in hoopPoints_)
 			{
-				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.5f, Color.yellow );
+				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.2f, Color.yellow );
 			}
 			spinePoint_.SetDirty( );
 		}
