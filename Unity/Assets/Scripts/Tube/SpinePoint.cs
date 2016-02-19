@@ -118,12 +118,14 @@ namespace RJWard.Tube
 					Vector3? posBefore = null;
 					if ( previousSpinePoint_ != null && previousSpinePoint_.previousSpinePoint != null && nextSpinePoint_ != null )
 					{
-						posBefore = RJWard.Core.CatmullRom.
-							Interpolate( 1f - rotationPositionFraction,
-											previousSpinePoint_.previousSpinePoint.transform.position,
-											previousSpinePoint_.transform.position,
-											transform.position,
-											nextSpinePoint_.transform.position );
+						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
+							(	previousSpinePoint_.previousSpinePoint.transform.position,
+								previousSpinePoint_.transform.position,
+								transform.position,
+								nextSpinePoint_.transform.position );
+
+						posBefore = interpolator.Interpolate( 1f - rotationPositionFraction );
+
 						if (DEBUG_ROTATIONS)
 						{
 							debugSB.Append( "\nPosBefore from cmspline = " ).Append( (Vector3)posBefore );
@@ -152,12 +154,14 @@ namespace RJWard.Tube
 					Vector3? posAfter = null;
 					if (previousSpinePoint_ != null && nextSpinePoint_ != null && nextSpinePoint_.nextSpinePoint != null)
 					{
-						posAfter = RJWard.Core.CatmullRom.
-							Interpolate( rotationPositionFraction,
-											previousSpinePoint_.transform.position,
-											transform.position,
-											nextSpinePoint_.transform.position,
-											nextSpinePoint_.nextSpinePoint.transform.position);
+						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
+							(	previousSpinePoint_.transform.position,
+								transform.position,
+								nextSpinePoint_.transform.position,
+								nextSpinePoint_.nextSpinePoint.transform.position );
+
+						posAfter = interpolator.Interpolate( rotationPositionFraction );
+
 						if (DEBUG_ROTATIONS)
 						{
 							debugSB.Append( "\nPosAfter from cmspline = " ).Append( (Vector3)posAfter);

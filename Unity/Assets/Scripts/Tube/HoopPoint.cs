@@ -16,7 +16,10 @@ namespace RJWard.Tube
 #if UNITY_EDITOR
 				if (vertexNumber_ != int.MaxValue)
 				{
-					Debug.LogWarning( "VertexNumber already " + vertexNumber_ + " on being set to " + value );
+					if (vertexNumber != value)
+					{
+						Debug.LogWarning( "VertexNumber being changed from " + vertexNumber_ + " to " + value );
+					}
 				}
 #endif
 				vertexNumber_ = value;
@@ -31,7 +34,10 @@ namespace RJWard.Tube
 #if UNITY_EDITOR
 				if (altVertexNumber_ != int.MaxValue)
 				{
-					Debug.LogWarning( "AltVertexNumber already " + altVertexNumber_ + " on being set to " + value );
+					if (altVertexNumber_ != value)
+					{
+						Debug.LogWarning( "AltVertexNumber being changed from " + altVertexNumber_ + " to " + value );
+					}
 				}
 #endif
 				altVertexNumber_ = value;
