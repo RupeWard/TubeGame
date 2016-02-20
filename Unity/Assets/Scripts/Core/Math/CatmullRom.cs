@@ -62,6 +62,16 @@ namespace RJWard.Core
 			return new CatMullRom3D( p0, p1, p2, p3, 0.5f);
 		}
 
+		static public CatMullRom3D CreateUniform( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3 )
+		{
+			return new CatMullRom3D( p0, p1, p2, p3, 0f );
+		}
+
+		static public CatMullRom3D CreateChordal( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3 )
+		{
+			return new CatMullRom3D( p0, p1, p2, p3, 1f );
+		}
+
 		private CatMullRom3D( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float catmullRomPower)
 		{	
 			catmullRomPower_ = catmullRomPower;
