@@ -88,7 +88,6 @@ namespace RJWard.Tube
 
 			debugSb.Length = 0;
 			debugSb.Append( "Generating splinar with " ).Append( numPerSection ).Append( " per section" );
-			Debug.LogError( debugSb.ToString( ) );
 		
 			GameObject spineGO = new GameObject( "Sp");
 			spine_ = spineGO.AddComponent<Spine>( );
@@ -116,7 +115,6 @@ namespace RJWard.Tube
 			if (numHoopPoints != int.MaxValue)
 			{
 				debugSb.Append( "\n Found " ).Append( numHoopPoints ).Append( " hoop points per spine point" );
-//				Debug.LogError( debugSb.ToString( ) );
 
 				// interpolate spine points
 
@@ -139,7 +137,6 @@ namespace RJWard.Tube
 
 				int numSpinePoints = spinePointPositions.Count;
 				debugSb.Append( "\n Interpolated spine points from ").Append(oldSpinePtPosns.Count).Append( " to ").Append(numSpinePoints );
-//				Debug.LogError( debugSb.ToString( ) );
 
 				// interpolate hoop points
 				List<Vector3>[] hoopPointPositions = new List<Vector3>[numHoopPoints];
@@ -168,7 +165,6 @@ namespace RJWard.Tube
 					{
 						hoopPointPositions[hoopIndex] = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldHoopPtPosns, numPerSection );
 						debugSb.Append( "\n Interpolated hoop points ").Append(hoopIndex).Append(" from " ).Append( oldSpinePtPosns.Count ).Append( " to " ).Append( numSpinePoints );
-//						Debug.LogError( debugSb.ToString( ) );
 						if (hoopPointPositions[hoopIndex].Count != spinePointPositions.Count)
 						{
 							Debug.LogError( "spine/hoop src num mistmatch" );
@@ -185,7 +181,6 @@ namespace RJWard.Tube
 						spine_.AddHoopLess( spinePointPositions[ptNum] );
 					}
 					debugSb.Append( "\n Made ").Append(spine_.NumSpinePoints).Append(" spine points, waiting for rotations" );
-//					Debug.LogError( debugSb.ToString( ) );
 					yield return new WaitForSeconds( 4f );
 
 					for (int ptNum = 0; ptNum < numNewPoints; ptNum++)
@@ -219,7 +214,6 @@ namespace RJWard.Tube
 							}
 							debugSb.Append( "\n Added " ).Append( nAdded ).Append( " hps of " ).Append( numHoopPoints )
 								.Append( " to hoop " ).Append( ptNum );
-//							Debug.LogError( debugSb.ToString( ) );
 						}
 					}
 
@@ -230,7 +224,7 @@ namespace RJWard.Tube
 
 			if (debugSb.Length > 0)
 			{
-				Debug.LogError( debugSb.ToString( ) );
+				Debug.Log( debugSb.ToString( ) );
 			}
 			yield return null;
 			remakeMeshWhenDirty = true;
