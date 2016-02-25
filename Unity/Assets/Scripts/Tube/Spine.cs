@@ -52,10 +52,10 @@ namespace RJWard.Tube
 			spinePoint.Init( this, pos, null );
 			spGo.transform.parent = this.transform;
 			spinePoints_.Add( spinePoint );
-			if (spinePoints_.Count > 0)
+			if (spinePoints_.Count > 1)
 			{
-				spinePoints_[spinePoints_.Count - 1].nextSpinePoint = spinePoint;
-				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 1];
+				spinePoints_[spinePoints_.Count - 2].nextSpinePoint = spinePoint;
+				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 2];
 			}
 
 			RJWard.Core.Test.DebugBlob.AddToObject( spGo, 0.15f, Color.green );
@@ -72,10 +72,10 @@ namespace RJWard.Tube
 		{
 			SpinePoint spinePoint = AddHoopLess( pos );
 			spinePoint.InitCircular( this, pos, rot, num, radius );
-			if (spinePoints_.Count > 0)
+			if (spinePoints_.Count > 1)
 			{
-				spinePoints_[spinePoints_.Count - 1].nextSpinePoint = spinePoint;
-				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 1];
+				spinePoints_[spinePoints_.Count - 2].nextSpinePoint = spinePoint;
+				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 2];
             }
 		}
 

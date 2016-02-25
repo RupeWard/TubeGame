@@ -116,8 +116,10 @@ namespace RJWard.Tube
 						debugSB.Append( "Calculate rotation for " ).DebugDescribe( this );
 					}
 					Vector3? posBefore = null;
+
 					if ( previousSpinePoint_ != null && previousSpinePoint_.previousSpinePoint != null && nextSpinePoint_ != null )
 					{
+
 						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
 							(	previousSpinePoint_.previousSpinePoint.transform.position,
 								previousSpinePoint_.transform.position,
