@@ -21,11 +21,11 @@ namespace RJWard.Tube
 		// Use this for initialization
 		void Start( )
 		{
-			StartCoroutine( TestCR( ) );
+			StartCoroutine( CreateFromSourcesInContainerCR( testTubeContainer ) );
 
 		}
 
-		private IEnumerator TestCR()
+		private IEnumerator CreateFromSourcesInContainerCR(Transform container)
 		{
 			yield return null;
 //			TubeSection TS = TubeSection.CreateLinear( pos1.position, null, pos2.position, null, num, startRadius, endRadius, tubeWallMaterial ); 
@@ -38,7 +38,7 @@ namespace RJWard.Tube
 
 				sb.Append( "Building Tube Section" );
 
-                SpinePointSource[] spinePointSources = testTubeContainer.GetComponentsInChildren<SpinePointSource>( );
+                SpinePointSource[] spinePointSources = container.GetComponentsInChildren<SpinePointSource>( );
 				sb.Append( "\nFound " ).Append( spinePointSources.Length ).Append( " sources" );
 
 				for (int i = 0; i < spinePointSources.Length; i++)
