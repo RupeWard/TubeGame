@@ -212,6 +212,12 @@ namespace RJWard.Tube
 									Debug.LogError( "NRE when hoopPtNum = " + hoopPtNum + " and ptNum = " + ptNum );
 								}
 							}
+							for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
+							{
+								HoopPoint hp = spinePoint.hoop.GetHoopPoint( hoopPtNum );
+								RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.2f, spinePoint.hoop.GetColourForPoint( hp) );
+							}
+
 							debugSb.Append( "\n Added " ).Append( nAdded ).Append( " hps of " ).Append( numHoopPoints )
 								.Append( " to hoop " ).Append( ptNum );
 						}

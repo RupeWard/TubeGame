@@ -84,12 +84,10 @@ namespace RJWard.Tube
 			hoopPoints_.Add( hoopPoint );
 			hoopPoint.hoopIndex = n;
 
-			RJWard.Core.Test.DebugBlob.AddToObject( hoopPoint.gameObject, 0.2f, GetColourForPoint( hoopPoint ) );
-
 			return hoopPoint;
 		}
 
-		private Color GetColourForPoint(HoopPoint hp)
+		public Color GetColourForPoint(HoopPoint hp)
 		{
 			float f = (float)hp.hoopIndex / (hoopPoints_.Count - 1);
 			return Color.Lerp( firstPointColour_, endPointColor_, f );
