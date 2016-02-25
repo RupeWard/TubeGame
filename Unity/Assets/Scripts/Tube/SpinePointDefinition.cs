@@ -7,7 +7,8 @@ namespace RJWard.Tube
 	{
 		private Vector3 position_ = Vector3.zero;
 		private Vector3? rotation_ = null;
-		private float radius_ = 0f;
+		private float hoopRadius_ = 0f;
+		private int numHoopPoints_ = 10;
 
 		public Vector3 position
 		{
@@ -21,14 +22,20 @@ namespace RJWard.Tube
 
 		public float radius
 		{
-			get { return radius_;  }
+			get { return hoopRadius_;  }
 		}
 
-		public SpinePointDefinition( Vector3 p, Vector3? ro, float ra )
+		public int numHoopPoints
+		{
+			get { return numHoopPoints_; }
+		}
+
+		public SpinePointDefinition( Vector3 p, Vector3? ro, int nh, float ra )
 		{
 			position_ = p;
 			rotation_ = ro;
-			radius_ = ra;
+			hoopRadius_ = ra;
+			numHoopPoints_ = nh;
 		}
 
 		private SpinePointDefinition( ) { }
@@ -44,7 +51,7 @@ namespace RJWard.Tube
 			{
 				sb.Append( "free" );
 			}
-			sb.Append( " RA=" ).Append( radius );
+			sb.Append( " RA=" ).Append( radius ).Append(" N=").Append(numHoopPoints_);
 		}
 
 	}

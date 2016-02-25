@@ -16,16 +16,16 @@ namespace RJWard.Tube
 			isMeshDirty_ = true;
 		}
 
-		public static TubeSection Create( string n, TubeSectionDefinition tsd, Material mat )
+		public static TubeSection CreateCircular( string n, TubeSectionDefinition tsd, Material mat )
 		{
 			GameObject tsGo = new GameObject( n );
 			TubeSection result = tsGo.AddComponent<TubeSection>( );
-			result.Init(n, tsd, mat );
+			result.InitCircular( n, tsd, mat );
 
 			return result;
 		}
 
-		private void Init( string n, TubeSectionDefinition tsd, Material mat )
+		private void InitCircular( string n, TubeSectionDefinition tsd, Material mat )
 		{
 			debugSb.Length = 0;
 			debugSb.Append( "Creating TubeSection" );
@@ -45,7 +45,7 @@ namespace RJWard.Tube
 				SpinePointDefinition spd = tsd.GetSpinePointDefn( i );
 				if (spd != null)
 				{
-					spine_.AddSpinePoint( spd );
+					spine_.AddCircularSpinePoint( spd );
 					debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( spd );
 				}
 				else
@@ -64,6 +64,8 @@ namespace RJWard.Tube
 			Spine newSpine = newSpineGO.AddComponent<Spine>( );
 			// do init only when ready
 
+			List< Vector3 > spinePointPositions = new List<Vector3>( );
+//			List<Vector3>[] hoopPointPositions = new List<Vector3>[spine_.]
 
 		}
 
@@ -75,7 +77,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, Material mat )
+		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, int numHoopPoints, Material mat )
 		{			
 			GameObject tsGo = new GameObject( "TubeSection" );
 			TubeSection result = tsGo.AddComponent<TubeSection>( );
@@ -98,7 +100,7 @@ namespace RJWard.Tube
 					rot = endRotation;
 				}
 				float interpolator = (float)i / (num - 1);
-                result.spine_.AddSpinePoint( Vector3.Lerp(start, end,  interpolator) , rot, Mathf.Lerp(startRadius, endRadius,  interpolator));
+                result.spine_.AddCircularSpinePoint( Vector3.Lerp(start, end,  interpolator) , rot, numHoopPoints, Mathf.Lerp(startRadius, endRadius,  interpolator));
 			}
 
 			return result;

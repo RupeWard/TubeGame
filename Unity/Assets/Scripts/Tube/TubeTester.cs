@@ -12,6 +12,8 @@ namespace RJWard.Tube
 		public float startRadius = 5f;
 		public float endRadius = 8f;
 
+		public int numHoopPoints = 10;
+
 		public Material tubeWallMaterial;
 
 		public Transform testTubeContainer;
@@ -52,7 +54,7 @@ namespace RJWard.Tube
 					}
 					float rad = sps.radius;
 
-					SpinePointDefinition spd = new SpinePointDefinition( pos, rot, rad );
+					SpinePointDefinition spd = new SpinePointDefinition( pos, rot, numHoopPoints, rad );
 					tsd.AddSpinePointDefn( spd );
 
 					sb.Append( "\n  Added as " ).DebugDescribe( spd );
@@ -60,7 +62,7 @@ namespace RJWard.Tube
 
 				Debug.Log( sb.ToString( ) );
 
-				TubeSection TS = TubeSection.Create("TS0", tsd, tubeWallMaterial );
+				TubeSection TS = TubeSection.CreateCircular("TS0", tsd, tubeWallMaterial );
 				testTubeContainer.gameObject.SetActive( false );
 			}
 		}

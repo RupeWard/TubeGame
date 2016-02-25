@@ -45,17 +45,17 @@ namespace RJWard.Tube
 		}
 		*/
 
-		public void AddSpinePoint(SpinePointDefinition spd)
+		public void AddCircularSpinePoint(SpinePointDefinition spd)
 		{
-			AddSpinePoint( spd.position, spd.rotation, spd.radius);
+			AddCircularSpinePoint( spd.position, spd.rotation, spd.numHoopPoints, spd.radius);
 		}
 
-		public void AddSpinePoint( Vector3 pos, Vector3? rot, float radius )
+		public void AddCircularSpinePoint( Vector3 pos, Vector3? rot, int num,  float radius )
 		{
 			GameObject spGo = new GameObject( "SP_"+spinePoints_.Count.ToString() );
 			SpinePoint spinePoint = spGo.AddComponent<SpinePoint>( );
 			spGo.transform.parent = this.transform;
-			spinePoint.InitCircular( this, pos, rot, radius );
+			spinePoint.InitCircular( this, pos, rot, num, radius );
 			if (spinePoints_.Count > 0)
 			{
 				spinePoints_[spinePoints_.Count - 1].nextSpinePoint = spinePoint;

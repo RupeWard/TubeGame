@@ -13,7 +13,7 @@ namespace RJWard.Tube
 			get { return hoop_; }
 		}
 
-		private float radius_ = 0f;
+//		private float radius_ = 0f;
 
 		private bool fixedRotation_ = false;
 
@@ -209,10 +209,9 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void InitCircular( Spine sp,  Vector3 pos, Vector3? rot, float rad )
+		public void Init( Spine sp,  Vector3 pos, Vector3? rot)
 		{
 			spine_ = sp;
-			radius_ = rad;
 			transform.localPosition = pos;
 			if (rot != null)
 			{
@@ -222,18 +221,24 @@ namespace RJWard.Tube
 			{
 				transform.localRotation = Quaternion.identity;
 			}
-			MakeHoopCircular( );
 		}
 
-		private void MakeHoopCircular( )
+		public void InitCircular( Spine sp, Vector3 pos, Vector3? rot, int num, float rad )
+		{
+			Init( sp, pos, rot );
+			MakeHoopCircular( num, rad );
+		}
+
+
+		private void MakeHoopCircular( int numPoints, float rad )
 		{
 			if (hoop_ == null)
 			{
 				GameObject hoopGo = new GameObject( "Hoop" );
 				hoop_ = hoopGo.AddComponent<Hoop>( );
 			}
-			hoop_.Init( this, 10);
-			hoop.CreateHoopPointsCircular( radius_ );
+			hoop_.Init( this );
+			hoop.CreateHoopPointsCircular(numPoints, rad);
 			rotationIsDirty_ = true;
 		}
 
