@@ -122,8 +122,17 @@ namespace RJWard.Core
 			return InterpolateFixedNum( srcPts, numPerSection, UNIFORM_POWER);
 		}
 
-		public static List< Vector3> InterpolateFixedNum(List< Vector3 > srcPts, int numPerSection, float catmullRomPower)
+		public static List< Vector3> InterpolateFixedNum(List< Vector3 > srcPtsIn, int numPerSection, float catmullRomPower)
 		{
+			List<Vector3> srcPts = new List<Vector3>( srcPtsIn );
+			float firstDist = Vector3.Distance( srcPtsIn[0], srcPtsIn[1] );
+			Vector3 priorPos = srcPtsIn[0];
+			priorPos.z -= firstDist;
+			srcPts.Insert( 0, priorPos );
+			Vector3 endDiff = srcPtsIn[srcPtsIn.Count - 1] - srcPtsIn[srcPtsIn.Count - 1];
+			Vector3 postPos = srcPtsIn[srcPtsIn.Count - 1] + endDiff;
+			srcPts.Add( postPos );
+
 			List<Vector3> result = null;
 			int numPoints = srcPts.Count;
 			if (numPoints < 4)

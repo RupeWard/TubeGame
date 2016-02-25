@@ -82,6 +82,9 @@ namespace RJWard.Tube
 			}
 		}
 
+		private RJWard.Core.CatMullRom3D forwardInterpolator_ = null;
+		private RJWard.Core.CatMullRom3D backInterpolator_ = null;
+
 		private bool rotationIsDirty_ = false;
 		public void SetRotationDirty()
 		{

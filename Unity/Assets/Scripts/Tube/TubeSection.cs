@@ -123,13 +123,6 @@ namespace RJWard.Tube
 				{
 					oldSpinePtPosns.Add( srcTs.spine_.GetSpinePoint( i ).transform.position );
 				}
-				float firstDist = Vector3.Distance( oldSpinePtPosns[0], oldSpinePtPosns[1] );
-				Vector3 priorPos = oldSpinePtPosns[0];
-				priorPos.z -= firstDist;
-				oldSpinePtPosns.Insert( 0, priorPos );
-				Vector3 endDiff = oldSpinePtPosns[oldSpinePtPosns.Count - 1] - oldSpinePtPosns[oldSpinePtPosns.Count - 1];
-				Vector3 postPos = oldSpinePtPosns[oldSpinePtPosns.Count - 1] + endDiff;
-				oldSpinePtPosns.Add( postPos );
 
 				// Prepare lists to contains positions : spinePoints & N * hoopPoints
 
@@ -148,17 +141,9 @@ namespace RJWard.Tube
 					{
 						oldHoopPtPosns.Add( srcTs.spine_.GetSpinePoint( i ).hoop.GetHoopPoint( hoopIndex ).transform.position );
 					}
-					float firstHPDist = Vector3.Distance( oldHoopPtPosns[0], oldHoopPtPosns[1] );
-					Vector3 priorHPPos = oldHoopPtPosns[0];
-					priorHPPos.z -= firstHPDist;
-					oldHoopPtPosns.Insert( 0, priorHPPos );
-					Vector3 endHPDiff = oldHoopPtPosns[oldHoopPtPosns.Count - 1] - oldHoopPtPosns[oldHoopPtPosns.Count - 1];
-					Vector3 postHPPos = oldHoopPtPosns[oldHoopPtPosns.Count - 1] + endHPDiff;
-					oldHoopPtPosns.Add( postHPPos );
-
 					if (oldHoopPtPosns.Count != oldSpinePtPosns.Count)
 					{
-						Debug.LogError( "spine/hoop src num mistmatch" );
+						Debug.LogError( "spine/hoop src num mismatch" );
 						abort = true;
 					}
 					else
@@ -179,6 +164,7 @@ namespace RJWard.Tube
 					for (int ptNum = 0; ptNum < numNewPoints; ptNum++ )
 					{
 						spine_.AddHoopLess( spinePointPositions[ptNum] );
+						
 					}
 					debugSb.Append( "\n Made ").Append(spine_.NumSpinePoints).Append(" spine points, waiting for rotations" );
 					yield return new WaitForSeconds( 4f );
