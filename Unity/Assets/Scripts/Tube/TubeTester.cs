@@ -60,7 +60,7 @@ namespace RJWard.Tube
 
 				Debug.Log( sb.ToString( ) );
 
-				TubeSection TS = TubeSection.Create( tsd, tubeWallMaterial );
+				TubeSection TS = TubeSection.Create("TS0", tsd, tubeWallMaterial );
 				testTubeContainer.gameObject.SetActive( false );
 			}
 		}

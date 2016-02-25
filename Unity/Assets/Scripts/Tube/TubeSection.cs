@@ -16,23 +16,25 @@ namespace RJWard.Tube
 			isMeshDirty_ = true;
 		}
 
-		public static TubeSection Create( TubeSectionDefinition tsd, Material mat )
+		public static TubeSection Create( string n, TubeSectionDefinition tsd, Material mat )
 		{
-			GameObject tsGo = new GameObject( "TubeSection" );
+			GameObject tsGo = new GameObject( n );
 			TubeSection result = tsGo.AddComponent<TubeSection>( );
-			result.Init( tsd, mat );
+			result.Init(n, tsd, mat );
 
 			return result;
 		}
 
-		private void Init( TubeSectionDefinition tsd, Material mat )
+		private void Init( string n, TubeSectionDefinition tsd, Material mat )
 		{
 			debugSb.Length = 0;
 			debugSb.Append( "Creating TubeSection" );
 
+			gameObject.name = n;
+
 			tubeWallMaterial_ = mat;
 
-			GameObject spineGO = new GameObject( "Spine" );
+			GameObject spineGO = new GameObject( "SP"+n );
 			spine_ = spineGO.AddComponent<Spine>( );
 			spine_.Init( this );
 
@@ -54,6 +56,15 @@ namespace RJWard.Tube
 			}
 
 			Debug.Log( debugSb.ToString( ) );
+		}
+
+		public void GenerateSplinar(int numPerSection)
+		{
+			GameObject newSpineGO = new GameObject( this.gameObject.name+"_Splinar" );
+			Spine newSpine = newSpineGO.AddComponent<Spine>( );
+			// do init only when ready
+
+
 		}
 
 		private void Update()
