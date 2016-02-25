@@ -3,8 +3,30 @@ using System.Collections;
 
 namespace RJWard.Tube
 {
+
 	public class HoopPoint : MonoBehaviour
 	{
+		private int hoopIndex_ = int.MaxValue;
+		public int hoopIndex
+		{
+			get
+			{
+				if (hoopIndex_ == int.MaxValue)
+				{
+					throw new System.Exception( "hoopindex not set yet" );
+				}
+				return hoopIndex_;
+			}
+			set
+			{
+				if (hoopIndex_ != int.MaxValue)
+				{
+					Debug.LogWarning( "Hoop index being changed from " + hoopIndex_ + " to " + value );
+				}
+				hoopIndex_ = value;
+			}
+		}
+
 		private int vertexNumber_ = int.MaxValue;
 		private int altVertexNumber_ = int.MaxValue; // when being considered as last instead of first. Only differs from default for that one point in hoop
 		

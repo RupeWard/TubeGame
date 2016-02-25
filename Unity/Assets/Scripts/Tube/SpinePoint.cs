@@ -232,7 +232,8 @@ namespace RJWard.Tube
 				GameObject hoopGo = new GameObject( "Hoop" );
 				hoop_ = hoopGo.AddComponent<Hoop>( );
 			}
-			hoop_.Init( this, 10, radius_ );
+			hoop_.Init( this, 10);
+			hoop.CreateHoopPointsCircular( radius_ );
 			rotationIsDirty_ = true;
 		}
 
