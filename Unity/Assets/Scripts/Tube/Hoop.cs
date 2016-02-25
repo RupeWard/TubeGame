@@ -96,7 +96,7 @@ namespace RJWard.Tube
 				}
 				hoopPoints_.Clear( );
 			}
-			GameObject firstHoopPointGO = new GameObject( this.gameObject.name+"HP0" );
+			GameObject firstHoopPointGO = new GameObject( this.gameObject.name+"_HP0" );
 			HoopPoint firstHoopPoint = firstHoopPointGO.AddComponent<HoopPoint>( );
 			firstHoopPointGO.transform.parent = this.transform;
 			firstHoopPointGO.transform.localPosition = new Vector3( radius_, 0f, 0f );

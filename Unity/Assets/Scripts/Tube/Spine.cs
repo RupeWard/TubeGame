@@ -55,7 +55,7 @@ namespace RJWard.Tube
 			GameObject spGo = new GameObject( "SP_"+spinePoints_.Count.ToString() );
 			SpinePoint spinePoint = spGo.AddComponent<SpinePoint>( );
 			spGo.transform.parent = this.transform;
-			spinePoint.Init( this, pos, rot, radius );
+			spinePoint.InitCircular( this, pos, rot, radius );
 			if (spinePoints_.Count > 0)
 			{
 				spinePoints_[spinePoints_.Count - 1].nextSpinePoint = spinePoint;

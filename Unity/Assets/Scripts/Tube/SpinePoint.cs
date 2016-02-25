@@ -209,7 +209,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void Init( Spine sp,  Vector3 pos, Vector3? rot, float rad )
+		public void InitCircular( Spine sp,  Vector3 pos, Vector3? rot, float rad )
 		{
 			spine_ = sp;
 			radius_ = rad;
@@ -222,10 +222,10 @@ namespace RJWard.Tube
 			{
 				transform.localRotation = Quaternion.identity;
 			}
-			MakeHoop( );
+			MakeHoopCircular( );
 		}
 
-		private void MakeHoop( )
+		private void MakeHoopCircular( )
 		{
 			if (hoop_ == null)
 			{
