@@ -167,7 +167,7 @@ namespace RJWard.Tube
 						
 					}
 					debugSb.Append( "\n Made ").Append(spine_.NumSpinePoints).Append(" spine points, waiting for rotations" );
-					yield return new WaitForSeconds( 4f );
+					yield return null;
 
 					for (int ptNum = 0; ptNum < numNewPoints; ptNum++)
 					{
