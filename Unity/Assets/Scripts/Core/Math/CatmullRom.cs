@@ -52,6 +52,10 @@ namespace RJWard.Core
 
 		static readonly float s_epsilon = 0.00001f;
 
+		const float CENTRIPETAL_POWER = 0.5f;
+		const float UNIFORM_POWER = 0f;
+		const float CHORDAL_POWER = 1f;
+
 		static public CatMullRom3D Create( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float catmullRomPower )
 		{
 			return new CatMullRom3D( p0, p1, p2, p3, catmullRomPower );
@@ -59,17 +63,17 @@ namespace RJWard.Core
 
 		static public CatMullRom3D CreateCentripetal( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
 		{
-			return new CatMullRom3D( p0, p1, p2, p3, 0.5f);
+			return new CatMullRom3D( p0, p1, p2, p3, CENTRIPETAL_POWER);
 		}
 
 		static public CatMullRom3D CreateUniform( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3 )
 		{
-			return new CatMullRom3D( p0, p1, p2, p3, 0f );
+			return new CatMullRom3D( p0, p1, p2, p3, UNIFORM_POWER);
 		}
 
 		static public CatMullRom3D CreateChordal( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3 )
 		{
-			return new CatMullRom3D( p0, p1, p2, p3, 1f );
+			return new CatMullRom3D( p0, p1, p2, p3, CHORDAL_POWER );
 		}
 
 		private CatMullRom3D( Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float catmullRomPower)
@@ -103,6 +107,46 @@ namespace RJWard.Core
 
 		}
 
+		public static List<Vector3> InterpolateFixedNumCentripetal( List<Vector3> srcPts, int numPerSection)
+		{
+			return InterpolateFixedNum( srcPts, numPerSection, CENTRIPETAL_POWER );
+		}
+
+		public static List<Vector3> InterpolateFixedNumChordal( List<Vector3> srcPts, int numPerSection )
+		{
+			return InterpolateFixedNum( srcPts, numPerSection, CHORDAL_POWER );
+		}
+
+		public static List<Vector3> InterpolateFixedNumUniform( List<Vector3> srcPts, int numPerSection )
+		{
+			return InterpolateFixedNum( srcPts, numPerSection, UNIFORM_POWER);
+		}
+
+		public static List< Vector3> InterpolateFixedNum(List< Vector3 > srcPts, int numPerSection, float catmullRomPower)
+		{
+			List<Vector3> result = null;
+			int numPoints = srcPts.Count;
+			if (numPoints < 4)
+			{
+				Debug.LogError( "Can't do Interpolate when less than 4 points" );
+			}
+			else
+			{
+				result = new List<Vector3>( );
+				for (int i = 1; i < numPoints-2; i++)
+				{
+					CatMullRom3D interpolator = new CatMullRom3D( srcPts[i - 1], srcPts[i], srcPts[i + 1], srcPts[i + 2], catmullRomPower );
+					for (int ptNum = 0; ptNum < numPerSection; ptNum++)
+					{
+						float t = (float)ptNum / numPerSection;
+						result.Add( interpolator.Interpolate( t ) );
+					}
+				}
+				result.Add( srcPts[numPoints - 1] );
+			}
+			return result;
+		}
+		
 		public Vector3 Interpolate(float t)
 		{
 			if ( t < 0f || t > 1f)

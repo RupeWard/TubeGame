@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
 	public class TubeSection : MonoBehaviour
 	{
+		public bool remakeMeshWhenDirty = true;
+
 		private Spine spine_ = null;
 		private Material tubeWallMaterial_;
 
@@ -25,14 +28,29 @@ namespace RJWard.Tube
 			return result;
 		}
 
-		private void InitCircular( string n, TubeSectionDefinition tsd, Material mat )
+		public static TubeSection CreateSplinar( string n, TubeSection ts, int numPerSection, Material mat )
 		{
-			debugSb.Length = 0;
-			debugSb.Append( "Creating TubeSection" );
+			GameObject tsGo = new GameObject( n );
+			TubeSection result = tsGo.AddComponent<TubeSection>( );
+			result.InitSplinar( n, ts, numPerSection, mat );
 
+			return result;
+		}
+
+		private void Init(string n, Material mat)
+		{
 			gameObject.name = n;
 
 			tubeWallMaterial_ = mat;
+
+		}
+
+		private void InitCircular( string n, TubeSectionDefinition tsd, Material mat )
+		{
+			Init( n, mat );
+
+			debugSb.Length = 0;
+			debugSb.Append( "Creating TubeSection" );
 
 			GameObject spineGO = new GameObject( "SP"+n );
 			spine_ = spineGO.AddComponent<Spine>( );
@@ -58,20 +76,170 @@ namespace RJWard.Tube
 			Debug.Log( debugSb.ToString( ) );
 		}
 
-		public void GenerateSplinar(int numPerSection)
+		public void InitSplinar( string n, TubeSection srcTs, int numPerSection, Material mat )
 		{
-			GameObject newSpineGO = new GameObject( this.gameObject.name+"_Splinar" );
-			Spine newSpine = newSpineGO.AddComponent<Spine>( );
-			// do init only when ready
+			remakeMeshWhenDirty = false;
+			StartCoroutine( InitSplinarCR(n, srcTs, numPerSection, mat ) );
+        }
 
-			List< Vector3 > spinePointPositions = new List<Vector3>( );
-//			List<Vector3>[] hoopPointPositions = new List<Vector3>[spine_.]
+		private IEnumerator InitSplinarCR(string n, TubeSection srcTs, int numPerSection, Material mat)
+		{
+			Init( n + "_SPL", mat );
 
+			debugSb.Length = 0;
+			debugSb.Append( "Generating splinar with " ).Append( numPerSection ).Append( " per section" );
+			Debug.LogError( debugSb.ToString( ) );
+		
+			GameObject spineGO = new GameObject( "Sp");
+			spine_ = spineGO.AddComponent<Spine>( );
+			spine_.Init( this );
+			
+			bool abort = false;
+
+			int numHoopPoints = int.MaxValue;
+			for (int i = 0; !abort && i < srcTs.spine_.NumSpinePoints; i++)
+			{
+				SpinePoint spt = srcTs.spine_.GetSpinePoint( i );
+				if (numHoopPoints != int.MaxValue && numHoopPoints != spt.hoop.numPoints( ))
+				{
+					Debug.LogError( "NumPoints mismatch" );
+					numHoopPoints = int.MaxValue;
+					abort = true;
+					break;
+				}
+				else
+				{
+					numHoopPoints = spt.hoop.numPoints( );
+				}
+			}
+
+			if (numHoopPoints != int.MaxValue)
+			{
+				debugSb.Append( "\n Found " ).Append( numHoopPoints ).Append( " hoop points per spine point" );
+//				Debug.LogError( debugSb.ToString( ) );
+
+				// interpolate spine points
+
+				List<Vector3> oldSpinePtPosns = new List<Vector3>( );
+				for (int i = 0; i < srcTs.spine_.NumSpinePoints; i++)
+				{
+					oldSpinePtPosns.Add( srcTs.spine_.GetSpinePoint( i ).transform.position );
+				}
+				float firstDist = Vector3.Distance( oldSpinePtPosns[0], oldSpinePtPosns[1] );
+				Vector3 priorPos = oldSpinePtPosns[0];
+				priorPos.z -= firstDist;
+				oldSpinePtPosns.Insert( 0, priorPos );
+				Vector3 endDiff = oldSpinePtPosns[oldSpinePtPosns.Count - 1] - oldSpinePtPosns[oldSpinePtPosns.Count - 1];
+				Vector3 postPos = oldSpinePtPosns[oldSpinePtPosns.Count - 1] + endDiff;
+				oldSpinePtPosns.Add( postPos );
+
+				// Prepare lists to contains positions : spinePoints & N * hoopPoints
+
+				List<Vector3> spinePointPositions = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldSpinePtPosns, numPerSection );
+
+				int numSpinePoints = spinePointPositions.Count;
+				debugSb.Append( "\n Interpolated spine points from ").Append(oldSpinePtPosns.Count).Append( " to ").Append(numSpinePoints );
+//				Debug.LogError( debugSb.ToString( ) );
+
+				// interpolate hoop points
+				List<Vector3>[] hoopPointPositions = new List<Vector3>[numHoopPoints];
+
+				for (int hoopIndex = 0; !abort && hoopIndex < numHoopPoints; hoopIndex++)
+				{
+					List<Vector3> oldHoopPtPosns = new List<Vector3>( );
+					for (int i = 0; i < srcTs.spine_.NumSpinePoints; i++)
+					{
+						oldHoopPtPosns.Add( srcTs.spine_.GetSpinePoint( i ).hoop.GetHoopPoint( hoopIndex ).transform.position );
+					}
+					float firstHPDist = Vector3.Distance( oldHoopPtPosns[0], oldHoopPtPosns[1] );
+					Vector3 priorHPPos = oldHoopPtPosns[0];
+					priorHPPos.z -= firstHPDist;
+					oldHoopPtPosns.Insert( 0, priorHPPos );
+					Vector3 endHPDiff = oldHoopPtPosns[oldHoopPtPosns.Count - 1] - oldHoopPtPosns[oldHoopPtPosns.Count - 1];
+					Vector3 postHPPos = oldHoopPtPosns[oldHoopPtPosns.Count - 1] + endHPDiff;
+					oldHoopPtPosns.Add( postHPPos );
+
+					if (oldHoopPtPosns.Count != oldSpinePtPosns.Count)
+					{
+						Debug.LogError( "spine/hoop src num mistmatch" );
+						abort = true;
+					}
+					else
+					{
+						hoopPointPositions[hoopIndex] = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldHoopPtPosns, numPerSection );
+						debugSb.Append( "\n Interpolated hoop points ").Append(hoopIndex).Append(" from " ).Append( oldSpinePtPosns.Count ).Append( " to " ).Append( numSpinePoints );
+//						Debug.LogError( debugSb.ToString( ) );
+						if (hoopPointPositions[hoopIndex].Count != spinePointPositions.Count)
+						{
+							Debug.LogError( "spine/hoop src num mistmatch" );
+							abort = true;
+						}
+					}
+				}
+
+				if (!abort)
+				{
+					int numNewPoints = spinePointPositions.Count;
+					for (int ptNum = 0; ptNum < numNewPoints; ptNum++ )
+					{
+						spine_.AddHoopLess( spinePointPositions[ptNum] );
+					}
+					debugSb.Append( "\n Made ").Append(spine_.NumSpinePoints).Append(" spine points, waiting for rotations" );
+//					Debug.LogError( debugSb.ToString( ) );
+					yield return new WaitForSeconds( 4f );
+
+					for (int ptNum = 0; ptNum < numNewPoints; ptNum++)
+					{
+						SpinePoint spinePoint = spine_.GetSpinePoint( ptNum );
+						if (spinePoint == null)
+						{
+							Debug.LogError( "No spine point " + ptNum );
+						}
+						else
+						{
+							int nAdded = 0;
+							for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
+							{
+								try
+								{
+									HoopPoint h = spinePoint.hoop.AddHoopPoint( hoopPointPositions[hoopPtNum][ptNum] );
+									if (h == null)
+									{
+										Debug.LogError( "null hooppoint" );
+									}
+									else
+									{
+										nAdded++;
+									}
+								}
+								catch (System.NullReferenceException /* nre */)
+								{
+									Debug.LogError( "NRE when hoopPtNum = " + hoopPtNum + " and ptNum = " + ptNum );
+								}
+							}
+							debugSb.Append( "\n Added " ).Append( nAdded ).Append( " hps of " ).Append( numHoopPoints )
+								.Append( " to hoop " ).Append( ptNum );
+//							Debug.LogError( debugSb.ToString( ) );
+						}
+					}
+
+
+				}
+
+			}
+
+			if (debugSb.Length > 0)
+			{
+				Debug.LogError( debugSb.ToString( ) );
+			}
+			yield return null;
+			remakeMeshWhenDirty = true;
+			SetMeshDirty( );
 		}
 
 		private void Update()
 		{
-			if (isMeshDirty_)
+			if (remakeMeshWhenDirty && isMeshDirty_)
 			{
 				MakeMesh( );
 			}
@@ -108,6 +276,8 @@ namespace RJWard.Tube
 
 		private void MakeMesh()
 		{
+			Debug.Log( "Make Mesh for " + this.gameObject );
+
 			RJWard.Core.ReverseNormals reverseNormals = GetComponent<RJWard.Core.ReverseNormals>( );
 			if (reverseNormals != null)
 			{

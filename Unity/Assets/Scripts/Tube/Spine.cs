@@ -45,6 +45,24 @@ namespace RJWard.Tube
 		}
 		*/
 
+		public SpinePoint AddHoopLess(Vector3 pos)
+		{
+			GameObject spGo = new GameObject( "SP_" + spinePoints_.Count.ToString( ) );
+			SpinePoint spinePoint = spGo.AddComponent<SpinePoint>( );
+			spinePoint.Init( this, pos, null );
+			spGo.transform.parent = this.transform;
+			spinePoints_.Add( spinePoint );
+			if (spinePoints_.Count > 0)
+			{
+				spinePoints_[spinePoints_.Count - 1].nextSpinePoint = spinePoint;
+				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 1];
+			}
+
+			RJWard.Core.Test.DebugBlob.AddToObject( spGo, 0.15f, Color.green );
+
+			return spinePoint;
+		}
+
 		public void AddCircularSpinePoint(SpinePointDefinition spd)
 		{
 			AddCircularSpinePoint( spd.position, spd.rotation, spd.numHoopPoints, spd.radius);
@@ -52,19 +70,13 @@ namespace RJWard.Tube
 
 		public void AddCircularSpinePoint( Vector3 pos, Vector3? rot, int num,  float radius )
 		{
-			GameObject spGo = new GameObject( "SP_"+spinePoints_.Count.ToString() );
-			SpinePoint spinePoint = spGo.AddComponent<SpinePoint>( );
-			spGo.transform.parent = this.transform;
+			SpinePoint spinePoint = AddHoopLess( pos );
 			spinePoint.InitCircular( this, pos, rot, num, radius );
 			if (spinePoints_.Count > 0)
 			{
 				spinePoints_[spinePoints_.Count - 1].nextSpinePoint = spinePoint;
 				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 1];
             }
-		
-			spinePoints_.Add( spinePoint );
-
-			RJWard.Core.Test.DebugBlob.AddToObject( spGo, 0.15f, Color.green );
 		}
 
 		public void AddAllVertexInfoToLists( List< Vector3 > verts, List< Vector3 > normals, List <Vector2> uvs)

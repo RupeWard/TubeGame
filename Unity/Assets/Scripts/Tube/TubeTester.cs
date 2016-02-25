@@ -18,12 +18,16 @@ namespace RJWard.Tube
 
 		public Transform testTubeContainer;
 
+		private TubeSection tubeSection_ = null;
+
 		// Use this for initialization
 		void Start( )
 		{
 			StartCoroutine( CreateFromSourcesInContainerCR( testTubeContainer ) );
 
 		}
+
+		private int tsNumber = 0;
 
 		private IEnumerator CreateFromSourcesInContainerCR(Transform container)
 		{
@@ -62,9 +66,17 @@ namespace RJWard.Tube
 
 				Debug.Log( sb.ToString( ) );
 
-				TubeSection TS = TubeSection.CreateCircular("TS0", tsd, tubeWallMaterial );
+				tubeSection_ = TubeSection.CreateCircular("TS"+tsNumber.ToString(), tsd, tubeWallMaterial );
 				testTubeContainer.gameObject.SetActive( false );
+				tsNumber++;
 			}
+
+			for (int i = 20; i>-1; i--)
+			{
+				Debug.Log( "Waiting for " + i );
+				yield return new WaitForSeconds( 1f );
+			}
+			TubeSection newTs = TubeSection.CreateSplinar( "SPLINAR", tubeSection_, 5, tubeWallMaterial );
 		}
 
 		// Update is called once per frame

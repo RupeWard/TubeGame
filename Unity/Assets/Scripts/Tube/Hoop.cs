@@ -50,9 +50,14 @@ namespace RJWard.Tube
 			get { return spinePoint_; }
 		}
 
-		private int numPoints()
+		public int numPoints()
 		{
 			return hoopPoints_.Count;
+		}
+
+		public HoopPoint GetHoopPoint(int index)
+		{
+			return hoopPoints_[index];
 		}
 
 		private float radius_ = 0f;
@@ -68,6 +73,22 @@ namespace RJWard.Tube
 			spinePoint_ = sp;
 		}
 	
+		public HoopPoint AddHoopPoint(Vector3 pos)
+		{
+			int n = hoopPoints_.Count;
+			GameObject hoopPointGO = new GameObject( this.gameObject.name + "_HP"+n.ToString() );
+			HoopPoint hoopPoint = hoopPointGO.AddComponent<HoopPoint>( );
+			hoopPointGO.transform.parent = this.transform;
+			hoopPointGO.transform.position = pos;
+			hoopPointGO.transform.localRotation = Quaternion.identity;
+			hoopPoints_.Add( hoopPoint );
+			hoopPoint.hoopIndex = n;
+
+			RJWard.Core.Test.DebugBlob.AddToObject( hoopPoint.gameObject, 0.2f, GetColourForPoint( hoopPoint ) );
+
+			return hoopPoint;
+		}
+
 		private Color GetColourForPoint(HoopPoint hp)
 		{
 			float f = (float)hp.hoopIndex / (hoopPoints_.Count - 1);
@@ -118,6 +139,7 @@ namespace RJWard.Tube
 				nextHoopPointGO.transform.localPosition = new Vector3( radius_, 0f, 0f );
 				nextHoopPointGO.transform.localRotation = Quaternion.identity;
 				nextHoopPoint.hoopIndex = i;
+
 				Vector3 forwardAxis = nextHoopPointGO.transform.TransformDirection( Vector3.forward );
 				nextHoopPointGO.transform.RotateAround( spinePoint.transform.position, forwardAxis, i * (360f / num) );
 				hoopPoints_.Add( nextHoopPoint );
