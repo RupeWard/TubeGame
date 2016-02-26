@@ -77,6 +77,8 @@ namespace RJWard.Tube
 				yield return new WaitForSeconds( 1f );
 			}
 			TubeSection newTs = TubeSection.CreateSplinar( "SPLINAR", tubeSection_, 5, tubeWallMaterial );
+			tubeSection_.gameObject.SetActive( false );
+			tubeSection_ = newTs;
 		}
 
 		// Update is called once per frame

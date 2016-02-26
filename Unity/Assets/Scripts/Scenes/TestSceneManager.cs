@@ -87,7 +87,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public void HandleCameraMotionButtonUp( )
 	{
 		Debug.Log( "Stop" );
-		mainCamera.stop( );
+		mainCamera.killPower( );
 	}
 
 

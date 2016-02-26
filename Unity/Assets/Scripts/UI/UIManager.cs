@@ -21,7 +21,7 @@ namespace RJWard.Tube.UI
 
 		public void HandleForwardButtonUp( )
 		{
-
+			TestSceneManager.Instance.HandleCameraMotionButtonUp( );
 		}
 
 		public void HandleBackButtonDown( )
@@ -31,7 +31,7 @@ namespace RJWard.Tube.UI
 
 		public void HandleBackButtonUp( )
 		{
-
+			TestSceneManager.Instance.HandleCameraMotionButtonUp( );
 		}
 	}
 

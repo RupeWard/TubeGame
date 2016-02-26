@@ -10,7 +10,7 @@ namespace RJWard.Tube.Camera
 		public float camSpeedMult = 1f;
 		public float camAcc = 1f;
 		public float camMaxSpeed = 1f;
-		public float camDec = 1f;
+		public float camDrag = 1f;
 
 		private SpinePoint spinePoint_ = null;
 
@@ -33,9 +33,13 @@ namespace RJWard.Tube.Camera
 
 		public void decelerate( )
 		{
-			currentAcc = camAcc;
+			currentAcc = -1f * camAcc;
 		}
 
+		public void killPower()
+		{
+			currentAcc = 0f;
+		}
 
 		void Update()
 		{
@@ -55,6 +59,7 @@ namespace RJWard.Tube.Camera
 				{
 					currentSpeed = camMaxSpeed;
 					Debug.Log( "Camera speed maxed at " + currentSpeed );
+					currentAcc = 0f;
 				}
 				else
 				{
@@ -63,8 +68,9 @@ namespace RJWard.Tube.Camera
 			}
 			else if (Mathf.Abs(currentSpeed) > Mathf.Epsilon)
 			{
-				currentSpeed = Mathf.Sign( currentSpeed ) * (Mathf.Abs( currentSpeed ) - camDec);
-				if (currentSpeed <= 0f)
+				float currentSpeedSign = Mathf.Sign( currentSpeed );
+				currentSpeed = currentSpeedSign * (Mathf.Abs( currentSpeed ) - camDrag);
+				if (currentSpeedSign != Mathf.Sign(currentSpeed))
 				{
 					currentSpeed = 0f;
 					Debug.Log( "Cam slowed to halt" );
