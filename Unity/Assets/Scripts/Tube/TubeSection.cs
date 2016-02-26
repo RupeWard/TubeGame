@@ -126,8 +126,13 @@ namespace RJWard.Tube
 
 				// Prepare lists to contains positions : spinePoints & N * hoopPoints
 
-				List<Vector3> spinePointPositions = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldSpinePtPosns, numPerSection );
+				List<RJWard.Core.CatMullRom3D> spinePointInterpolators = new List<Core.CatMullRom3D>( );
+				List<Vector3> spinePointPositions = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldSpinePtPosns, numPerSection, spinePointInterpolators );
 
+				if (spinePointPositions.Count != (spinePointInterpolators.Count+1))
+				{
+					Debug.LogError( spinePointPositions.Count + " posns " + spinePointInterpolators.Count + " interpolators" );
+				}
 				int numSpinePoints = spinePointPositions.Count;
 				debugSb.Append( "\n Interpolated spine points from ").Append(oldSpinePtPosns.Count).Append( " to ").Append(numSpinePoints );
 
@@ -148,7 +153,7 @@ namespace RJWard.Tube
 					}
 					else
 					{
-						hoopPointPositions[hoopIndex] = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldHoopPtPosns, numPerSection );
+						hoopPointPositions[hoopIndex] = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldHoopPtPosns, numPerSection, null );
 						debugSb.Append( "\n Interpolated hoop points ").Append(hoopIndex).Append(" from " ).Append( oldSpinePtPosns.Count ).Append( " to " ).Append( numSpinePoints );
 						if (hoopPointPositions[hoopIndex].Count != spinePointPositions.Count)
 						{
@@ -163,8 +168,7 @@ namespace RJWard.Tube
 					int numNewPoints = spinePointPositions.Count;
 					for (int ptNum = 0; ptNum < numNewPoints; ptNum++ )
 					{
-						spine_.AddHoopLess( spinePointPositions[ptNum] );
-						
+						spine_.AddHoopLess( spinePointPositions[ptNum] );						
 					}
 					debugSb.Append( "\n Made ").Append(spine_.NumSpinePoints).Append(" spine points, waiting for rotations" );
 					yield return null;
@@ -178,6 +182,14 @@ namespace RJWard.Tube
 						}
 						else
 						{
+							if (ptNum > 0)
+							{
+								spinePoint.backInterpolator = spinePointInterpolators[ptNum - 1];
+							}
+							if (ptNum < (numNewPoints-1))
+							{
+								spinePoint.forwardInterpolator = spinePointInterpolators[ptNum];
+							}
 							int nAdded = 0;
 							for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
 							{
@@ -231,6 +243,7 @@ namespace RJWard.Tube
 			}
 		}
 
+		
 		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, int numHoopPoints, Material mat )
 		{			
 			GameObject tsGo = new GameObject( "TubeSection" );

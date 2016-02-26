@@ -42,7 +42,7 @@ namespace RJWard.Core
 		}
 	}
 
-	class CatMullRom3D
+	public class CatMullRom3D
 	{
 		NonUniformCatMullRomPoly xPoly_ = null;
 		NonUniformCatMullRomPoly yPoly_ = null;
@@ -107,22 +107,26 @@ namespace RJWard.Core
 
 		}
 
-		public static List<Vector3> InterpolateFixedNumCentripetal( List<Vector3> srcPts, int numPerSection)
+		public static List<Vector3> InterpolateFixedNumCentripetal( List<Vector3> srcPts, int numPerSection,
+			List<CatMullRom3D> interpolators )
 		{
-			return InterpolateFixedNum( srcPts, numPerSection, CENTRIPETAL_POWER );
+			return InterpolateFixedNum( srcPts, numPerSection, CENTRIPETAL_POWER, interpolators );
 		}
 
-		public static List<Vector3> InterpolateFixedNumChordal( List<Vector3> srcPts, int numPerSection )
+		public static List<Vector3> InterpolateFixedNumChordal( List<Vector3> srcPts, int numPerSection,
+			List<CatMullRom3D> interpolators )
 		{
-			return InterpolateFixedNum( srcPts, numPerSection, CHORDAL_POWER );
+			return InterpolateFixedNum( srcPts, numPerSection, CHORDAL_POWER, interpolators );
 		}
 
-		public static List<Vector3> InterpolateFixedNumUniform( List<Vector3> srcPts, int numPerSection )
+		public static List<Vector3> InterpolateFixedNumUniform( List<Vector3> srcPts, int numPerSection,
+			List<CatMullRom3D> interpolators )
 		{
-			return InterpolateFixedNum( srcPts, numPerSection, UNIFORM_POWER);
+			return InterpolateFixedNum( srcPts, numPerSection, UNIFORM_POWER, interpolators);
 		}
 
-		public static List< Vector3> InterpolateFixedNum(List< Vector3 > srcPtsIn, int numPerSection, float catmullRomPower)
+		public static List< Vector3> InterpolateFixedNum(List< Vector3 > srcPtsIn, int numPerSection, float catmullRomPower,
+			List <CatMullRom3D> interpolators)
 		{
 			List<Vector3> srcPts = new List<Vector3>( srcPtsIn );
 			float firstDist = Vector3.Distance( srcPtsIn[0], srcPtsIn[1] );
@@ -145,6 +149,10 @@ namespace RJWard.Core
 				for (int i = 1; i < numPoints-2; i++)
 				{
 					CatMullRom3D interpolator = new CatMullRom3D( srcPts[i - 1], srcPts[i], srcPts[i + 1], srcPts[i + 2], catmullRomPower );
+					if (interpolators != null)
+					{
+						interpolators.Add( interpolator );
+					}
 					for (int ptNum = 0; ptNum < numPerSection; ptNum++)
 					{
 						float t = (float)ptNum / numPerSection;
