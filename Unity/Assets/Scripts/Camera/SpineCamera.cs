@@ -58,12 +58,12 @@ namespace RJWard.Tube.Camera
 				if (currentSpeed > camMaxSpeed)
 				{
 					currentSpeed = camMaxSpeed;
-					Debug.Log( "Camera speed maxed at " + currentSpeed );
+//					Debug.Log( "Camera speed maxed at " + currentSpeed );
 					currentAcc = 0f;
 				}
 				else
 				{
-					Debug.Log( "Camera speed changed to " + currentSpeed );
+//					Debug.Log( "Camera speed changed to " + currentSpeed );
 				}
 			}
 			else if (Mathf.Abs(currentSpeed) > Mathf.Epsilon)
@@ -73,13 +73,13 @@ namespace RJWard.Tube.Camera
 				if (currentSpeedSign != Mathf.Sign(currentSpeed))
 				{
 					currentSpeed = 0f;
-					Debug.Log( "Cam slowed to halt" );
+//					Debug.Log( "Cam slowed to halt" );
 				}
 			}
 
 			if (Mathf.Abs(currentSpeed) > Mathf.Epsilon)
 			{
-				Debug.Log( "Moving at speed " + currentSpeed );
+//				Debug.Log( "Moving at speed " + currentSpeed );
 				float newT = t_ + currentSpeed * Time.deltaTime;
 				if (newT < 0f)
 				{
@@ -90,7 +90,7 @@ namespace RJWard.Tube.Camera
 					else
 					{
 						stop( );
-						Debug.Log( "Can't move, at start" );
+//						Debug.Log( "Can't move, at start" );
 					}
 				}
 				else if (newT < 1f)
@@ -108,7 +108,7 @@ namespace RJWard.Tube.Camera
 						{
 							stop( );
 							newT = 1f;
-							Debug.Log( "Can't move, at end" );
+//							Debug.Log( "Can't move, at end" );
 						}
 						else
 						{
