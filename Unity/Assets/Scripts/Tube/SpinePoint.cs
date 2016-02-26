@@ -85,6 +85,79 @@ namespace RJWard.Tube
 		public RJWard.Core.CatMullRom3D forwardInterpolator = null;
 		public RJWard.Core.CatMullRom3D backInterpolator = null;
 		
+		public bool InterpolateForwardWorld(float t, ref Vector3 result)
+		{
+			bool success = false;
+			result = Vector3.zero;
+
+			if (t < 0f || t > 1f)
+			{
+				Debug.LogWarning( "t = " + t );
+			}
+			t = Mathf.Clamp01( t );
+
+			if (false)// (forwardInterpolator != null)
+			{
+				if (nextSpinePoint_ == null)
+				{
+					Debug.LogWarning( "Spine pt has a forward interpolator but no next point!" );
+				}
+				result = forwardInterpolator.Interpolate( t );
+				success = true;
+			}
+			else
+			{
+				if (nextSpinePoint_ == null)
+				{
+					Debug.LogWarning( "Spine pt has no forward interpolator and no next point, can't interpolate!" );
+                }
+				else
+				{
+					result = Vector3.Lerp( transform.position, nextSpinePoint_.transform.position, t );
+					success = true;
+				}
+
+			}
+			return success;
+		}
+
+		public bool InterpolateBackwardWorld( float t, out Vector3 result )
+		{
+			bool success = false;
+			result = Vector3.zero;
+
+			if (t < 0f || t > 1f)
+			{
+				Debug.LogWarning( "t = " + t );
+			}
+			t = Mathf.Clamp01( t );
+
+			if (backInterpolator != null)
+			{
+				if (previousSpinePoint_ == null)
+				{
+					Debug.LogWarning( "Spine pt has a back interpolator but no prev point!" );
+                }
+				result = backInterpolator.Interpolate( 1-t );
+				success = true;
+			}
+			else
+			{
+				if (previousSpinePoint_ == null)
+				{
+					Debug.LogWarning( "Spine pt has no forward interpolator and no next point, can't interpolate!" );
+                }
+				else
+				{
+					result = Vector3.Lerp( transform.position, previousSpinePoint_.transform.position, t );
+					success = true;
+				}
+
+			}
+			return success;
+		}
+
+
 		private bool rotationIsDirty_ = false;
 		public void SetRotationDirty()
 		{
