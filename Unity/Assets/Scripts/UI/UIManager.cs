@@ -14,6 +14,25 @@ namespace RJWard.Tube.UI
 			
 		}
 
+		public void HandleForwardButtonDown()
+		{
+			TestSceneManager.Instance.HandleCameraForwardDown( );
+		}
+
+		public void HandleForwardButtonUp( )
+		{
+
+		}
+
+		public void HandleBackButtonDown( )
+		{
+			TestSceneManager.Instance.HandleCameraBackDown( );
+		}
+
+		public void HandleBackButtonUp( )
+		{
+
+		}
 	}
 
 }

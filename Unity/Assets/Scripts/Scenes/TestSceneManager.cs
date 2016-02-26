@@ -5,26 +5,30 @@ using RJWard.Tube.Camera;
 
 public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifetime<TestSceneManager>
 {
-
 	public SpineCamera mainCamera;
 
 	public Transform cameraHook;
 
-	public bool cameraOnHook = true;
+	private bool cameraOnHook_ = true;
 
 	private Vector3 originalPosition_ = Vector3.zero;
 	private Quaternion originalRotation_ = Quaternion.identity;
+
+	public void SetCameraOffHook()
+	{
+		cameraOnHook_ = false;
+	}
 
 	protected override void PostAwake( )
 	{
 		originalPosition_ = mainCamera.transform.position;
 		originalRotation_ = mainCamera.transform.rotation;
-		cameraOnHook = true;
+		cameraOnHook_ = true;
 	}
 
 	public void ToggleCamera()
 	{
-		if (cameraOnHook)
+		if (cameraOnHook_)
 		{
 			SetCameraToFirstSpinePoint( );
 		}
@@ -39,7 +43,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		mainCamera.enabled = false;
 		mainCamera.transform.position = originalPosition_;
 		mainCamera.transform.rotation = originalRotation_;
-		cameraOnHook = true;
+		cameraOnHook_ = true;
 	}
 
 	public void SetCameraToFirstSpinePoint()
@@ -57,8 +61,8 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 				}
 			}
 			mainCamera.enabled = true;
-			mainCamera.Init( spFound, 0f );
-			cameraOnHook = false;
+			mainCamera.InitStationary( spFound, 0f );
+			cameraOnHook_ = false;
 			Debug.Log( "Set to first spine point = " + spFound.gameObject.name );
 		}
 		else
@@ -67,4 +71,24 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		}
 
 	}
+
+	public void HandleCameraForwardDown()
+	{
+		Debug.Log( "Forward" );
+		mainCamera.accelerate( );
+	}
+
+	public void HandleCameraBackDown( )
+	{
+		Debug.Log( "Back" );
+		mainCamera.decelerate( );
+	}
+
+	public void HandleCameraMotionButtonUp( )
+	{
+		Debug.Log( "Stop" );
+		mainCamera.stop( );
+	}
+
+
 }
