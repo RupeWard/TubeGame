@@ -99,14 +99,32 @@ namespace RJWard.Tube.Camera
 				}
 				else
 				{
-					if (lastSpinePoint_.nextSpinePoint != null)
+					int numJumps = 0;
+					SpinePoint foundSpinePoint = lastSpinePoint_;
+					while (newT >= 1f)
 					{
-						Init( lastSpinePoint_.nextSpinePoint, newT - 1f );
+						newT -= 1f;
+						if (foundSpinePoint.nextSpinePoint == null)
+						{
+							stop( );
+							newT = 1f;
+							Debug.Log( "Can't move, at end" );
+						}
+						else
+						{
+							foundSpinePoint = foundSpinePoint.nextSpinePoint;
+							numJumps++;
+						}
 					}
-					else
+					if (numJumps > 0)
 					{
-						stop( );
-						Debug.Log( "Can't move, at end" );
+						Debug.LogError( "NumJumps = " + numJumps + " fsp= "+foundSpinePoint.gameObject.name );
+					//	Init( foundSpinePoint, newT );
+					}
+
+					if (newT < 1f)
+					{
+						Init( foundSpinePoint, newT );
 					}
 				}
 			}
@@ -151,15 +169,25 @@ namespace RJWard.Tube.Camera
 					transform.position = pos;
 
 					Vector3 lookAtPos = Vector3.zero;
-					if (lastSpinePoint_.InterpolateForwardWorld((t+0.1f), ref lookAtPos))
+					float tdiff = 0.01f;
+					float newT = t + tdiff;
+					if (newT <= 1f)
 					{
-						if (Vector3.Distance(pos, lookAtPos) > 0.001f)
+						if (lastSpinePoint_.InterpolateForwardWorld( (newT), ref lookAtPos ))
 						{
-							transform.LookAt( lookAtPos );
+							if (Vector3.Distance( pos, lookAtPos ) > 0.001f)
+							{
+								transform.LookAt( lookAtPos );
+							}
+							else
+							{
+								Debug.LogWarning( "Failed to set camera position" );
+							}
 						}
 						else
 						{
-							Debug.LogWarning( "Failed to set camera position" );
+							Debug.LogError( "Stopped" );
+							stop( );
 						}
 					}
 				}

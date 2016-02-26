@@ -93,6 +93,7 @@ namespace RJWard.Tube
 			if (t < 0f || t > 1f)
 			{
 				Debug.LogWarning( "t = " + t );
+				return false;
 			}
 			t = Mathf.Clamp01( t );
 
