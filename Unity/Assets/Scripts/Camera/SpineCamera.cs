@@ -21,6 +21,7 @@ namespace RJWard.Tube.Camera
 				modSpinePoint = null;
 				Debug.Log( "Spine point changed" );
 				Init( pointToMod, 0f );
+				TestSceneManager.Instance.cameraOnHook = false;
 			}
 		}
 

@@ -71,7 +71,7 @@ namespace RJWard.Tube
 				tsNumber++;
 			}
 
-			for (int i = 10; i>-1; i--)
+			for (int i = 4; i>-1; i--)
 			{
 				Debug.Log( "Waiting for " + i );
 				yield return new WaitForSeconds( 1f );

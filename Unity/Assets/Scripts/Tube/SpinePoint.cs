@@ -96,7 +96,7 @@ namespace RJWard.Tube
 			}
 			t = Mathf.Clamp01( t );
 
-			if (false)// (forwardInterpolator != null)
+			if (forwardInterpolator != null)
 			{
 				if (nextSpinePoint_ == null)
 				{
