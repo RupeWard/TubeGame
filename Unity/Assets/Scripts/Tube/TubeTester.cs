@@ -12,6 +12,8 @@ namespace RJWard.Tube
 		public float startRadius = 5f;
 		public float endRadius = 8f;
 
+		public int delaySecs = 10;
+
 		public int numHoopPoints = 10;
 
 		public Material tubeWallMaterial;
@@ -71,7 +73,7 @@ namespace RJWard.Tube
 				tsNumber++;
 			}
 
-			for (int i = 4; i>-1; i--)
+			for (int i = delaySecs; i>-1; i--)
 			{
 				Debug.Log( "Waiting for " + i );
 				yield return new WaitForSeconds( 1f );
