@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace RJWard.Tube.Camera
 {
+	[RequireComponent (typeof(UnityEngine.Camera))]
 	public class SpineCamera : MonoBehaviour
 	{
 		private Transform cachedTransform_ = null;
@@ -19,6 +20,8 @@ namespace RJWard.Tube.Camera
 #endif
 		private float currentSpeed = 0f;
 		private float currentAcc = 0f;
+
+		private UnityEngine.Camera camera_;
 
 		public void stop()
 		{
@@ -39,6 +42,26 @@ namespace RJWard.Tube.Camera
 		public void killPower()
 		{
 			currentAcc = 0f;
+		}
+
+		public void showDebugObjects(bool show)
+		{
+			int debugObjectsLayer = 1 << LayerMask.NameToLayer( "DebugObjects" );
+			if (show)
+			{
+				camera_.cullingMask = camera_.cullingMask | debugObjectsLayer;
+			}
+			else
+			{
+				camera_.cullingMask = camera_.cullingMask & ~debugObjectsLayer;
+			}
+		}
+
+		public void toggleDebugObjects(  )
+		{
+			int debugObjectsLayer = 1 << LayerMask.NameToLayer( "DebugObjects" );
+			bool isShowing = (camera_.cullingMask & debugObjectsLayer) != 0;
+			showDebugObjects( !isShowing );
 		}
 
 		void Update()
@@ -133,6 +156,7 @@ namespace RJWard.Tube.Camera
 		void Awake()
 		{
 			cachedTransform_ = transform;
+			camera_ = GetComponent<UnityEngine.Camera>( );
 		}
 
 		private RJWard.Tube.SpinePoint lastSpinePoint_ = null;

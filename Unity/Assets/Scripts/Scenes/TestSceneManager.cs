@@ -90,5 +90,9 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		mainCamera.killPower( );
 	}
 
+	public void HandleDebugButtonPressed()
+	{
+		mainCamera.toggleDebugObjects( );
+	}
 
 }
