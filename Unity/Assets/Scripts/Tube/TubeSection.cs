@@ -19,6 +19,51 @@ namespace RJWard.Tube
 			isMeshDirty_ = true;
 		}
 
+		public Hoop LastHoop()
+		{
+			Hoop result = null;
+			if (spine_ != null)
+			{
+				SpinePoint sp = spine_.GetSpinePoint( spine_.NumSpinePoints - 1 );
+				if (sp != null)
+				{
+					result = sp.hoop;
+				}
+				else
+				{
+					Debug.LogWarning( "No last spinepoint on " + this.gameObject.name );
+				}
+			}
+			else
+			{
+				Debug.LogWarning( "No spine on " + this.gameObject.name );
+			}
+			return result;
+		}
+
+		public Hoop FirstHoop( )
+		{
+			Hoop result = null;
+			if (spine_ != null)
+			{
+				SpinePoint sp = spine_.GetSpinePoint( 0 );
+				if (sp != null)
+				{
+					result = sp.hoop;
+				}
+				else
+				{
+					Debug.LogWarning( "No first spinepoint on " + this.gameObject.name );
+				}
+			}
+			else
+			{
+				Debug.LogWarning( "No spine on " + this.gameObject.name );
+			}
+			return result;
+		}
+
+
 		public static TubeSection CreateCircular( string n, TubeSectionDefinition tsd, Material mat )
 		{
 			GameObject tsGo = new GameObject( n );
@@ -259,11 +304,12 @@ namespace RJWard.Tube
 				Debug.Log( debugSb.ToString( ) );
 			}
 			yield return null;
+//			MakeMesh( );
 			remakeMeshWhenDirty = true;
 			SetMeshDirty( );
 		}
 
-		private void Update()
+		private void LateUpdate()
 		{
 			if (remakeMeshWhenDirty && isMeshDirty_)
 			{

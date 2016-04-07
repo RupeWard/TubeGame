@@ -25,16 +25,15 @@ namespace RJWard.Tube
 		// Use this for initialization
 		void Start( )
 		{
-			StartCoroutine( CreateFromSourcesInContainerCR( testTubeContainer ) );
+			StartCoroutine( CreateFromSourcesInContainerCR( testTubeContainer, HandleInitialTubesectionMade ) );
 
 		}
 
 		private int tsNumber = 0;
 
-		private IEnumerator CreateFromSourcesInContainerCR(Transform container)
+		private IEnumerator CreateFromSourcesInContainerCR( Transform container, System.Action<TubeSection> onTubeSectionMadeAction)
 		{
 			yield return null;
-//			TubeSection TS = TubeSection.CreateLinear( pos1.position, null, pos2.position, null, num, startRadius, endRadius, tubeWallMaterial ); 
 
 			if (testTubeContainer != null)
 			{
@@ -68,19 +67,58 @@ namespace RJWard.Tube
 
 				Debug.Log( sb.ToString( ) );
 
-				tubeSection_ = TubeSection.CreateCircular("TS"+tsNumber.ToString(), tsd, tubeWallMaterial );
+				TubeSection newTs0 = TubeSection.CreateCircular("TS"+tsNumber.ToString(), tsd, tubeWallMaterial );
 				testTubeContainer.gameObject.SetActive( false );
 				tsNumber++;
+
+				for (int i = delaySecs; i > -1; i--)
+				{
+					Debug.Log( "Waiting for " + i );
+					yield return new WaitForSeconds( 1f );
+				}
+				TubeSection newTs1 = TubeSection.CreateSplinar( "SPLINAR", newTs0, 5, tubeWallMaterial );
+				GameObject.Destroy( newTs0.gameObject );
+				yield return null;
+				yield return new WaitForSeconds(5f);
+				if (onTubeSectionMadeAction != null)
+				{
+					onTubeSectionMadeAction( newTs1 );
+				}
 			}
 
-			for (int i = delaySecs; i>-1; i--)
+		}
+
+		private void HandleInitialTubesectionMade(TubeSection ts)
+		{
+			tubeSection_ = ts;
+		}
+
+		public void AppendSectionToEnd(TubeSection ts)
+		{
+			Debug.Log( "Appending to end" );
+			ts.gameObject.name = "New_" + ts.gameObject.name;
+
+			Hoop lastHoopOfPrevious = tubeSection_.LastHoop( );
+			if (lastHoopOfPrevious == null)
 			{
-				Debug.Log( "Waiting for " + i );
-				yield return new WaitForSeconds( 1f );
+				Debug.LogWarning( "No last hoop of previous" );
 			}
-			TubeSection newTs = TubeSection.CreateSplinar( "SPLINAR", tubeSection_, 5, tubeWallMaterial );
-			tubeSection_.gameObject.SetActive( false );
-			tubeSection_ = newTs;
+			
+			Hoop firstHoop = ts.FirstHoop( );
+			if (firstHoop == null)
+			{
+				Debug.LogWarning( "No firstHoop" );
+			}
+
+			ts.gameObject.transform.Translate( lastHoopOfPrevious.transform.position - firstHoop.transform.position );
+
+		}
+
+		public void DuplicateSection()
+		{
+			Debug.Log( "DUPLICATING" );
+			StartCoroutine( CreateFromSourcesInContainerCR( testTubeContainer, AppendSectionToEnd ) );
+
 		}
 
 		// Update is called once per frame

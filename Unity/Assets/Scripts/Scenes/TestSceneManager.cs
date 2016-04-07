@@ -6,6 +6,7 @@ using RJWard.Tube.Camera;
 public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifetime<TestSceneManager>
 {
 	public SpineCamera mainCamera;
+	public TubeTester tubeTester;
 
 	public Transform cameraHook;
 
@@ -95,4 +96,8 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		mainCamera.toggleDebugObjects( );
 	}
 
+	public void HandleAppendTubeSectionButtonPressed()
+	{
+		tubeTester.DuplicateSection( );
+	}
 }
