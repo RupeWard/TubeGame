@@ -63,7 +63,7 @@ namespace RJWard.Tube
 			return result;
 		}
 
-
+		/*
 		public static TubeSection CreateCircular( string n, TubeSectionDefinition tsd, Material mat )
 		{
 			GameObject tsGo = new GameObject( n );
@@ -81,6 +81,7 @@ namespace RJWard.Tube
 
 			return result;
 		}
+		*/
 
 		private void Init(string n, Material mat)
 		{
@@ -90,7 +91,7 @@ namespace RJWard.Tube
 
 		}
 
-		private void InitCircular( string n, TubeSectionDefinition tsd, Material mat )
+		public void InitCircular( string n, TubeSectionDefinition tsd, Material mat )
 		{
 			Init( n, mat );
 
@@ -123,12 +124,13 @@ namespace RJWard.Tube
 
 		public void InitSplinar( string n, TubeSection srcTs, int numPerSection, Material mat )
 		{
-			remakeMeshWhenDirty = false;
 			StartCoroutine( InitSplinarCR(n, srcTs, numPerSection, mat ) );
         }
 
-		private IEnumerator InitSplinarCR(string n, TubeSection srcTs, int numPerSection, Material mat)
+		public IEnumerator InitSplinarCR(string n, TubeSection srcTs, int numPerSection, Material mat)
 		{
+			remakeMeshWhenDirty = false;
+			
 			Init( n + "_SPL", mat );
 
 			debugSb.Length = 0;

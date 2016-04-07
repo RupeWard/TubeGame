@@ -25,68 +25,9 @@ namespace RJWard.Tube
 		// Use this for initialization
 		void Start( )
 		{
-			StartCoroutine( CreateFromSourcesInContainerCR( testTubeContainer, HandleInitialTubesectionMade ) );
-
+			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, HandleInitialTubesectionMade );
 		}
 
-		private int tsNumber = 0;
-
-		private IEnumerator CreateFromSourcesInContainerCR( Transform container, System.Action<TubeSection> onTubeSectionMadeAction)
-		{
-			yield return null;
-
-			if (testTubeContainer != null)
-			{
-				System.Text.StringBuilder sb = new System.Text.StringBuilder( );
-
-				TubeSectionDefinition tsd = new TubeSectionDefinition( );
-
-				sb.Append( "Building Tube Section" );
-
-                SpinePointSource[] spinePointSources = container.GetComponentsInChildren<SpinePointSource>( );
-				sb.Append( "\nFound " ).Append( spinePointSources.Length ).Append( " sources" );
-
-				for (int i = 0; i < spinePointSources.Length; i++)
-				{
-					SpinePointSource sps = spinePointSources[i];
-					sb.Append( "\n " ).Append( i ).Append(": ").DebugDescribe(sps );
-
-					Vector3 pos = sps.transform.position;
-					Vector3? rot = null;
-					if (sps.fixRotation)
-					{
-						rot = sps.transform.rotation.eulerAngles;
-					}
-					float rad = sps.radius;
-
-					SpinePointDefinition spd = new SpinePointDefinition( pos, rot, numHoopPoints, rad );
-					tsd.AddSpinePointDefn( spd );
-
-					sb.Append( "\n  Added as " ).DebugDescribe( spd );
-				}
-
-				Debug.Log( sb.ToString( ) );
-
-				TubeSection newTs0 = TubeSection.CreateCircular("TS"+tsNumber.ToString(), tsd, tubeWallMaterial );
-				testTubeContainer.gameObject.SetActive( false );
-				tsNumber++;
-
-				for (int i = delaySecs; i > -1; i--)
-				{
-					Debug.Log( "Waiting for " + i );
-					yield return new WaitForSeconds( 1f );
-				}
-				TubeSection newTs1 = TubeSection.CreateSplinar( "SPLINAR", newTs0, 5, tubeWallMaterial );
-				GameObject.Destroy( newTs0.gameObject );
-				yield return null;
-				yield return new WaitForSeconds(5f);
-				if (onTubeSectionMadeAction != null)
-				{
-					onTubeSectionMadeAction( newTs1 );
-				}
-			}
-
-		}
 
 		private void HandleInitialTubesectionMade(TubeSection ts)
 		{
@@ -117,7 +58,7 @@ namespace RJWard.Tube
 		public void DuplicateSection()
 		{
 			Debug.Log( "DUPLICATING" );
-			StartCoroutine( CreateFromSourcesInContainerCR( testTubeContainer, AppendSectionToEnd ) );
+			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, AppendSectionToEnd );
 
 		}
 
