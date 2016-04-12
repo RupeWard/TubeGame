@@ -25,6 +25,11 @@ namespace RJWard.Tube
 			sb.Append( "CIRC,R=" ).Append( radius );
 		}
 
+		override public void AddToSpine( Spine sp )
+		{
+			sp.AddCircularSpinePoint( this );
+		}
+
 	}
 }
 

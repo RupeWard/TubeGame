@@ -5,53 +5,49 @@ namespace RJWard.Tube
 {
 	public class SpinePointDefinition : RJWard.Core.IDebugDescribable
 	{
-		private Vector3 position_ = Vector3.zero;
-		private Vector3? rotation_ = null;
-		private float hoopRadius_ = 0f;
-		private int numHoopPoints_ = 10;
+		private HoopDefinition_Base hoopDefn_ = null;
+		public HoopDefinition_Base hoopDefn
+		{
+			get { return hoopDefn_; }
+		}
+
+		//		private Vector3 position_ = Vector3.zero;
+		//		private Vector3? rotation_ = null;
+		//		private float hoopRadius_ = 0f;
+		//		private int numHoopPoints_ = 10;
 
 		public Vector3 position
 		{
-			get { return position_;  }
+			get { return hoopDefn_.position;  }
 		}
 
 		public Vector3? rotation
 		{
-			get { return rotation_; }
+			get { return hoopDefn_.rotation; }
 		}
 
-		public float radius
-		{
-			get { return hoopRadius_;  }
-		}
+//		public float radius
+//		{
+//			get { return hoopRadius_;  }
+//		}
 
 		public int numHoopPoints
 		{
-			get { return numHoopPoints_; }
+			get { return hoopDefn_.numHoopPoints; }
 		}
 
-		public SpinePointDefinition( Vector3 p, Vector3? ro, int nh, float ra )
+		public SpinePointDefinition( HoopDefinition_Base hdb )
 		{
-			position_ = p;
-			rotation_ = ro;
-			hoopRadius_ = ra;
-			numHoopPoints_ = nh;
+			hoopDefn_ = hdb;
 		}
 
 		private SpinePointDefinition( ) { }
 
 		public void DebugDescribe(System.Text.StringBuilder sb)
 		{
-			sb.Append( "SPD @" ).Append( position ).Append( " RO=" );
-			if (rotation != null)
-			{
-				sb.Append( rotation );
-			}
-			else
-			{
-				sb.Append( "free" );
-			}
-			sb.Append( " RA=" ).Append( radius ).Append(" N=").Append(numHoopPoints_);
+			sb.Append( "SPD (" );
+			hoopDefn_.DebugDescribe( sb );
+			sb.Append( ")" );
 		}
 
 	}

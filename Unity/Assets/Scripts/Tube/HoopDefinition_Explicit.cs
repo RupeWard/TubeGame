@@ -34,6 +34,12 @@ namespace RJWard.Tube
 			}
 		}
 
+		override public void AddToSpine( Spine sp )
+		{
+			Debug.LogError( "Not implemented" );
+			throw new System.InvalidOperationException( "not implememted" );
+		}
+
 	}
 }
 

@@ -76,7 +76,7 @@ namespace RJWard.Tube
 					}
 					float rad = sps.radius;
 
-					SpinePointDefinition spd = new SpinePointDefinition( pos, rot, numHoopPoints, rad );
+					SpinePointDefinition spd = new SpinePointDefinition( new HoopDefinition_Circular( pos, rot, numHoopPoints, rad ));
 					tsd.AddSpinePointDefn( spd );
 
 					sb.Append( "\n  Added as " ).DebugDescribe( spd );

@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace RJWard.Tube
 {
-	public class HoopDefinition_Base : RJWard.Core.IDebugDescribable
+	abstract public class HoopDefinition_Base : RJWard.Core.IDebugDescribable
 	{
 		private Vector3 position_ = Vector3.zero;
 		private Vector3? rotation_ = null;
@@ -52,6 +52,8 @@ namespace RJWard.Tube
 		protected virtual void DebugDescribeDetails( System.Text.StringBuilder sb)
 		{
 		}
+
+		abstract public void AddToSpine( Spine sp );
 	}
 }
 

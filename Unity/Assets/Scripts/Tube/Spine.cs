@@ -63,12 +63,24 @@ namespace RJWard.Tube
 			return spinePoint;
 		}
 
+		/*
 		public void AddCircularSpinePoint(SpinePointDefinition spd)
 		{
 			AddCircularSpinePoint( spd.position, spd.rotation, spd.numHoopPoints, spd.radius);
 		}
+		*/
 
-		public void AddCircularSpinePoint( Vector3 pos, Vector3? rot, int num,  float radius )
+		public void AddSpinePoint( HoopDefinition_Base hdb)
+		{
+			hdb.AddToSpine( this );
+		}
+
+		public void AddCircularSpinePoint( HoopDefinition_Circular hdc )
+		{
+			AddCircularSpinePoint( hdc.position, hdc.rotation, hdc.numHoopPoints, hdc.radius );
+		}
+
+		private void AddCircularSpinePoint( Vector3 pos, Vector3? rot, int num,  float radius )
 		{
 			SpinePoint spinePoint = AddHoopLess( pos );
 			spinePoint.InitCircular( this, pos, rot, num, radius );

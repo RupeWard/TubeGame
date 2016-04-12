@@ -109,7 +109,8 @@ namespace RJWard.Tube
 				SpinePointDefinition spd = tsd.GetSpinePointDefn( i );
 				if (spd != null)
 				{
-					spine_.AddCircularSpinePoint( spd );
+					spine_.AddSpinePoint( spd.hoopDefn );
+//					spine_.AddCircularSpinePoint( spd.hoopDefn );
 					debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( spd );
 				}
 				else
@@ -343,7 +344,7 @@ namespace RJWard.Tube
 					rot = endRotation;
 				}
 				float interpolator = (float)i / (num - 1);
-                result.spine_.AddCircularSpinePoint( Vector3.Lerp(start, end,  interpolator) , rot, numHoopPoints, Mathf.Lerp(startRadius, endRadius,  interpolator));
+                result.spine_.AddSpinePoint( new HoopDefinition_Circular( Vector3.Lerp(start, end,  interpolator) , rot, numHoopPoints, Mathf.Lerp(startRadius, endRadius,  interpolator)));
 			}
 
 			return result;

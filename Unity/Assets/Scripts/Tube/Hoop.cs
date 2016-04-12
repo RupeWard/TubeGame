@@ -30,17 +30,21 @@ namespace RJWard.Tube
 			}
 		}
 
-		private Hoop nextHoop_ = null;
-		public Hoop nextHoop
-		{
-			get { return nextHoop_; }
-		}
+//		private List<Hoop> nextHoops_ = new List<Hoop>( );
 
-		private Hoop previousHoop_ = null;
-		public Hoop previousHoop
-		{
-			get { return previousHoop_; }
-		}
+		//		private Hoop nextHoop_ = null;
+		//		public Hoop nextHoop
+		//		{
+		//			get { return nextHoop_; }
+		//		}
+
+//		private List<Hoop> previousHoops_ = new List<Hoop>( );
+
+//		private Hoop previousHoop_ = null;
+//		public Hoop previousHoop
+//		{
+//			get { return previousHoop_; }
+//		}
 
 		private List<HoopPoint> hoopPoints_ = new List<HoopPoint>( );
 
