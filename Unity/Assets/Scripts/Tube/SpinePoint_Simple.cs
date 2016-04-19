@@ -12,7 +12,10 @@ namespace RJWard.Tube
 		}
 
 		private bool fixedRotation_ = false;
-
+		public void fixRotation()
+		{
+			fixedRotation_ = true;
+		}
 		override public bool isFirst( )
 		{
 			return previousSpinePoint_ == null;
@@ -47,10 +50,10 @@ namespace RJWard.Tube
 				{
 					Debug.LogWarning( "Why setting nextSpinePoint to null?" );
 				}
-				if (previousSpinePoint_ != null)
-				{
-					previousSpinePoint_.SetRotationDirty( );
-				}
+//				if (previousSpinePoint_ != null)
+	//			{
+		//			previousSpinePoint_.SetRotationDirty( );
+			//	}
 			}
 		}
 
@@ -77,10 +80,10 @@ namespace RJWard.Tube
 				{
 					Debug.LogWarning( "Why setting previousSpinePoint to null?" );
 				}
-				if (nextSpinePoint_ != null)
-				{
-					nextSpinePoint_.SetRotationDirty( );
-				}
+//				if (nextSpinePoint_ != null)
+	//			{
+		//			nextSpinePoint_.SetRotationDirty( );
+			//	}
 			}
 		}
 
@@ -167,6 +170,10 @@ namespace RJWard.Tube
 			{
 				rotationIsDirty_ = true;
 			}
+			else
+			{
+				Debug.LogWarning( "Setting rotation when fixed" );
+			}
 		}
 
 		private float rotationPositionFraction = 0.1f;
@@ -195,11 +202,11 @@ namespace RJWard.Tube
 					}
 					Vector3? posBefore = null;
 
-					if ( previousSpinePoint_ != null && previousSpinePoint_.previousSpinePoint != null && nextSpinePoint_ != null )
+					if (previousSpinePoint_ != null && previousSpinePoint_.previousSpinePoint != null && nextSpinePoint_ != null)
 					{
 
 						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
-							(	previousSpinePoint_.previousSpinePoint.transform.position,
+							( previousSpinePoint_.previousSpinePoint.transform.position,
 								previousSpinePoint_.transform.position,
 								transform.position,
 								nextSpinePoint_.transform.position );
@@ -267,25 +274,44 @@ namespace RJWard.Tube
 					if (posBefore != null && posAfter != null)
 					{
 						Vector3 dirn = (Vector3)posAfter - (Vector3)posBefore;
+
 						transform.LookAt( transform.position + dirn );
 						rotationIsDirty_ = false;
 						if (DEBUG_ROTATIONS)
 						{
 							debugSB.Append( "\nUpdated rotation " );
 							Debug.Log( debugSB.ToString() );
+							debugSB.Length = 0;
+						}
+					}
+					else if (posAfter != null)
+					{
+						transform.LookAt( (Vector3)posAfter );
+						rotationIsDirty_ = false;
+						if (DEBUG_ROTATIONS)
+						{
+							debugSB.Append( "\nUpdated rotation using after only" );
+							Debug.Log( debugSB.ToString( ) );
+							debugSB.Length = 0;
 						}
 					}
 					else
 					{
 						if (DEBUG_ROTATIONS)
 						{
+							rotationIsDirty_ = false;
 							debugSB.Append( "\n!! Unable to update rotation " );
 							Debug.LogWarning( "Unable to " + debugSB );
+							debugSB.Length = 0;
 						}
 					}
-
 				}
-				spine_.SetDirty( );
+//				spine_.SetDirty( );
+				if (debugSB.Length > 0)
+				{
+					Debug.Log( debugSB );
+				}
+				rotationIsDirty_ = false;
 			}
 		}
 

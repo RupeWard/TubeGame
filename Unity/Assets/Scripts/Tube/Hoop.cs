@@ -171,7 +171,7 @@ namespace RJWard.Tube
 			for (int i = 0; i < hoopPoints_.Count; i++)
 			{
 				hoopPoints_[i].vertexNumber = verts.Count;
-				verts.Add( hoopPoints_[i].transform.position);
+				verts.Add( hoopPoints_[i].transform.position );
 				uvs.Add( new Vector2( (float)i / (hoopPoints_.Count), v ) );
 
 				dirn = spinePoint.transform.position - hoopPoints_[i].transform.position;

@@ -77,6 +77,15 @@ namespace RJWard.Tube
 		public void CreateRandomSection()
 		{
 			Debug.Log( "Randomising" );
+			randLinearSectionDefn.firstHoop = null;
+			if (tube_ != null)
+			{
+				Hoop lastHoop = tube_.LastHoop( );
+				if (lastHoop != null)
+				{
+					randLinearSectionDefn.initialRad = lastHoop.radius;
+				}
+			}
 			TubeFactory.Instance.CreateRandomLinearSection(randLinearSectionDefn,  HandleTubeSectionMade );
 		}
 	}

@@ -15,6 +15,7 @@ namespace RJWard.Tube
 			public Vector2 radRange = new Vector2( 0.5f, 3f);
 			public float maxRadD = 0.5f;
 			public int numHoopPoints = 10;
+			public HoopDefinition_Explicit firstHoop = null;
 
 			public void DebugDescribe(System.Text.StringBuilder sb)
 			{
@@ -44,14 +45,25 @@ namespace RJWard.Tube
 
 			float radius = settings.initialRad;
 
-			HoopDefinition_Circular hdc = new HoopDefinition_Circular( Vector3.zero, null, settings.numHoopPoints, radius );
-			defn.AddHoopDefn( hdc );
+			HoopDefinition_Base previous = null;
+			if (settings.firstHoop != null)
+			{
+				Debug.LogError( "Not checked" );
+				defn.AddHoopDefn( settings.firstHoop );
+				previous = settings.firstHoop;
+				sb.Append( "\n COPIED first hoop defn :" ).DebugDescribe( settings.firstHoop);
+			}
+			else
+			{
+				HoopDefinition_Circular hdc = new HoopDefinition_Circular( Vector3.zero, Vector3.forward, settings.numHoopPoints, radius );
+				defn.AddHoopDefn( hdc );
+				previous = hdc;
+				sb.Append( "\n CREATED first hoop defn :" ).DebugDescribe( hdc );
+			}
 			yield return null;
 
-			sb.Append( "\n created first hoop defn :" ).DebugDescribe( hdc );
 			Vector3 direction = Vector3.forward;
 
-			HoopDefinition_Circular previous = hdc;
 			for (int i = 1; i < settings.numHoops; i++)
 			{
 				Vector3 pos = previous.position + direction * settings.separation;
@@ -61,7 +73,7 @@ namespace RJWard.Tube
 				HoopDefinition_Circular hdcnew = new HoopDefinition_Circular( pos, null, settings.numHoopPoints, radius );
 				defn.AddHoopDefn( hdcnew );
 				previous = hdcnew;
-				sb.Append( "\n created hoop defn ").Append(i).Append(":" ).DebugDescribe( hdc );
+				sb.Append( "\n created hoop defn ").Append(i).Append(":" ).DebugDescribe( hdcnew );
 
 				float xAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD);
 				float yAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD );
@@ -99,7 +111,7 @@ namespace RJWard.Tube
 			}
 			GameObject tsGo = new GameObject( n );
 			tmpTubeSection_= tsGo.AddComponent<TubeSection_Linear>( );
-			yield return StartCoroutine(tmpTubeSection_.InitSplinarCR( n, ts, numPerSection, mat )); // TOD CR
+			yield return StartCoroutine(tmpTubeSection_.InitSplinarCR( n, ts, numPerSection, mat ));
 			yield return null;
 			if (onCreatedAction != null)
 			{

@@ -30,6 +30,10 @@ namespace RJWard.Tube
 			position_ = p;
 			rotation_ = ro;
 			numHoopPoints_ = nh;
+			if (numHoopPoints_ == 0)
+			{
+				Debug.LogError( "no hp" );
+			}
 		}
 
 		protected HoopDefinition_Base( ) { }
@@ -53,7 +57,7 @@ namespace RJWard.Tube
 		{
 		}
 
-		abstract public void AddToSpine( Spine sp );
+		abstract public void AddToSpine( Spine sp, bool fixedRotation );
 	}
 }
 

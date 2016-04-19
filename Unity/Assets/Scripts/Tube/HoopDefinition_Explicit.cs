@@ -34,7 +34,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		override public void AddToSpine( Spine sp )
+		override public void AddToSpine( Spine sp, bool fixedRotation )
 		{
 			Debug.LogError( "Not implemented" );
 			throw new System.InvalidOperationException( "not implememted" );

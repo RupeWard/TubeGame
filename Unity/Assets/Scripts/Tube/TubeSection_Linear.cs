@@ -6,7 +6,24 @@ namespace RJWard.Tube
 {
 	public class TubeSection_Linear : MonoBehaviour
 	{
-		public bool remakeMeshWhenDirty = true;
+		public void ConnectAfterSpinePoint(SpinePoint_Simple sp)
+		{
+			if (spine_ != null && spine_.NumSpinePoints > 0)
+			{
+				SpinePoint_Simple mySp = spine_.GetSpinePoint( 0 );
+				mySp.previousSpinePoint = sp;
+				if (sp != null)
+				{
+					sp.nextSpinePoint = mySp;
+				}
+			}
+			else
+			{
+				sp.nextSpinePoint = null;
+			}
+		}
+
+		public bool remakeMeshWhenDirty = false;
 
 		private Spine spine_ = null;
 		private Material tubeWallMaterial_;
@@ -14,9 +31,18 @@ namespace RJWard.Tube
 		private static System.Text.StringBuilder debugSb = new System.Text.StringBuilder( );
 
 		private bool isMeshDirty_ = false;
-		public void SetMeshDirty ()
+		public void SetMeshDirty (bool force)
 		{
+			Debug.Log( "Setting mesh dirty on " + gameObject.name );
 			isMeshDirty_ = true;
+			if (force)
+			{
+				remakeMeshWhenDirty = true; 
+			}
+		}
+		public bool isMeshDirty
+		{
+			get { return isMeshDirty_; }
 		}
 
 		static int s_counter = 0;
@@ -96,7 +122,7 @@ namespace RJWard.Tube
 				HoopDefinition_Base hdb = tsd.GetHoopDefn( i );
 				if (hdb != null)
 				{
-					spine_.AddSpinePoint( hdb );
+					spine_.AddSpinePoint( hdb, i==0 );
 					debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( hdb );
 				}
 				else
@@ -202,7 +228,7 @@ namespace RJWard.Tube
 					int numNewPoints = spinePointPositions.Count;
 					for (int ptNum = 0; ptNum < numNewPoints; ptNum++ )
 					{
-						spine_.AddHoopLess( spinePointPositions[ptNum] );						
+						spine_.AddHoopLess( spinePointPositions[ptNum], ptNum==0  );						
 					}
 					debugSb.Append( "\n Made ").Append(spine_.NumSpinePoints).Append(" spine points, waiting for rotations" );
 					yield return null;
@@ -294,8 +320,8 @@ namespace RJWard.Tube
 			}
 			yield return null;
 //			MakeMesh( );
-			remakeMeshWhenDirty = true;
-			SetMeshDirty( );
+			//remakeMeshWhenDirty = true;
+			SetMeshDirty(false );
 		}
 
 		private void LateUpdate()
@@ -304,9 +330,17 @@ namespace RJWard.Tube
 			{
 				MakeMesh( );
 			}
+			else if (remakeMeshWhenDirty)
+			{
+//				Debug.LogWarning( "Not remaking as not dirty" );
+			}
+			else if (isMeshDirty_)
+			{
+				Debug.LogWarning( "Not remaking as not remaking when dirty" );
+			}
 		}
 
-		
+		/*
 		public static TubeSection_Linear CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, int numHoopPoints, Material mat )
 		{			
 			GameObject tsGo = new GameObject( "TubeSection_Linear" );
@@ -330,11 +364,11 @@ namespace RJWard.Tube
 					rot = endRotation;
 				}
 				float interpolator = (float)i / (num - 1);
-                result.spine_.AddSpinePoint( new HoopDefinition_Circular( Vector3.Lerp(start, end,  interpolator) , rot, numHoopPoints, Mathf.Lerp(startRadius, endRadius,  interpolator)));
+                result.spine_.AddSpinePoint( new HoopDefinition_Circular( Vector3.Lerp(start, end,  interpolator) , rot, numHoopPoints, Mathf.Lerp(startRadius, endRadius,  interpolator)), i==0);
 			}
 
 			return result;
-		}
+		}*/
 
 		private void MakeMesh()
 		{
@@ -364,6 +398,10 @@ namespace RJWard.Tube
 			{
 				meshFilter.sharedMesh = new Mesh( );
 				mesh = meshFilter.sharedMesh;
+			}
+			else
+			{
+				Debug.LogError( "Remaking mesh" );
 			}
 			mesh.Clear( );
 
