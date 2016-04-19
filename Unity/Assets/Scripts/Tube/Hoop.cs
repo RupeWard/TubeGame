@@ -22,7 +22,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void SetDirty()
+		public void SetDirty( )
 		{
 			if (spinePoint_ != null)
 			{
@@ -38,17 +38,34 @@ namespace RJWard.Tube
 			get { return spinePoint_; }
 		}
 
-		public int numPoints()
+		public int numPoints( )
 		{
 			return hoopPoints_.Count;
 		}
 
-		public HoopPoint GetHoopPoint(int index)
+		public HoopPoint GetHoopPoint( int index )
 		{
 			return hoopPoints_[index];
 		}
 
-		private float radius_ = 0f;
+		private float radius_ = -1f;
+		public float radius
+		{
+			get
+			{
+				if (radius_ != -1f)
+				{
+					return radius_;
+				}
+				float total = 0f;
+				for (int i = 0; i < hoopPoints_.Count; i++)
+				{
+					total += hoopPoints_[i].transform.localPosition.magnitude;
+				}
+				total = total / hoopPoints_.Count;
+				return total;
+			}
+		}
 
 		public void Init( SpinePoint_Simple sp )
 		{
@@ -60,11 +77,11 @@ namespace RJWard.Tube
 
 			spinePoint_ = sp;
 		}
-	
-		public HoopPoint AddHoopPoint(Vector3 pos)
+
+		public HoopPoint AddHoopPoint( Vector3 pos )
 		{
 			int n = hoopPoints_.Count;
-			GameObject hoopPointGO = new GameObject( this.gameObject.name + "_HP"+n.ToString() );
+			GameObject hoopPointGO = new GameObject( this.gameObject.name + "_HP" + n.ToString( ) );
 			HoopPoint hoopPoint = hoopPointGO.AddComponent<HoopPoint>( );
 			hoopPointGO.transform.parent = this.transform;
 			hoopPointGO.transform.position = pos;
@@ -75,13 +92,13 @@ namespace RJWard.Tube
 			return hoopPoint;
 		}
 
-		public Color GetColourForPoint(HoopPoint hp)
+		public Color GetColourForPoint( HoopPoint hp )
 		{
 			float f = (float)hp.hoopIndex / (hoopPoints_.Count - 1);
 			return Color.Lerp( firstPointColour_, endPointColor_, f );
 		}
 
-		public void CreateHoopPointsCircular( int num, float radius)
+		public void CreateHoopPointsCircular( int num, float radius )
 		{
 			radius_ = radius;
 			if (DEBUG_HOOP)
@@ -105,7 +122,7 @@ namespace RJWard.Tube
 				}
 				hoopPoints_.Clear( );
 			}
-			GameObject firstHoopPointGO = new GameObject( this.gameObject.name+"_HP0" );
+			GameObject firstHoopPointGO = new GameObject( this.gameObject.name + "_HP0" );
 			HoopPoint firstHoopPoint = firstHoopPointGO.AddComponent<HoopPoint>( );
 			firstHoopPointGO.transform.parent = this.transform;
 			firstHoopPointGO.transform.localPosition = new Vector3( radius_, 0f, 0f );
@@ -119,7 +136,7 @@ namespace RJWard.Tube
 
 			for (int i = 1; i < num; i++)
 			{
-				GameObject nextHoopPointGO = new GameObject( this.gameObject.name+"_HP" + i.ToString( ) );
+				GameObject nextHoopPointGO = new GameObject( this.gameObject.name + "_HP" + i.ToString( ) );
 				HoopPoint nextHoopPoint = nextHoopPointGO.AddComponent<HoopPoint>( );
 				nextHoopPointGO.transform.parent = this.transform;
 				nextHoopPointGO.transform.localPosition = new Vector3( radius_, 0f, 0f );
@@ -151,17 +168,17 @@ namespace RJWard.Tube
 		{
 			Vector3 dirn;
 
-            for (int i = 0; i < hoopPoints_.Count; i++)
+			for (int i = 0; i < hoopPoints_.Count; i++)
 			{
 				hoopPoints_[i].vertexNumber = verts.Count;
-				verts.Add( hoopPoints_[i].transform.position );
-				uvs.Add( new Vector2( (float)i/(hoopPoints_.Count),v  ) );
-				
+				verts.Add( hoopPoints_[i].transform.position);
+				uvs.Add( new Vector2( (float)i / (hoopPoints_.Count), v ) );
+
 				dirn = spinePoint.transform.position - hoopPoints_[i].transform.position;
 				Vector3 normedDirn = dirn.normalized;
 
-				normals.Add( normedDirn);
-				hoopPoints_[i].LookAt(spinePoint.transform);
+				normals.Add( normedDirn );
+				hoopPoints_[i].LookAt( spinePoint.transform );
 			}
 			hoopPoints_[0].altVertexNumber = verts.Count;
 			verts.Add( hoopPoints_[0].transform.position );
@@ -171,7 +188,7 @@ namespace RJWard.Tube
 			normals.Add( dirn.normalized );
 		}
 
-		public static void AddConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts)
+		public static void AddConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts )
 		{
 			if (A.hoopPoints_.Count != B.hoopPoints_.Count)
 			{
@@ -198,7 +215,7 @@ namespace RJWard.Tube
 					*/
 
 					triVerts.Add( A.hoopPoints_[i].vertexNumber );
-					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber(nextIndex == 0) );
+					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
 					triVerts.Add( B.hoopPoints_[i].vertexNumber );
 
 					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
@@ -208,5 +225,10 @@ namespace RJWard.Tube
 			}
 		}
 
+		public HoopDefinition_Explicit ExplicitDefinition( )
+		{
+			HoopDefinition_Explicit result = new HoopDefinition_Explicit(this );
+			return result;
+		}
 	}
 }
