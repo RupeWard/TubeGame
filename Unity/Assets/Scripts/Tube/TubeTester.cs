@@ -32,8 +32,8 @@ namespace RJWard.Tube
 
 		public void NewFromSources()
 		{
-			ClearTubeSection( );
-			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, HandleInitialTubesectionMade );
+//			ClearTubeSection( );
+			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, HandleTubeSectionMade );
 		}
 
 		public void ClearTubeSection()
@@ -49,6 +49,18 @@ namespace RJWard.Tube
 		{
 			Debug.Log( "HandleInitialTubesectionMade" );
 			tubeSection_ = ts;
+		}
+
+		private void HandleTubeSectionMade( TubeSection_Linear ts)
+		{
+			if (tubeSection_ == null)
+			{
+				tubeSection_ = ts;
+			}
+			else
+			{
+				AppendSectionToEnd( ts );
+			}
 		}
 
 		public void AppendSectionToEnd(TubeSection_Linear ts)
@@ -72,10 +84,12 @@ namespace RJWard.Tube
 
 		}
 
-		public void DuplicateSection()
+		public void AppendSection()
 		{
-			Debug.Log( "DUPLICATING" );
-			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, AppendSectionToEnd );
+			Debug.Log( "DEFUNCT" );
+
+			//			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, AppendSectionToEnd );
+//			TubeFactory.Instance.CreateRandomLinearSection( randLinearSectionDefn, AppendSectionToEnd );
 
 		}
 
@@ -88,8 +102,7 @@ namespace RJWard.Tube
 		public void CreateRandomSection()
 		{
 			Debug.Log( "Randomising" );
-			ClearTubeSection( );
-			TubeFactory.Instance.CreateRandomLinearSection(randLinearSectionDefn,  HandleInitialTubesectionMade );
+			TubeFactory.Instance.CreateRandomLinearSection(randLinearSectionDefn,  HandleTubeSectionMade );
 		}
 	}
 

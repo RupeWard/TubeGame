@@ -102,7 +102,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void HandleAppendTubeSectionButtonPressed()
 	{
-		tubeTester.DuplicateSection( );
+		tubeTester.AppendSection( );
 	}
 
 	public void HandleRandomTubeSectionButtonPressed( )
