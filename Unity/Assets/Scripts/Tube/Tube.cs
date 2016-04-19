@@ -95,9 +95,10 @@ namespace RJWard.Tube
 						Debug.Log( "Moving to match prev section, rotation is "+ts.transform.rotation);				
 						Vector3 prevHoopRot = lastHoopOfPrevious.spinePoint.transform.rotation.eulerAngles;
 
-						//						ts.transform.rotation = lastHoopOfPrevious.transform.rotation;
+						ts.transform.rotation = lastHoopOfPrevious.spinePoint.transform.rotation; // SEEMS RIGHT
+						yield return null;
 //						ts.transform.rotation = Quaternion.Euler( lastHoopOfPrevious.spinePoint.transform.rotation.eulerAngles - firstHoop.spinePoint.transform.rotation.eulerAngles) * ts.transform.rotation;
-						ts.transform.Translate( lastHoopOfPrevious.transform.position - firstHoop.transform.position );
+						ts.transform.position = lastHoopOfPrevious.spinePoint.transform.position  ;
 
 						// need to rotate ts so first hoop at same orientation as previous
 
