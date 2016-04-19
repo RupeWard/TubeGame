@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
@@ -63,6 +62,13 @@ namespace RJWard.Tube
 				defn.AddHoopDefn( hdcnew );
 				previous = hdcnew;
 				sb.Append( "\n created hoop defn ").Append(i).Append(":" ).DebugDescribe( hdc );
+
+				float xAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD);
+				float yAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD );
+
+				Quaternion rot = Quaternion.Euler( new Vector3( xAngle, yAngle, 0f ) );
+				direction = rot * direction;
+
 			}
 			yield return StartCoroutine( CreateSectionFromDefinitionCR( defn, onCreatedAction, sb ) );
 			Debug.Log( sb.ToString( ) );
