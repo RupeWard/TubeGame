@@ -3,27 +3,29 @@ using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
-	public class SpinePoint : MonoBehaviour, RJWard.Core.IDebugDescribable
+	public class SpinePoint_Simple : SpinePoint_Base, RJWard.Core.IDebugDescribable
 	{
-		private Spine spine_ = null;
-
 		private Hoop hoop_ = null;
 		public Hoop hoop
 		{
 			get { return hoop_; }
 		}
 
-//		private float radius_ = 0f;
-
 		private bool fixedRotation_ = false;
 
-		public void SetDirty()
+		override public bool isFirst( )
 		{
-			spine_.SetDirty( );
+			return previousSpinePoint_ == null;
 		}
 
-		private SpinePoint nextSpinePoint_ = null;
-		public SpinePoint nextSpinePoint
+		override public bool isLast( )
+		{
+			return nextSpinePoint_ == null;
+		}
+
+
+		private SpinePoint_Simple nextSpinePoint_ = null;
+		public SpinePoint_Simple nextSpinePoint
 		{
 			get { return nextSpinePoint_;  }
 			set
@@ -52,8 +54,8 @@ namespace RJWard.Tube
 			}
 		}
 
-		private SpinePoint previousSpinePoint_ = null;
-		public SpinePoint previousSpinePoint
+		private SpinePoint_Simple previousSpinePoint_ = null;
+		public SpinePoint_Simple previousSpinePoint
 		{
 			get { return previousSpinePoint_;  }
 			set
@@ -157,7 +159,6 @@ namespace RJWard.Tube
 			}
 			return success;
 		}
-
 
 		private bool rotationIsDirty_ = false;
 		public void SetRotationDirty()
@@ -331,7 +332,7 @@ namespace RJWard.Tube
 
 		public void DebugDescribe(System.Text.StringBuilder sb)
 		{
-			sb.Append( "SP " ).Append( gameObject.name ).Append( " @" ).Append( transform.position );
+			sb.Append( "SPS " ).Append( gameObject.name ).Append( " @" ).Append( transform.position );
 			sb.Append( " P/N = (" );
 			if (previousSpinePoint_ == null)
 			{

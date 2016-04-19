@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
-	public class TubeSection : MonoBehaviour
+	public class TubeSection_Linear : MonoBehaviour
 	{
 		public bool remakeMeshWhenDirty = true;
 
@@ -19,12 +19,21 @@ namespace RJWard.Tube
 			isMeshDirty_ = true;
 		}
 
+		static int s_counter = 0;
+		int id_;
+
+		private void Awake()
+		{
+			id_ = s_counter;
+			s_counter++;
+		}
+
 		public Hoop LastHoop()
 		{
 			Hoop result = null;
 			if (spine_ != null)
 			{
-				SpinePoint sp = spine_.GetSpinePoint( spine_.NumSpinePoints - 1 );
+				SpinePoint_Simple sp = spine_.GetSpinePoint( spine_.NumSpinePoints - 1 );
 				if (sp != null)
 				{
 					result = sp.hoop;
@@ -46,7 +55,7 @@ namespace RJWard.Tube
 			Hoop result = null;
 			if (spine_ != null)
 			{
-				SpinePoint sp = spine_.GetSpinePoint( 0 );
+				SpinePoint_Simple sp = spine_.GetSpinePoint( 0 );
 				if (sp != null)
 				{
 					result = sp.hoop;
@@ -63,40 +72,18 @@ namespace RJWard.Tube
 			return result;
 		}
 
-		/*
-		public static TubeSection CreateCircular( string n, TubeSectionDefinition tsd, Material mat )
-		{
-			GameObject tsGo = new GameObject( n );
-			TubeSection result = tsGo.AddComponent<TubeSection>( );
-			result.InitCircular( n, tsd, mat );
-
-			return result;
-		}
-
-		public static TubeSection CreateSplinar( string n, TubeSection ts, int numPerSection, Material mat )
-		{
-			GameObject tsGo = new GameObject( n );
-			TubeSection result = tsGo.AddComponent<TubeSection>( );
-			result.InitSplinar( n, ts, numPerSection, mat );
-
-			return result;
-		}
-		*/
-
 		private void Init(string n, Material mat)
 		{
-			gameObject.name = n;
-
+			gameObject.name = id_.ToString()+"_" +n;
 			tubeWallMaterial_ = mat;
-
 		}
 
-		public void InitCircular( string n, TubeSectionDefinition tsd, Material mat )
+		public void InitCircular( string n, TubeSectionDefinition_Linear tsd, Material mat )
 		{
 			Init( n, mat );
 
 			debugSb.Length = 0;
-			debugSb.Append( "Creating TubeSection" );
+			debugSb.Append( "Creating TubeSection_Linear" );
 
 			GameObject spineGO = new GameObject( "SP"+n );
 			spine_ = spineGO.AddComponent<Spine>( );
@@ -106,12 +93,11 @@ namespace RJWard.Tube
 
 			for (int i = 0; i < tsd.NumSpinePoints; i++)
 			{
-				SpinePointDefinition spd = tsd.GetSpinePointDefn( i );
-				if (spd != null)
+				HoopDefinition_Base hdb = tsd.GetHoopDefn( i );
+				if (hdb != null)
 				{
-					spine_.AddSpinePoint( spd.hoopDefn );
-//					spine_.AddCircularSpinePoint( spd.hoopDefn );
-					debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( spd );
+					spine_.AddSpinePoint( hdb );
+					debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( hdb );
 				}
 				else
 				{
@@ -123,12 +109,12 @@ namespace RJWard.Tube
 			Debug.Log( debugSb.ToString( ) );
 		}
 
-		public void InitSplinar( string n, TubeSection srcTs, int numPerSection, Material mat )
+		public void InitSplinar( string n, TubeSection_Linear srcTs, int numPerSection, Material mat )
 		{
 			StartCoroutine( InitSplinarCR(n, srcTs, numPerSection, mat ) );
         }
 
-		public IEnumerator InitSplinarCR(string n, TubeSection srcTs, int numPerSection, Material mat)
+		public IEnumerator InitSplinarCR(string n, TubeSection_Linear srcTs, int numPerSection, Material mat)
 		{
 			remakeMeshWhenDirty = false;
 			
@@ -146,7 +132,7 @@ namespace RJWard.Tube
 			int numHoopPoints = int.MaxValue;
 			for (int i = 0; !abort && i < srcTs.spine_.NumSpinePoints; i++)
 			{
-				SpinePoint spt = srcTs.spine_.GetSpinePoint( i );
+				SpinePoint_Simple spt = srcTs.spine_.GetSpinePoint( i );
 				if (numHoopPoints != int.MaxValue && numHoopPoints != spt.hoop.numPoints( ))
 				{
 					Debug.LogError( "NumPoints mismatch" );
@@ -223,7 +209,7 @@ namespace RJWard.Tube
 
 					for (int ptNum = 0; ptNum < numNewPoints; ptNum++)
 					{
-						SpinePoint spinePoint = spine_.GetSpinePoint( ptNum );
+						SpinePoint_Simple spinePoint = spine_.GetSpinePoint( ptNum );
 						if (spinePoint == null)
 						{
 							Debug.LogError( "No spine point " + ptNum );
@@ -321,10 +307,10 @@ namespace RJWard.Tube
 		}
 
 		
-		public static TubeSection CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, int numHoopPoints, Material mat )
+		public static TubeSection_Linear CreateLinear( Vector3 start, Vector3? startRotation, Vector3 end, Vector3? endRotation, int num, float startRadius, float endRadius, int numHoopPoints, Material mat )
 		{			
-			GameObject tsGo = new GameObject( "TubeSection" );
-			TubeSection result = tsGo.AddComponent<TubeSection>( );
+			GameObject tsGo = new GameObject( "TubeSection_Linear" );
+			TubeSection_Linear result = tsGo.AddComponent<TubeSection_Linear>( );
 			result.tubeWallMaterial_ = mat;
 
 			GameObject spineGO = new GameObject( "Spine" );

@@ -30,26 +30,10 @@ namespace RJWard.Tube
 			}
 		}
 
-//		private List<Hoop> nextHoops_ = new List<Hoop>( );
-
-		//		private Hoop nextHoop_ = null;
-		//		public Hoop nextHoop
-		//		{
-		//			get { return nextHoop_; }
-		//		}
-
-//		private List<Hoop> previousHoops_ = new List<Hoop>( );
-
-//		private Hoop previousHoop_ = null;
-//		public Hoop previousHoop
-//		{
-//			get { return previousHoop_; }
-//		}
-
 		private List<HoopPoint> hoopPoints_ = new List<HoopPoint>( );
 
-		private SpinePoint spinePoint_ = null;
-		public SpinePoint spinePoint
+		private SpinePoint_Simple spinePoint_ = null;
+		public SpinePoint_Simple spinePoint
 		{
 			get { return spinePoint_; }
 		}
@@ -66,7 +50,7 @@ namespace RJWard.Tube
 
 		private float radius_ = 0f;
 
-		public void Init( SpinePoint sp )
+		public void Init( SpinePoint_Simple sp )
 		{
 			gameObject.name = "H" + sp.gameObject.name;
 

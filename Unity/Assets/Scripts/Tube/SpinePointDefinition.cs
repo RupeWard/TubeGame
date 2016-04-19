@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace RJWard.Tube
 {
+	/*
 	public class SpinePointDefinition : RJWard.Core.IDebugDescribable
 	{
 		private HoopDefinition_Base hoopDefn_ = null;
@@ -10,11 +11,6 @@ namespace RJWard.Tube
 		{
 			get { return hoopDefn_; }
 		}
-
-		//		private Vector3 position_ = Vector3.zero;
-		//		private Vector3? rotation_ = null;
-		//		private float hoopRadius_ = 0f;
-		//		private int numHoopPoints_ = 10;
 
 		public Vector3 position
 		{
@@ -25,11 +21,6 @@ namespace RJWard.Tube
 		{
 			get { return hoopDefn_.rotation; }
 		}
-
-//		public float radius
-//		{
-//			get { return hoopRadius_;  }
-//		}
 
 		public int numHoopPoints
 		{
@@ -51,5 +42,6 @@ namespace RJWard.Tube
 		}
 
 	}
+	*/
 }
 

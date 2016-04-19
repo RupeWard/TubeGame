@@ -15,6 +15,8 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	private Vector3 originalPosition_ = Vector3.zero;
 	private Quaternion originalRotation_ = Quaternion.identity;
 
+	public TubeFactory.RandLinearSectionDefn randLinearSectionDefn = new TubeFactory.RandLinearSectionDefn( );
+
 	public void SetCameraOffHook()
 	{
 		cameraOnHook_ = false;
@@ -49,14 +51,16 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void SetCameraToFirstSpinePoint()
 	{
-		SpinePoint[] spinePoints = Transform.FindObjectsOfType<SpinePoint>( );
+		Debug.LogWarning( "Setting to first camera position" );
+
+		SpinePoint_Base[] spinePoints = Transform.FindObjectsOfType<SpinePoint_Base>( );
 		if (spinePoints != null && spinePoints.Length > 0)
 		{
-			SpinePoint spFound = null;
+			SpinePoint_Base spFound = null;
 			for (int i = 0; i < spinePoints.Length; i++)
 			{
 				spFound = spinePoints[i];
-				if (spinePoints[i].previousSpinePoint == null)
+				if (spFound.isFirst())
 				{
 					break;
 				}
@@ -99,5 +103,21 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public void HandleAppendTubeSectionButtonPressed()
 	{
 		tubeTester.DuplicateSection( );
+	}
+
+	public void HandleRandomTubeSectionButtonPressed( )
+	{
+		Debug.Log( "Randomising" );
+		tubeTester.CreateRandomSection( );
+	}
+
+	public void HandleSourcesButtonPressed()
+	{
+		tubeTester.NewFromSources( );
+	}
+
+	public void HandleClearButtonPressed()
+	{
+		tubeTester.ClearTubeSection( );
 	}
 }

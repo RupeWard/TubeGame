@@ -20,21 +20,38 @@ namespace RJWard.Tube
 
 		public Transform testTubeContainer;
 
-		private TubeSection tubeSection_ = null;
+		private TubeSection_Linear tubeSection_ = null;
+
+		public TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
 
 		// Use this for initialization
 		void Start( )
 		{
+			TubeFactory.Instance.tubeWallMaterial = tubeWallMaterial;
+		}
+
+		public void NewFromSources()
+		{
+			ClearTubeSection( );
 			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, HandleInitialTubesectionMade );
 		}
 
-
-		private void HandleInitialTubesectionMade(TubeSection ts)
+		public void ClearTubeSection()
 		{
+			if (tubeSection_ != null)
+			{
+				GameObject.Destroy( tubeSection_.gameObject );
+			}
+			tubeSection_ = null;
+		}
+
+		private void HandleInitialTubesectionMade(TubeSection_Linear ts)
+		{
+			Debug.Log( "HandleInitialTubesectionMade" );
 			tubeSection_ = ts;
 		}
 
-		public void AppendSectionToEnd(TubeSection ts)
+		public void AppendSectionToEnd(TubeSection_Linear ts)
 		{
 			Debug.Log( "Appending to end" );
 			ts.gameObject.name = "New_" + ts.gameObject.name;
@@ -66,6 +83,13 @@ namespace RJWard.Tube
 		void Update( )
 		{
 
+		}
+
+		public void CreateRandomSection()
+		{
+			Debug.Log( "Randomising" );
+			ClearTubeSection( );
+			TubeFactory.Instance.CreateRandomLinearSection(randLinearSectionDefn,  HandleInitialTubesectionMade );
 		}
 	}
 

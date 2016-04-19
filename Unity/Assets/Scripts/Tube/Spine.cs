@@ -5,16 +5,16 @@ namespace RJWard.Tube
 {
 	public class Spine : MonoBehaviour
 	{
-		private TubeSection tubeSection_ = null;
+		private TubeSection_Linear tubeSection_ = null;
 
-		private List< SpinePoint > spinePoints_ = new List< SpinePoint >( );
+		private List< SpinePoint_Simple > spinePoints_ = new List< SpinePoint_Simple >( );
 
 		public int NumSpinePoints
 		{
 			get { return spinePoints_.Count;  }
 		}
 
-		public void Init(TubeSection ts)
+		public void Init(TubeSection_Linear ts)
 		{
 			tubeSection_ = ts;
 			transform.parent = tubeSection_.transform;
@@ -25,9 +25,9 @@ namespace RJWard.Tube
 			tubeSection_.SetMeshDirty( );
 		}
 
-		public SpinePoint GetSpinePoint(int index)
+		public SpinePoint_Simple GetSpinePoint(int index)
 		{
-			SpinePoint result = null;
+			SpinePoint_Simple result = null;
 			if (index >= 0  && index < NumSpinePoints)
 			{
 				result = spinePoints_[index];
@@ -45,10 +45,10 @@ namespace RJWard.Tube
 		}
 		*/
 
-		public SpinePoint AddHoopLess(Vector3 pos)
+		public SpinePoint_Simple AddHoopLess(Vector3 pos)
 		{
 			GameObject spGo = new GameObject( "SP_" + spinePoints_.Count.ToString( ) );
-			SpinePoint spinePoint = spGo.AddComponent<SpinePoint>( );
+			SpinePoint_Simple spinePoint = spGo.AddComponent<SpinePoint_Simple>( );
 			spinePoint.Init( this, pos, null );
 			spGo.transform.parent = this.transform;
 			spinePoints_.Add( spinePoint );
@@ -63,13 +63,6 @@ namespace RJWard.Tube
 			return spinePoint;
 		}
 
-		/*
-		public void AddCircularSpinePoint(SpinePointDefinition spd)
-		{
-			AddCircularSpinePoint( spd.position, spd.rotation, spd.numHoopPoints, spd.radius);
-		}
-		*/
-
 		public void AddSpinePoint( HoopDefinition_Base hdb)
 		{
 			hdb.AddToSpine( this );
@@ -82,7 +75,7 @@ namespace RJWard.Tube
 
 		private void AddCircularSpinePoint( Vector3 pos, Vector3? rot, int num,  float radius )
 		{
-			SpinePoint spinePoint = AddHoopLess( pos );
+			SpinePoint_Simple spinePoint = AddHoopLess( pos );
 			spinePoint.InitCircular( this, pos, rot, num, radius );
 			if (spinePoints_.Count > 1)
 			{

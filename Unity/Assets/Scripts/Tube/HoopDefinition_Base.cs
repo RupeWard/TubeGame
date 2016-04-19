@@ -45,7 +45,7 @@ namespace RJWard.Tube
 			{
 				sb.Append( "-" );
 			}
-			sb.Append(" N=").Append(numHoopPoints_);
+			sb.Append( " N=" ).Append( numHoopPoints_ );
 			DebugDescribeDetails( sb );
 		}
 
