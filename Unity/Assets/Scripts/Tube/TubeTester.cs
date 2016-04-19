@@ -20,14 +20,20 @@ namespace RJWard.Tube
 
 		public Transform testTubeContainer;
 
-		private TubeSection_Linear tubeSection_ = null;
+//		private TubeSection_Linear tubeSection_ = null;
 
 		public TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
+
+		public Tube tube_ = null;
 
 		// Use this for initialization
 		void Start( )
 		{
 			TubeFactory.Instance.tubeWallMaterial = tubeWallMaterial;
+			GameObject tubeGO = new GameObject( "Tube" );
+			tubeGO.transform.position = Vector3.zero;
+			tubeGO.transform.localScale = Vector3.one;
+			tube_ = tubeGO.AddComponent<Tube>( );
 		}
 
 		public void NewFromSources()
@@ -36,33 +42,17 @@ namespace RJWard.Tube
 			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, HandleTubeSectionMade );
 		}
 
-		public void ClearTubeSection()
+		public void ClearTube()
 		{
-			if (tubeSection_ != null)
-			{
-				GameObject.Destroy( tubeSection_.gameObject );
-			}
-			tubeSection_ = null;
-		}
-
-		private void HandleInitialTubesectionMade(TubeSection_Linear ts)
-		{
-			Debug.Log( "HandleInitialTubesectionMade" );
-			tubeSection_ = ts;
+			tube_.DeleteAllSections( );
 		}
 
 		private void HandleTubeSectionMade( TubeSection_Linear ts)
 		{
-			if (tubeSection_ == null)
-			{
-				tubeSection_ = ts;
-			}
-			else
-			{
-				AppendSectionToEnd( ts );
-			}
+			tube_.AddToEnd( ts );
 		}
 
+		/*
 		public void AppendSectionToEnd(TubeSection_Linear ts)
 		{
 			Debug.Log( "Appending to end" );
@@ -82,22 +72,7 @@ namespace RJWard.Tube
 
 			ts.gameObject.transform.Translate( lastHoopOfPrevious.transform.position - firstHoop.transform.position );
 
-		}
-
-		public void AppendSection()
-		{
-			Debug.Log( "DEFUNCT" );
-
-			//			TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, AppendSectionToEnd );
-//			TubeFactory.Instance.CreateRandomLinearSection( randLinearSectionDefn, AppendSectionToEnd );
-
-		}
-
-		// Update is called once per frame
-		void Update( )
-		{
-
-		}
+		}*/
 
 		public void CreateRandomSection()
 		{

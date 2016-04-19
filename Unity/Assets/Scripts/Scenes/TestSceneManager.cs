@@ -100,11 +100,6 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		mainCamera.toggleDebugObjects( );
 	}
 
-	public void HandleAppendTubeSectionButtonPressed()
-	{
-		tubeTester.AppendSection( );
-	}
-
 	public void HandleRandomTubeSectionButtonPressed( )
 	{
 		Debug.Log( "Randomising" );
@@ -118,6 +113,6 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void HandleClearButtonPressed()
 	{
-		tubeTester.ClearTubeSection( );
+		tubeTester.ClearTube( );
 	}
 }
