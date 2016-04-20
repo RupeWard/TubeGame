@@ -33,6 +33,11 @@ namespace RJWard.Tube
 			get { return nextSpinePoint_;  }
 			set
 			{
+				if (value == this)
+				{
+					Debug.LogError( "Can't set nextspinepoint to " + value.gameObject.name + " on " + this.gameObject.name );
+					return;
+				}
 				if (value != nextSpinePoint_)
 				{
 					SetRotationDirty();
@@ -63,6 +68,11 @@ namespace RJWard.Tube
 			get { return previousSpinePoint_;  }
 			set
 			{
+				if (value == this)
+				{
+					Debug.LogError( "Can't set previousspinepoint to " + value.gameObject.name + " on " + this.gameObject.name );
+					return;
+				}
 				if (value != previousSpinePoint_)
 				{
 					SetRotationDirty();
