@@ -88,17 +88,17 @@ namespace RJWard.Core
 			if (dt1 < s_epsilon)
 			{
 				dt1 = 1f;
-				Debug.LogWarning( "dt1 vanishing" );
+				Debug.LogWarning( "dt1 vanishing with p1/2 = "+p1+"/"+p2 );
 			}
 			if ( dt0 < s_epsilon)
 			{
 				dt0 = dt1;
-				Debug.LogWarning( "dt0 vanishing" );
+				Debug.LogWarning( "dt0 vanishing with p0/1 = "+p0+"/"+p1 );
 			}
 			if (dt2 < s_epsilon)
 			{
 				dt2 = dt1;
-				Debug.LogWarning( "dt2 vanishing" );
+				Debug.LogWarning( "dt2 vanishing with p2/3 = "+p2+"/"+p3 );
 			}
 
 			xPoly_ = NonUniformCatMullRomPoly.Create( p0.x, p1.x, p2.x, p3.x, dt0, dt1, dt2 );
@@ -138,7 +138,7 @@ namespace RJWard.Core
 			Vector3 priorPos = srcPtsIn[0];
 			priorPos.z -= firstDist;
 			srcPts.Insert( 0, priorPos );
-			Vector3 endDiff = srcPtsIn[srcPtsIn.Count - 1] - srcPtsIn[srcPtsIn.Count - 1];
+			Vector3 endDiff = srcPtsIn[srcPtsIn.Count - 1] - srcPtsIn[srcPtsIn.Count - 2];
 			Vector3 postPos = srcPtsIn[srcPtsIn.Count - 1] + endDiff;
 			srcPts.Add( postPos );
 
@@ -164,7 +164,7 @@ namespace RJWard.Core
 						result.Add( interpolator.Interpolate( t ) );
 					}
 				}
-				result.Add( srcPts[numPoints - 1] );
+				result.Add( srcPts[numPoints - 2] );
 			}
 			return result;
 		}
