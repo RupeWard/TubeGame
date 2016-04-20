@@ -81,7 +81,7 @@ namespace RJWard.Tube.Camera
 				if (currentSpeed > camMaxSpeed)
 				{
 					currentSpeed = camMaxSpeed;
-//					Debug.Log( "Camera speed maxed at " + currentSpeed );
+					Debug.Log( "Camera speed maxed at " + currentSpeed );
 					currentAcc = 0f;
 				}
 				else
@@ -96,24 +96,32 @@ namespace RJWard.Tube.Camera
 				if (currentSpeedSign != Mathf.Sign(currentSpeed))
 				{
 					currentSpeed = 0f;
-//					Debug.Log( "Cam slowed to halt" );
+					Debug.Log( "Cam slowed to halt" );
 				}
 			}
 
 			if (Mathf.Abs(currentSpeed) > Mathf.Epsilon)
 			{
 //				Debug.Log( "Moving at speed " + currentSpeed );
-				float newT = t_ + currentSpeed * Time.deltaTime;
+				float newT = t_ + currentSpeed *camSpeedMult * Time.deltaTime;
 				if (newT < 0f)
 				{
 					if (lastSpinePoint_.previousSpinePoint != null)
 					{
-						Init( lastSpinePoint_.previousSpinePoint, newT + 1 );
+						if (newT <=1 && newT >=0)
+						{
+							Debug.Log( "Switching to previous spinepoint" + lastSpinePoint_.previousSpinePoint.gameObject.name );
+							Init( lastSpinePoint_.previousSpinePoint, newT + 1 );
+						}
+						else
+						{
+							Debug.LogError( "Failed to switch on reverse" );
+						}
 					}
 					else
 					{
 						stop( );
-//						Debug.Log( "Can't move, at start" );
+						Debug.Log( "Can't move, at start" );
 					}
 				}
 				else if (newT < 1f)
@@ -122,6 +130,7 @@ namespace RJWard.Tube.Camera
 				}
 				else
 				{
+					Debug.Log( "NewT=" + newT );
 					int numJumps = 0;
 					SpinePoint_Simple foundSpinePoint = lastSpinePoint_;
 					while (newT >= 1f)
@@ -130,13 +139,14 @@ namespace RJWard.Tube.Camera
 						if (foundSpinePoint.nextSpinePoint == null)
 						{
 							stop( );
-							newT = 1f;
-//							Debug.Log( "Can't move, at end" );
+							newT = 0f;
+							Debug.Log( "Can't move, at end" );
 						}
 						else
 						{
 							foundSpinePoint = foundSpinePoint.nextSpinePoint;
 							numJumps++;
+							Debug.Log( "Switching to next spinepoint "+foundSpinePoint.gameObject.name +" ("+numJumps+" jumps");
 						}
 					}
 					if (numJumps > 0)
@@ -148,6 +158,10 @@ namespace RJWard.Tube.Camera
 					if (newT < 1f)
 					{
 						Init( foundSpinePoint, newT );
+					}
+					else
+					{
+						Debug.LogWarning( "NewT=" + newT );
 					}
 				}
 			}
@@ -178,24 +192,38 @@ namespace RJWard.Tube.Camera
 				throw new System.InvalidOperationException( "Non spinepointsimple not yet implemented" );
 			}
 
+			if (lastSpinePoint_ != sp)
+			{
+				Debug.Log( "Initing to new " + sp.gameObject.name );
+			}
 			lastSpinePoint_ = sp;
 			t_ = t;
 
-			if (lastSpinePoint_.nextSpinePoint == null)
+			if (t>0f && lastSpinePoint_.nextSpinePoint == null)
 			{
+				Debug.LogWarning( "No next point with t=" + t_ +", clamping to zero");
+				stop( );
+				t_ = 0f;
+				/*
 				if (lastSpinePoint_.previousSpinePoint != null)
 				{
-					Debug.LogWarning( "Initing on preultimate point" );
+					Debug.LogWarning( "Initing on preultimate point instead with t="+t_ );
 					InitStationary( lastSpinePoint_.previousSpinePoint, 0.9f );
+					return;
 				}
 				else
 				{
 					Debug.LogError( "Can't init on only one point" );
 				}
+				*/
 			}
-			else
+//			else
 			{
 				Vector3 pos = Vector3.zero;
+				if (t < 0f || t > 1f)
+				{
+					Debug.LogError( "t=" + t );
+				}
 				if (lastSpinePoint_.InterpolateForwardWorld(t, ref pos))
 				{
 					transform.position = pos;
@@ -222,10 +250,16 @@ namespace RJWard.Tube.Camera
 							stop( );
 						}
 					}
+					else
+					{
+						Debug.LogWarning( "Camera failed to lookAt" );
+					}
 				}
 				else
 				{
-					Debug.LogError( "Can't init camera" );
+					stop( );
+					t = 0f;
+					Debug.LogWarning( "Stopping because Can't init camera" );
 				}
 
 			}

@@ -147,7 +147,7 @@ namespace RJWard.Tube
 			Init( n + "_SPL", mat );
 
 			debugSb.Length = 0;
-			debugSb.Append( "Generating splinar with " ).Append( numPerSection ).Append( " per section" );
+			debugSb.Append( "Generating splinar "+gameObject.name+ " with " ).Append( numPerSection ).Append( " per section" );
 		
 			GameObject spineGO = new GameObject( "Sp");
 			spine_ = spineGO.AddComponent<Spine>( );
@@ -242,29 +242,39 @@ namespace RJWard.Tube
 						}
 						else
 						{
-	//						Debug.LogError( debugSb.ToString( ) );
+							//						Debug.LogError( debugSb.ToString( ) );
+							//							HERE NEED NEW INTERPOLTAORS
 
-							int interpolatorIndex = ptNum % numPerSection;
-							if (interpolatorIndex < 0 || interpolatorIndex > spinePointInterpolators.Count)
+							List<RJWard.Core.CatMullRom3D> newSpinePointInterpolators = new List<Core.CatMullRom3D>( );
+							RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( spinePointPositions, 1, newSpinePointInterpolators );
+							debugSb.Append( "\n made " + newSpinePointInterpolators.Count + " new interpolators for " + spinePointPositions.Count + " new spine points" );
+							int interpolatorIndex = ptNum;// % numPerSection;
+							if (interpolatorIndex == spinePointPositions.Count-1)
 							{
-								Debug.LogError( "bad interpolator index" );
+								debugSb.Append( "\nNo interpolator for last point" );
+							}
+							else if (interpolatorIndex < 0 || interpolatorIndex > newSpinePointInterpolators.Count)
+							{
+								debugSb.Append( "\nbad interpolator index " + interpolatorIndex );
+								Debug.LogError( "bad interpolator index "+interpolatorIndex );
 							}
 							else
 							{
-								if (interpolatorIndex == spinePointInterpolators.Count)
+								if (interpolatorIndex >= newSpinePointInterpolators.Count)
 								{
-//									Debug.LogWarning( "Can't set forward interpolator for last point" );
+									Debug.LogWarning( "Can't set forward interpolator for index "+interpolatorIndex );
 								}
 								else
 								{
-									spinePoint.forwardInterpolator = spinePointInterpolators[interpolatorIndex];
+									spinePoint.forwardInterpolator = newSpinePointInterpolators[interpolatorIndex];
 								}
 								if (interpolatorIndex > 0)
 								{
-									spinePoint.backInterpolator = spinePointInterpolators[interpolatorIndex - 1];
+									spinePoint.backInterpolator = newSpinePointInterpolators[interpolatorIndex - 1];
 								}
 								else
 								{
+									Debug.LogWarning( "Can't set back interpolator for index " + interpolatorIndex );
 //									Debug.LogWarning( "Can't set back interpolator for first point" );
 								}
 							}

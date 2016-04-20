@@ -128,6 +128,11 @@ namespace RJWard.Core
 		public static List< Vector3> InterpolateFixedNum(List< Vector3 > srcPtsIn, int numPerSection, float catmullRomPower,
 			List <CatMullRom3D> interpolators)
 		{
+			if (interpolators != null)
+			{
+				interpolators.Clear();
+			}
+
 			List<Vector3> srcPts = new List<Vector3>( srcPtsIn );
 			float firstDist = Vector3.Distance( srcPtsIn[0], srcPtsIn[1] );
 			Vector3 priorPos = srcPtsIn[0];

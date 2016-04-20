@@ -102,25 +102,34 @@ namespace RJWard.Tube
 			}
 			t = Mathf.Clamp01( t );
 
-			if (forwardInterpolator != null)
+			if (t==0f)
 			{
-				if (nextSpinePoint_ == null)
-				{
-					Debug.LogWarning( "Spine pt has a forward interpolator but no next point!" );
-				}
-				result = forwardInterpolator.Interpolate( t );
+				result = transform.position;
 				success = true;
 			}
 			else
 			{
-				if (nextSpinePoint_ == null)
+				if (forwardInterpolator != null)
 				{
-					Debug.LogWarning( "Spine pt has no forward interpolator and no next point, can't interpolate!" );
-                }
+					if (nextSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine pt has a forward interpolator but no next point!" );
+					}
+					result = forwardInterpolator.Interpolate( t );
+					success = true;
+				}
 				else
 				{
-					result = Vector3.Lerp( transform.position, nextSpinePoint_.transform.position, t );
-					success = true;
+					if (nextSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine pt has no forward interpolator and no next point, can't interpolate!" );
+					}
+					else
+					{
+						result = Vector3.Lerp( transform.position, nextSpinePoint_.transform.position, t );
+						success = true;
+					}
+
 				}
 
 			}

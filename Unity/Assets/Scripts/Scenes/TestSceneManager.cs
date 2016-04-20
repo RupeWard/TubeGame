@@ -79,19 +79,19 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void HandleCameraForwardDown()
 	{
-		Debug.Log( "Forward" );
+//		Debug.Log( "Forward" );
 		mainCamera.accelerate( );
 	}
 
 	public void HandleCameraBackDown( )
 	{
-		Debug.Log( "Back" );
+//		Debug.Log( "Back" );
 		mainCamera.decelerate( );
 	}
 
 	public void HandleCameraMotionButtonUp( )
 	{
-		Debug.Log( "Stop" );
+//		Debug.Log( "Stop" );
 		mainCamera.killPower( );
 	}
 
