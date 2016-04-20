@@ -10,7 +10,10 @@ namespace RJWard.Tube
 		{
 			if (spine_ != null && spine_.NumSpinePoints > 0)
 			{
-				SpinePoint_Simple mySp = spine_.GetSpinePoint( 0 );
+				SpinePoint_Simple firstSp = spine_.GetSpinePoint( 0 );
+				firstSp.previousSpinePoint = sp;
+				
+				SpinePoint_Simple mySp = spine_.GetSpinePoint( 1 );
 				mySp.previousSpinePoint = sp;
 				if (sp != null)
 				{
