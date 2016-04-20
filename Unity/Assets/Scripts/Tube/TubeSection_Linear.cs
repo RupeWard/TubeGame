@@ -245,6 +245,7 @@ namespace RJWard.Tube
 							//						Debug.LogError( debugSb.ToString( ) );
 							//							HERE NEED NEW INTERPOLTAORS
 
+							/*
 							List<RJWard.Core.CatMullRom3D> newSpinePointInterpolators = new List<Core.CatMullRom3D>( );
 							RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( spinePointPositions, 1, newSpinePointInterpolators );
 							debugSb.Append( "\n made " + newSpinePointInterpolators.Count + " new interpolators for " + spinePointPositions.Count + " new spine points" );
@@ -278,6 +279,7 @@ namespace RJWard.Tube
 //									Debug.LogWarning( "Can't set back interpolator for first point" );
 								}
 							}
+							*/
 /*
                             if (ptNum > 0)
 							{

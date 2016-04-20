@@ -168,7 +168,7 @@ namespace RJWard.Tube
 					}
 					else
 					{
-						Debug.LogWarning( "Can't set back interpolator for index " + i );
+//						Debug.LogWarning( "Can't set back interpolator for index " + i );
 						//									Debug.LogWarning( "Can't set back interpolator for first point" );
 					}
 				}
