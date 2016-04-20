@@ -108,6 +108,41 @@ namespace RJWard.Tube.Camera
 				{
 					if (lastSpinePoint_.previousSpinePoint != null)
 					{
+						Debug.Log( "Reverse, NewT=" + newT );
+						int numJumps = 0;
+						SpinePoint_Simple foundSpinePoint = lastSpinePoint_;
+						while (newT < 0f)
+						{
+							newT += 1f;
+							if (foundSpinePoint.previousSpinePoint == null)
+							{
+								stop( );
+								newT = 0f;
+								Debug.Log( "Can't move back, at start" );
+							}
+							else
+							{
+								foundSpinePoint = foundSpinePoint.previousSpinePoint;
+								numJumps++;
+								Debug.Log( "Switching to previous spinepoint " + foundSpinePoint.gameObject.name + " (" + numJumps + " jumps" );
+							}
+						}
+						if (numJumps > 0)
+						{
+							Debug.LogWarning( "Rev NumJumps = " + numJumps + " fsp= " + foundSpinePoint.gameObject.name );
+							//	Init( foundSpinePoint, newT );
+						}
+
+						if (newT < 1f)
+						{
+							Init( foundSpinePoint, newT );
+						}
+						else
+						{
+							Debug.LogWarning( "Reverse NewT=" + newT );
+						}
+
+						/*
 						if (newT <=1 && newT >=0)
 						{
 							Debug.Log( "Switching to previous spinepoint" + lastSpinePoint_.previousSpinePoint.gameObject.name );
@@ -115,13 +150,14 @@ namespace RJWard.Tube.Camera
 						}
 						else
 						{
-							Debug.LogError( "Failed to switch on reverse" );
-						}
+							Debug.LogError( "Failed to switch on reverse with t="+t_+" newT = "+newT );
+							stop( );
+						}*/
 					}
 					else
 					{
 						stop( );
-						Debug.Log( "Can't move, at start" );
+						Debug.Log( "Can't move back, at start" );
 					}
 				}
 				else if (newT < 1f)
@@ -130,7 +166,7 @@ namespace RJWard.Tube.Camera
 				}
 				else
 				{
-					Debug.Log( "NewT=" + newT );
+					Debug.Log( "Forward, NewT=" + newT );
 					int numJumps = 0;
 					SpinePoint_Simple foundSpinePoint = lastSpinePoint_;
 					while (newT >= 1f)
@@ -140,7 +176,7 @@ namespace RJWard.Tube.Camera
 						{
 							stop( );
 							newT = 0f;
-							Debug.Log( "Can't move, at end" );
+							Debug.Log( "Can't move fwd, at end" );
 						}
 						else
 						{
@@ -151,7 +187,7 @@ namespace RJWard.Tube.Camera
 					}
 					if (numJumps > 0)
 					{
-						Debug.LogWarning( "NumJumps = " + numJumps + " fsp= "+foundSpinePoint.gameObject.name );
+						Debug.LogWarning( "FWD NumJumps = " + numJumps + " fsp= "+foundSpinePoint.gameObject.name );
 					//	Init( foundSpinePoint, newT );
 					}
 
@@ -161,7 +197,7 @@ namespace RJWard.Tube.Camera
 					}
 					else
 					{
-						Debug.LogWarning( "NewT=" + newT );
+						Debug.LogWarning( "FWD NewT=" + newT );
 					}
 				}
 			}
