@@ -134,12 +134,12 @@ namespace RJWard.Tube
 
 			Debug.Log( debugSb.ToString( ) );
 		}
-
+		/*
 		public void InitSplinar( string n, TubeSection_Linear srcTs, int numPerSection, Material mat )
 		{
 			StartCoroutine( InitSplinarCR(n, srcTs, numPerSection, mat ) );
         }
-
+		*/
 		public IEnumerator InitSplinarCR(string n, TubeSection_Linear srcTs, int numPerSection, Material mat)
 		{
 			remakeMeshWhenDirty = false;

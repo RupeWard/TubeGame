@@ -16,6 +16,7 @@ namespace RJWard.Tube
 			public float maxRadD = 0.5f;
 			public int numHoopPoints = 10;
 			public HoopDefinition_Explicit firstHoop = null;
+			public int numPerSection = 4;
 
 			public void DebugDescribe(System.Text.StringBuilder sb)
 			{
@@ -82,7 +83,7 @@ namespace RJWard.Tube
 				direction = rot * direction;
 
 			}
-			yield return StartCoroutine( CreateSectionFromDefinitionCR( defn, onCreatedAction, sb ) );
+			yield return StartCoroutine( CreateSectionFromDefinitionCR( defn, settings.numPerSection, onCreatedAction, sb ) );
 			Debug.Log( sb.ToString( ) );
 		}
 
@@ -128,7 +129,7 @@ namespace RJWard.Tube
 			StartCoroutine( CreateFromSourcesInContainerCR( container, numHoopPoints, tubeWallMaterial, onTubeSectionMadeAction ) );
 		}
 
-		private IEnumerator CreateSectionFromDefinitionCR( TubeSectionDefinition_Linear defn, System.Action<TubeSection_Linear> onTubeSectionMadeAction, System.Text.StringBuilder sb )
+		private IEnumerator CreateSectionFromDefinitionCR( TubeSectionDefinition_Linear defn, int numPerSection, System.Action<TubeSection_Linear> onTubeSectionMadeAction, System.Text.StringBuilder sb )
 		{
 			yield return null;
 
@@ -162,7 +163,7 @@ namespace RJWard.Tube
 					yield return null;
 					TubeSection_Linear firstTubeSection = tmpTubeSection_;
 					tmpTubeSection_ = null;
-					yield return StartCoroutine(CreateSplinar( "SPLINAR", firstTubeSection, 5, tubeWallMaterial, null ));
+					yield return StartCoroutine(CreateSplinar( "SPLINAR", firstTubeSection, numPerSection, tubeWallMaterial, null ));
 					GameObject.Destroy( firstTubeSection.gameObject );
 					yield return null;
 					if (tmpTubeSection_ != null)

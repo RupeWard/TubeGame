@@ -117,7 +117,69 @@ namespace RJWard.Tube
 				}
 			}
 			tubeSections_.Add( ts );
+			yield return null;
+			RecalculateInterpolatorsLinear( );
 		}
+
+		public void RecalculateInterpolatorsLinear( )
+		{
+			System.Text.StringBuilder debugsb = new System.Text.StringBuilder( );
+			debugsb.Append( "Recalculating interpolators" );
+
+			List<SpinePoint_Simple> spinePoints = new List<SpinePoint_Simple>( );
+			List<Vector3> spinePointPositions = new List<Vector3>( );
+
+			if (tubeSections_.Count > 0)
+			{
+				SpinePoint_Simple spinePoint = tubeSections_[0].FirstHoop().spinePoint;
+				while (spinePoint != null)
+				{
+					spinePoints.Add( spinePoint );
+					spinePointPositions.Add( spinePoint.transform.position );
+					spinePoint = spinePoint.nextSpinePoint;
+				}
+			}
+			int numSpinePoints = spinePoints.Count;
+			debugsb.Append( "\nFound " + numSpinePoints + " spine points" );
+
+			List<RJWard.Core.CatMullRom3D> spinePointInterpolators = new List<Core.CatMullRom3D>( );
+			RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( spinePointPositions, 1, spinePointInterpolators );
+
+			for (int i = 0; i < numSpinePoints; i++)
+			{
+				if (i == spinePointPositions.Count - 1)
+				{
+					spinePoints[i].forwardInterpolator = null;
+					debugsb.Append( "\nNo interpolator for last point" );
+				}
+				else
+				{
+					if (i >= spinePointInterpolators.Count)
+					{
+						Debug.LogWarning( "Can't set forward interpolator for index " + i);
+					}
+					else
+					{
+						spinePoints[i].forwardInterpolator = spinePointInterpolators[i];
+					}
+					if (i> 0)
+					{
+						spinePoints[i].backInterpolator = spinePointInterpolators[i - 1];
+					}
+					else
+					{
+						Debug.LogWarning( "Can't set back interpolator for index " + i );
+						//									Debug.LogWarning( "Can't set back interpolator for first point" );
+					}
+				}
+			}
+			if (debugsb.Length >0)
+			{
+				Debug.Log( debugsb.ToString( ) );
+			}
+		}
+
+
 		// Use this for initialization
 		void Start( )
 		{

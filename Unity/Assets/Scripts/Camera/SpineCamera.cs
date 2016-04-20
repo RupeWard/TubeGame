@@ -267,6 +267,10 @@ namespace RJWard.Tube.Camera
 					Vector3 lookAtPos = Vector3.zero;
 					float tdiff = 0.01f;
 					float newT = t + tdiff;
+					if (newT > 1f)
+					{
+						newT = 1f;
+					}
 					if (newT <= 1f)
 					{
 						if (lastSpinePoint_.InterpolateForwardWorld( (newT), ref lookAtPos ))
