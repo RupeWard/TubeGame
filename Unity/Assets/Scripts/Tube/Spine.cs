@@ -62,7 +62,7 @@ namespace RJWard.Tube
 				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 2];
 			}
 
-			RJWard.Core.Test.DebugBlob.AddToObject( spGo, 0.15f, Color.green );
+			RJWard.Core.Test.DebugBlob.AddToObject( spGo, 0.05f, Color.green );
 
 			return spinePoint;
 		}
@@ -86,6 +86,17 @@ namespace RJWard.Tube
 				spinePoints_[spinePoints_.Count - 2].nextSpinePoint = spinePoint;
 				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 2];
             }
+		}
+
+		public void AddExplicitSpinePoint(HoopDefinition_Explicit hde, bool fixedRotation)
+		{
+			SpinePoint_Simple spinePoint = AddHoopLess( hde.position, fixedRotation );
+			spinePoint.InitExplicit( this, hde );
+			if (spinePoints_.Count > 1)
+			{
+				spinePoints_[spinePoints_.Count - 2].nextSpinePoint = spinePoint;
+				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 2];
+			}
 		}
 
 		public void AddAllVertexInfoToLists( List< Vector3 > verts, List< Vector3 > normals, List <Vector2> uvs)

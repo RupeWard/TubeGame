@@ -361,7 +361,18 @@ namespace RJWard.Tube
 			MakeHoopCircular( num, rad );
 		}
 
-		
+		public void InitExplicit( Spine sp, HoopDefinition_Explicit hde )
+		{
+			Init( sp, hde.position, hde.rotation);
+			MakeHoopExplicit( hde);
+		}
+
+		private void MakeHoopExplicit( HoopDefinition_Explicit hde )
+		{
+			hoop.CreateHoopPointsExplicit( hde );
+		}
+
+
 		private void MakeHoopCircular( int numPoints, float rad )
 		{
 			hoop.CreateHoopPointsCircular(numPoints, rad);

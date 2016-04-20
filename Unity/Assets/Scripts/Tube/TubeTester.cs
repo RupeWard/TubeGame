@@ -83,6 +83,7 @@ namespace RJWard.Tube
 				Hoop lastHoop = tube_.LastHoop( );
 				if (lastHoop != null)
 				{
+					randLinearSectionDefn.firstHoop = lastHoop.ExplicitDefinition();
 					randLinearSectionDefn.initialRad = lastHoop.radius;
 				}
 			}

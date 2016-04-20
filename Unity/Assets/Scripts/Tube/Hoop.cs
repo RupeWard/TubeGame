@@ -98,6 +98,73 @@ namespace RJWard.Tube
 			return Color.Lerp( firstPointColour_, endPointColor_, f );
 		}
 
+		public void CreateHoopPointsExplicit( HoopDefinition_Explicit hde)
+		{
+			radius_ = -1f;
+			if (DEBUG_HOOP)
+			{
+				debugSb.Length = 0;
+				if (hoopPoints_.Count > 0)
+				{
+					debugSb.Append( "Re-" );
+				}
+				debugSb.Append( "Creating Explicit Hoop Points " );
+			}
+			if (hoopPoints_.Count > 0)
+			{
+				if (DEBUG_HOOP)
+				{
+					debugSb.Append( "\n - deleting " + hoopPoints_.Count );
+				}
+				for (int i = 0; i < hoopPoints_.Count; i++)
+				{
+					GameObject.Destroy( hoopPoints_[i].gameObject );
+				}
+				hoopPoints_.Clear( );
+			}
+			GameObject firstHoopPointGO = new GameObject( this.gameObject.name + "_HP0" );
+			HoopPoint firstHoopPoint = firstHoopPointGO.AddComponent<HoopPoint>( );
+			firstHoopPointGO.transform.parent = this.transform;
+			firstHoopPointGO.transform.localPosition = hde.GetHoopPointPosition( 0 );// new Vector3( radius_, 0f, 0f );
+			firstHoopPointGO.transform.localRotation = Quaternion.identity;
+			if (DEBUG_HOOP)
+			{
+				debugSb.Append( "\n - added first " );
+			}
+			firstHoopPoint.hoopIndex = 0;
+			hoopPoints_.Add( firstHoopPoint );
+
+			for (int i = 1; i < hde.numHoopPoints; i++)
+			{
+				GameObject nextHoopPointGO = new GameObject( this.gameObject.name + "_HP" + i.ToString( ) );
+				HoopPoint nextHoopPoint = nextHoopPointGO.AddComponent<HoopPoint>( );
+				nextHoopPointGO.transform.parent = this.transform;
+				nextHoopPointGO.transform.localPosition = hde.GetHoopPointPosition( i );// new Vector3( radius_, 0f, 0f );
+				nextHoopPointGO.transform.localRotation = Quaternion.identity;
+				nextHoopPoint.hoopIndex = i;
+
+//				Vector3 forwardAxis = nextHoopPointGO.transform.TransformDirection( Vector3.forward );
+//				nextHoopPointGO.transform.RotateAround( spinePoint.transform.position, forwardAxis, i * (360f / num) );
+				hoopPoints_.Add( nextHoopPoint );
+
+				if (DEBUG_HOOP)
+				{
+					debugSb.Append( "\n - added " + i );
+				}
+
+			}
+			if (DEBUG_HOOP)
+			{
+				Debug.Log( debugSb.ToString( ) );
+			}
+			foreach (HoopPoint hp in hoopPoints_)
+			{
+				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
+			}
+			spinePoint_.SetDirty( );
+
+		}
+
 		public void CreateHoopPointsCircular( int num, float radius )
 		{
 			radius_ = radius;
@@ -159,7 +226,7 @@ namespace RJWard.Tube
 			}
 			foreach (HoopPoint hp in hoopPoints_)
 			{
-				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.2f, GetColourForPoint( hp ) );
+				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
 			}
 			spinePoint_.SetDirty( );
 		}
