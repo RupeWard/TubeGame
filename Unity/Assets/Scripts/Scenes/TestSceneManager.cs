@@ -5,6 +5,8 @@ using RJWard.Tube.Camera;
 
 public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifetime<TestSceneManager>
 {
+	static private readonly bool DEBUG_LOCAL = false;
+
 	public SpineCamera mainCamera;
 	public TubeTester tubeTester;
 
@@ -51,30 +53,21 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void SetCameraToFirstSpinePoint()
 	{
-		Debug.LogWarning( "Setting to first camera position" );
-
-		SpinePoint_Base[] spinePoints = Transform.FindObjectsOfType<SpinePoint_Base>( );
-		if (spinePoints != null && spinePoints.Length > 0)
+		SpinePoint_Base firstSpinePoint = tubeTester.GetFirstSpinePoint( );
+		if (firstSpinePoint != null )
 		{
-			SpinePoint_Base spFound = null;
-			for (int i = 0; i < spinePoints.Length; i++)
-			{
-				spFound = spinePoints[i];
-				if (spFound.isFirst())
-				{
-					break;
-				}
-			}
 			mainCamera.enabled = true;
-			mainCamera.InitStationary( spFound, 0f );
+			mainCamera.InitStationary( firstSpinePoint, 0f );
 			cameraOnHook_ = false;
-			Debug.Log( "Set to first spine point = " + spFound.gameObject.name );
+			if (DEBUG_LOCAL)
+			{
+				Debug.Log( "Set camera to first spine point = " + firstSpinePoint.gameObject.name );
+			}
 		}
 		else
 		{
-			Debug.LogWarning( "Didn't find any spine points" );
+			Debug.LogWarning( "Didn't find first spine point" );
 		}
-
 	}
 
 	public void HandleCameraForwardDown()
@@ -102,7 +95,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void HandleRandomTubeSectionButtonPressed( )
 	{
-		Debug.Log( "Randomising" );
+//		Debug.Log( "Randomising" );
 		tubeTester.CreateRandomSection( );
 	}
 

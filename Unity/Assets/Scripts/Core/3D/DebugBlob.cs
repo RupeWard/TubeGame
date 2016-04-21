@@ -30,19 +30,21 @@ namespace RJWard.Core.Test
 			return result;
 		}
 
+		private Transform cachedTransform_ = null;
 
 		private Material mat_ = null;
 		public MeshRenderer pointerMesh;
 
 		private void Awake( )
 		{
+			cachedTransform_ = transform;
 			mat_ = GetComponent<MeshRenderer>( ).sharedMaterial;
 			pointerMesh.gameObject.SetActive( false );
 		}
 
 		private void Init( float s, Color c )
 		{
-			transform.localScale = s * Vector3.one;
+			cachedTransform_.localScale = s * Vector3.one;
 			if (mat_.color != c)
 			{
 				mat_ = GetMaterialForColor( c );

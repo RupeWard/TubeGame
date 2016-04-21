@@ -20,6 +20,40 @@ namespace RJWard.Tube
 			tubeSections_.Clear( );
 		}
 
+		public SpinePoint_Base FirstSpinePoint()
+		{
+			SpinePoint_Base result = null;
+			Hoop h = FirstHoop( );
+			if (h != null)
+			{
+				result = h.spinePoint;
+			}
+			return result;
+		}
+
+		public SpinePoint_Base LastSpinePoint( )
+		{
+			SpinePoint_Base result = null;
+			Hoop h = LastHoop( );
+			if (h != null)
+			{
+				result = h.spinePoint;
+			}
+			return result;
+		}
+
+
+		public Hoop FirstHoop( )
+		{
+			Hoop result = null;
+			TubeSection_Linear ts = FirstSection( );
+			if (ts != null)
+			{
+				result = ts.FirstHoop( );
+			}
+			return result;
+		}
+
 		public Hoop LastHoop()
 		{
 			Hoop result = null;
@@ -27,6 +61,16 @@ namespace RJWard.Tube
 			if (ts != null)
 			{
 				result = ts.LastHoop( );
+			}
+			return result;
+		}
+
+		public TubeSection_Linear FirstSection( )
+		{
+			TubeSection_Linear result = null;
+			if (tubeSections_.Count > 0)
+			{
+				result = tubeSections_[0];
 			}
 			return result;
 		}
@@ -40,6 +84,7 @@ namespace RJWard.Tube
 			}
 			return result;
 		}
+
 		public void AddToEnd( TubeSection_Linear ts )
 		{
 			StartCoroutine( AddToEndCR( ts ) );

@@ -74,6 +74,17 @@ namespace RJWard.Tube
 
 		}*/
 
+		public SpinePoint_Base GetFirstSpinePoint()
+		{
+			
+			SpinePoint_Base result = null;
+			if (tube_ != null)
+			{
+				result = tube_.FirstSpinePoint( );
+			}
+			return result;
+		}
+
 		public void CreateRandomSection()
 		{
 			Debug.Log( "Randomising" );
