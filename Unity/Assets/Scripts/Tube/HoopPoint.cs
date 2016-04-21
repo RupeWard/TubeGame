@@ -6,6 +6,8 @@ namespace RJWard.Tube
 
 	public class HoopPoint : MonoBehaviour
 	{
+		private Transform cachedTransform_ = null;
+
 		private int hoopIndex_ = int.MaxValue;
 		public int hoopIndex
 		{
@@ -75,13 +77,18 @@ namespace RJWard.Tube
 		{
 			if (t != null)
 			{
-				transform.LookAt( t );
+				cachedTransform_.LookAt( t );
 			}
-			RJWard.Core.Test.DebugBlob debugBlob = transform.GetComponentInChildren<RJWard.Core.Test.DebugBlob>( );
+			RJWard.Core.Test.DebugBlob debugBlob = cachedTransform_.GetComponentInChildren<RJWard.Core.Test.DebugBlob>( );
 			if (debugBlob != null)
 			{
 				debugBlob.ActivateDirectionPointer( t != null );
 			}
+		}
+
+		private void Awake()
+		{
+			cachedTransform_ = transform;
 		}
 	}
 }

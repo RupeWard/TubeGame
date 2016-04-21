@@ -382,7 +382,7 @@ namespace RJWard.Tube
 		{
 			if (hoop_ != null)
 			{
-				hoop_.AddAllVertices( verts, normals, uvs, v );
+				hoop_.ExtractAllVertexInfo( verts, normals, uvs, v );
 			}
 		}
 

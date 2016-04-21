@@ -8,7 +8,7 @@ namespace RJWard.Tube
 		private Color firstPointColour_ = Color.green;
 		private Color endPointColor_ = Color.yellow;
 
-		private static readonly bool DEBUG_HOOP = true;
+		private static readonly bool DEBUG_LOCAL = true;
 		private System.Text.StringBuilder debugSb_ = null;
 		private System.Text.StringBuilder debugSb
 		{
@@ -19,14 +19,6 @@ namespace RJWard.Tube
 					debugSb_ = new System.Text.StringBuilder( );
 				}
 				return debugSb_;
-			}
-		}
-
-		public void SetDirty( )
-		{
-			if (spinePoint_ != null)
-			{
-				spinePoint_.SetDirty( );
 			}
 		}
 
@@ -46,25 +38,6 @@ namespace RJWard.Tube
 		public HoopPoint GetHoopPoint( int index )
 		{
 			return hoopPoints_[index];
-		}
-
-		private float radius_ = -1f;
-		public float radius
-		{
-			get
-			{
-				if (radius_ != -1f)
-				{
-					return radius_;
-				}
-				float total = 0f;
-				for (int i = 0; i < hoopPoints_.Count; i++)
-				{
-					total += hoopPoints_[i].transform.localPosition.magnitude;
-				}
-				total = total / hoopPoints_.Count;
-				return total;
-			}
 		}
 
 		public void Init( SpinePoint_Simple sp )
@@ -100,8 +73,7 @@ namespace RJWard.Tube
 
 		public void CreateHoopPointsExplicit( HoopDefinition_Explicit hde)
 		{
-			radius_ = -1f;
-			if (DEBUG_HOOP)
+			if (DEBUG_LOCAL)
 			{
 				debugSb.Length = 0;
 				if (hoopPoints_.Count > 0)
@@ -112,7 +84,7 @@ namespace RJWard.Tube
 			}
 			if (hoopPoints_.Count > 0)
 			{
-				if (DEBUG_HOOP)
+				if (DEBUG_LOCAL)
 				{
 					debugSb.Append( "\n - deleting " + hoopPoints_.Count );
 				}
@@ -125,9 +97,9 @@ namespace RJWard.Tube
 			GameObject firstHoopPointGO = new GameObject( this.gameObject.name + "_HP0" );
 			HoopPoint firstHoopPoint = firstHoopPointGO.AddComponent<HoopPoint>( );
 			firstHoopPointGO.transform.parent = this.transform;
-			firstHoopPointGO.transform.localPosition = hde.GetHoopPointPosition( 0 );// new Vector3( radius_, 0f, 0f );
+			firstHoopPointGO.transform.localPosition = hde.GetHoopPointPosition( 0 );
 			firstHoopPointGO.transform.localRotation = Quaternion.identity;
-			if (DEBUG_HOOP)
+			if (DEBUG_LOCAL)
 			{
 				debugSb.Append( "\n - added first " );
 			}
@@ -143,19 +115,13 @@ namespace RJWard.Tube
 				nextHoopPointGO.transform.localRotation = Quaternion.identity;
 				nextHoopPoint.hoopIndex = i;
 
-//				Vector3 forwardAxis = nextHoopPointGO.transform.TransformDirection( Vector3.forward );
-//				nextHoopPointGO.transform.RotateAround( spinePoint.transform.position, forwardAxis, i * (360f / num) );
 				hoopPoints_.Add( nextHoopPoint );
 
-				if (DEBUG_HOOP)
+				if (DEBUG_LOCAL)
 				{
 					debugSb.Append( "\n - added " + i );
 				}
 
-			}
-			if (DEBUG_HOOP)
-			{
-				Debug.Log( debugSb.ToString( ) );
 			}
 			foreach (HoopPoint hp in hoopPoints_)
 			{
@@ -163,12 +129,16 @@ namespace RJWard.Tube
 			}
 			spinePoint_.SetDirty( );
 
+			if (DEBUG_LOCAL && debugSb.Length > 0)
+			{
+				Debug.Log( debugSb.ToString( ) );
+			}
+
 		}
 
 		public void CreateHoopPointsCircular( int num, float radius )
 		{
-			radius_ = radius;
-			if (DEBUG_HOOP)
+			if (DEBUG_LOCAL)
 			{
 				debugSb.Length = 0;
 				if (hoopPoints_.Count > 0)
@@ -179,7 +149,7 @@ namespace RJWard.Tube
 			}
 			if (hoopPoints_.Count > 0)
 			{
-				if (DEBUG_HOOP)
+				if (DEBUG_LOCAL)
 				{
 					debugSb.Append( "\n - deleting " + hoopPoints_.Count );
 				}
@@ -192,9 +162,9 @@ namespace RJWard.Tube
 			GameObject firstHoopPointGO = new GameObject( this.gameObject.name + "_HP0" );
 			HoopPoint firstHoopPoint = firstHoopPointGO.AddComponent<HoopPoint>( );
 			firstHoopPointGO.transform.parent = this.transform;
-			firstHoopPointGO.transform.localPosition = new Vector3( radius_, 0f, 0f );
+			firstHoopPointGO.transform.localPosition = new Vector3( radius, 0f, 0f );
 			firstHoopPointGO.transform.localRotation = Quaternion.identity;
-			if (DEBUG_HOOP)
+			if (DEBUG_LOCAL)
 			{
 				debugSb.Append( "\n - added first " );
 			}
@@ -206,7 +176,7 @@ namespace RJWard.Tube
 				GameObject nextHoopPointGO = new GameObject( this.gameObject.name + "_HP" + i.ToString( ) );
 				HoopPoint nextHoopPoint = nextHoopPointGO.AddComponent<HoopPoint>( );
 				nextHoopPointGO.transform.parent = this.transform;
-				nextHoopPointGO.transform.localPosition = new Vector3( radius_, 0f, 0f );
+				nextHoopPointGO.transform.localPosition = new Vector3( radius, 0f, 0f );
 				nextHoopPointGO.transform.localRotation = Quaternion.identity;
 				nextHoopPoint.hoopIndex = i;
 
@@ -214,24 +184,24 @@ namespace RJWard.Tube
 				nextHoopPointGO.transform.RotateAround( spinePoint.transform.position, forwardAxis, i * (360f / num) );
 				hoopPoints_.Add( nextHoopPoint );
 
-				if (DEBUG_HOOP)
+				if (DEBUG_LOCAL)
 				{
 					debugSb.Append( "\n - added " + i );
 				}
 
-			}
-			if (DEBUG_HOOP)
-			{
-				Debug.Log( debugSb.ToString( ) );
 			}
 			foreach (HoopPoint hp in hoopPoints_)
 			{
 				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
 			}
 			spinePoint_.SetDirty( );
+			if (DEBUG_LOCAL)
+			{
+				Debug.Log( debugSb.ToString( ) );
+			}
 		}
 
-		public void AddAllVertices( List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, float v )
+		public void ExtractAllVertexInfo( List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, float v )
 		{
 			Vector3 dirn;
 
@@ -255,7 +225,7 @@ namespace RJWard.Tube
 			normals.Add( dirn.normalized );
 		}
 
-		public static void AddConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts )
+		public static void ExtractConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts )
 		{
 			if (A.hoopPoints_.Count != B.hoopPoints_.Count)
 			{
@@ -271,16 +241,6 @@ namespace RJWard.Tube
 					{
 						nextIndex = 0;
 					}
-					/*
-					triVerts.Add( A.hoopPoints_[i].vertexNumber );
-					triVerts.Add( B.hoopPoints_[i].vertexNumber );
-					triVerts.Add( A.hoopPoints_[nextIndex].vertexNumber );
-
-					triVerts.Add( A.hoopPoints_[nextIndex].vertexNumber );
-					triVerts.Add( B.hoopPoints_[i].vertexNumber );
-					triVerts.Add( B.hoopPoints_[nextIndex].vertexNumber );
-					*/
-
 					triVerts.Add( A.hoopPoints_[i].vertexNumber );
 					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
 					triVerts.Add( B.hoopPoints_[i].vertexNumber );
