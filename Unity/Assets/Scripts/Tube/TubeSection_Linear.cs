@@ -36,8 +36,6 @@ namespace RJWard.Tube
 		private Spine spine_ = null;
 		private Material tubeWallMaterial_;
 
-		private static System.Text.StringBuilder debugSb = new System.Text.StringBuilder( );
-
 		private bool isMeshDirty_ = false;
 		public void SetMeshDirty (bool force)
 		{
@@ -110,29 +108,34 @@ namespace RJWard.Tube
 			return result;
 		}
 
-		private void Init(string n, Material mat)
+		private void Init(string n, Material mat, System.Text.StringBuilder debugsb)
 		{
 			gameObject.name = id_.ToString()+"_" +n;
 			tubeWallMaterial_ = mat;
-			if (DEBUG_LOCAL || DEBUG_CIRCULAR || DEBUG_SPLINAR)
+			if (debugsb != null)
 			{
-				debugSb.Append( " #" + id_+" as "+gameObject.name );
+				debugsb.Append( " #" + id_+" as "+gameObject.name );
 			}
 		}
 
-		public void InitCircular( string n, TubeSectionDefinition_Linear tsd, Material mat )
+		public IEnumerator InitCircularCR( string n, TubeSectionDefinition_Linear tsd, Material mat )
 		{
+            System.Text.StringBuilder debugSb = null;
+
 			if (DEBUG_CIRCULAR)
 			{
+				debugSb = new System.Text.StringBuilder( );
 				debugSb.Length = 0;
 				debugSb.Append( "TubeSection_Linear.InitCircular" );
 			}
 
-			Init( n, mat );
+			Init( n, mat, debugSb );
 
 			GameObject spineGO = new GameObject( "SP"+n );
 			spine_ = spineGO.AddComponent<Spine>( );
 			spine_.Init( this );
+
+			yield return null;
 
 			if (DEBUG_CIRCULAR)
 			{
@@ -145,6 +148,7 @@ namespace RJWard.Tube
 				if (hdb != null)
 				{
 					spine_.AddSpinePoint( hdb, i==0 );
+					yield return null;
 					if (DEBUG_CIRCULAR)
 					{
 						debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( hdb );
@@ -158,6 +162,7 @@ namespace RJWard.Tube
 						debugSb.Append( "\n  " ).Append( i ).Append( ": NULL" );
 					}
 				}
+
 			}
 			if (DEBUG_CIRCULAR)
 			{
@@ -174,14 +179,17 @@ namespace RJWard.Tube
 
 		public IEnumerator InitSplinarCR(string n, TubeSection_Linear srcTs, int numPerSection, Material mat)
 		{
+			System.Text.StringBuilder debugSb = null;
+
 			if (DEBUG_SPLINAR)
 			{
+				debugSb = new System.Text.StringBuilder( );
 				debugSb.Length = 0;
 				debugSb.Append( "TubeSection_Linear.InitSplinar " );
 			}
 			remakeMeshWhenDirty = false;
 			
-			Init( n + "_SPL", mat );
+			Init( n + "_SPL", mat, debugSb );
 
 			if (DEBUG_SPLINAR)
 			{
@@ -191,7 +199,8 @@ namespace RJWard.Tube
 			GameObject spineGO = new GameObject( "Sp");
 			spine_ = spineGO.AddComponent<Spine>( );
 			spine_.Init( this );
-			
+			yield return null;
+
 			bool abort = false;
 
 			int numHoopPoints = int.MaxValue;
@@ -210,6 +219,7 @@ namespace RJWard.Tube
 					numHoopPoints = spt.hoop.numPoints( );
 				}
 			}
+			yield return null;
 
 			if (numHoopPoints != int.MaxValue)
 			{
@@ -230,6 +240,7 @@ namespace RJWard.Tube
 
 				List<RJWard.Core.CatMullRom3D> spinePointInterpolators = new List<Core.CatMullRom3D>( );
 				List<Vector3> spinePointPositions = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldSpinePtPosns, numPerSection, spinePointInterpolators );
+				yield return null;
 
 				if (spinePointPositions.Count != (spinePointInterpolators.Count * numPerSection +1))
 				{
@@ -251,6 +262,7 @@ namespace RJWard.Tube
 					{
 						oldHoopPtPosns.Add( srcTs.spine_.GetSpinePoint( i ).hoop.GetHoopPoint( hoopIndex ).transform.position );
 					}
+
 					if (oldHoopPtPosns.Count != oldSpinePtPosns.Count)
 					{
 						Debug.LogError( "spine/hoop src num mismatch" );
@@ -259,6 +271,7 @@ namespace RJWard.Tube
 					else
 					{
 						hoopPointPositions[hoopIndex] = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldHoopPtPosns, numPerSection, null );
+						yield return null;
 						if (DEBUG_SPLINAR)
 						{
 							debugSb.Append( "\n Interpolated hoop points " ).Append( hoopIndex ).Append( " from " ).Append( oldSpinePtPosns.Count ).Append( " to " ).Append( numSpinePoints );
@@ -312,11 +325,13 @@ namespace RJWard.Tube
 								{
 									Debug.LogError( "NRE when hoopPtNum = " + hoopPtNum + " and ptNum = " + ptNum );
 								}
+								yield return null;
 							}
 							for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
 							{
 								HoopPoint hp = spinePoint.hoop.GetHoopPoint( hoopPtNum );
 								RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, spinePoint.hoop.GetColourForPoint( hp) );
+								yield return null;
 							}
 
 							if (DEBUG_SPLINAR)

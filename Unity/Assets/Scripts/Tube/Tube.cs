@@ -138,7 +138,6 @@ namespace RJWard.Tube
 						}
 
 						Debug.Log( "Moving to match prev section, rotation is "+ts.transform.rotation);				
-						Vector3 prevHoopRot = lastHoopOfPrevious.spinePoint.transform.rotation.eulerAngles;
 
 						ts.transform.rotation = lastHoopOfPrevious.spinePoint.transform.rotation; // SEEMS RIGHT
 						yield return null;

@@ -87,7 +87,7 @@ namespace RJWard.Tube
 		}
 
 
-		public IEnumerator CreateCircular( string n, TubeSectionDefinition_Linear tsd, Material mat, System.Action< TubeSection_Linear > onCreatedAction )
+		public IEnumerator CreateCircularCR( string n, TubeSectionDefinition_Linear tsd, Material mat, System.Action< TubeSection_Linear > onCreatedAction )
 		{
 			if (tmpTubeSection_ != null)
 			{
@@ -95,7 +95,7 @@ namespace RJWard.Tube
 			}
 			GameObject tsGo = new GameObject( n );
 			tmpTubeSection_ = tsGo.AddComponent<TubeSection_Linear>( );
-			tmpTubeSection_.InitCircular( n, tsd, mat );// TOD CR
+			yield return StartCoroutine(tmpTubeSection_.InitCircularCR( n, tsd, mat ));
 			yield return null;
 			if (onCreatedAction != null)
 			{
@@ -153,7 +153,7 @@ namespace RJWard.Tube
 					sb.Append( "\n  Added as " ).DebugDescribe( hdb );
 				}
 
-				yield return StartCoroutine(CreateCircular( "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ));
+				yield return StartCoroutine(CreateCircularCR( "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ));
 				//container.gameObject.SetActive( false );
 				tsNumber++;
 
@@ -224,7 +224,7 @@ namespace RJWard.Tube
 
 				Debug.Log( sb.ToString( ) );
 
-				yield return StartCoroutine( CreateCircular( "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ) );
+				yield return StartCoroutine( CreateCircularCR( "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ) );
 				container.gameObject.SetActive( false );
 				tsNumber++;
 
