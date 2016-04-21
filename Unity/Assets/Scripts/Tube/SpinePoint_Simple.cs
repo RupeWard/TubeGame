@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
-	public class SpinePoint_Simple : SpinePoint_Base, RJWard.Core.IDebugDescribable
+	public class SpinePoint_Simple : SpinePoint_Base
 	{
 		private Hoop hoop_ = null;
 		public Hoop hoop
@@ -16,6 +16,7 @@ namespace RJWard.Tube
 		{
 			fixedRotation_ = true;
 		}
+
 		override public bool isFirst( )
 		{
 			return previousSpinePoint_ == null;
@@ -25,7 +26,6 @@ namespace RJWard.Tube
 		{
 			return nextSpinePoint_ == null;
 		}
-
 
 		private SpinePoint_Simple nextSpinePoint_ = null;
 		public SpinePoint_Simple nextSpinePoint
@@ -55,10 +55,6 @@ namespace RJWard.Tube
 				{
 					Debug.LogWarning( "Why setting nextSpinePoint to null?" );
 				}
-//				if (previousSpinePoint_ != null)
-	//			{
-		//			previousSpinePoint_.SetRotationDirty( );
-			//	}
 			}
 		}
 
@@ -90,10 +86,6 @@ namespace RJWard.Tube
 				{
 					Debug.LogWarning( "Why setting previousSpinePoint to null?" );
 				}
-//				if (nextSpinePoint_ != null)
-	//			{
-		//			nextSpinePoint_.SetRotationDirty( );
-			//	}
 			}
 		}
 
@@ -108,13 +100,13 @@ namespace RJWard.Tube
 			if (t < 0f || t > 1f)
 			{
 				Debug.LogWarning( "t = " + t );
-				return false;
+//				return false;
 			}
 			t = Mathf.Clamp01( t );
 
 			if (t==0f)
 			{
-				result = transform.position;
+				result = cachedTransform_.position;
 				success = true;
 			}
 			else
@@ -136,12 +128,10 @@ namespace RJWard.Tube
 					}
 					else
 					{
-						result = Vector3.Lerp( transform.position, nextSpinePoint_.transform.position, t );
+						result = Vector3.Lerp( cachedTransform_.position, nextSpinePoint_.cachedTransform_.position, t );
 						success = true;
 					}
-
 				}
-
 			}
 			return success;
 		}
@@ -157,27 +147,34 @@ namespace RJWard.Tube
 			}
 			t = Mathf.Clamp01( t );
 
-			if (backInterpolator != null)
+			if (t==0)
 			{
-				if (previousSpinePoint_ == null)
-				{
-					Debug.LogWarning( "Spine pt has a back interpolator but no prev point!" );
-                }
-				result = backInterpolator.Interpolate( 1-t );
+				result = cachedTransform_.position;
 				success = true;
 			}
 			else
 			{
-				if (previousSpinePoint_ == null)
+				if (backInterpolator != null)
 				{
-					Debug.LogWarning( "Spine pt has no forward interpolator and no next point, can't interpolate!" );
-                }
-				else
-				{
-					result = Vector3.Lerp( transform.position, previousSpinePoint_.transform.position, t );
+					if (previousSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine pt has a back interpolator but no prev point!" );
+					}
+					result = backInterpolator.Interpolate( 1 - t );
 					success = true;
 				}
-
+				else
+				{
+					if (previousSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine pt has no back interpolator and no previous point, can't interpolate!" );
+					}
+					else
+					{
+						result = Vector3.Lerp( cachedTransform_.position, previousSpinePoint_.cachedTransform_.position, t );
+						success = true;
+					}
+				}
 			}
 			return success;
 		}
@@ -185,14 +182,14 @@ namespace RJWard.Tube
 		private bool rotationIsDirty_ = false;
 		public void SetRotationDirty()
 		{
-			if (!fixedRotation_)
+//			if (!fixedRotation_)
 			{
 				rotationIsDirty_ = true;
 			}
-			else
-			{
-				Debug.LogWarning( "Setting rotation when fixed" );
-			}
+//			else
+//			{
+//				Debug.LogWarning( "Setting rotation dirty when fixed" );
+//			}
 		}
 
 		private float rotationPositionFraction = 0.1f;
@@ -206,7 +203,7 @@ namespace RJWard.Tube
 			{
 				if (fixedRotation_)
 				{
-					Debug.LogError( "Rotation dirty but fixed on " + gameObject.name );
+					Debug.LogWarning( "Rotation dirty but fixed on " + gameObject.name );
 				}
 				else
 				{
@@ -225,10 +222,10 @@ namespace RJWard.Tube
 					{
 
 						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
-							( previousSpinePoint_.previousSpinePoint.transform.position,
-								previousSpinePoint_.transform.position,
-								transform.position,
-								nextSpinePoint_.transform.position );
+							( previousSpinePoint_.previousSpinePoint.cachedTransform_.position,
+								previousSpinePoint_.cachedTransform_.position,
+								cachedTransform_.position,
+								nextSpinePoint_.cachedTransform_.position );
 
 						posBefore = interpolator.Interpolate( 1f - rotationPositionFraction );
 
@@ -239,7 +236,7 @@ namespace RJWard.Tube
 					}
 					else if (previousSpinePoint_ != null)
 					{
-						posBefore = transform.position - rotationPositionFraction * (transform.position - previousSpinePoint_.transform.position);
+						posBefore = cachedTransform_.position - rotationPositionFraction * (cachedTransform_.position - previousSpinePoint_.cachedTransform_.position);
 						if (DEBUG_ROTATIONS)
 						{
 							debugSB.Append( "\nPosBefore linear from previous = " ).Append( (Vector3)posBefore );
@@ -247,7 +244,7 @@ namespace RJWard.Tube
 					}
 					else if (nextSpinePoint_ != null)
 					{
-						posBefore = transform.position - rotationPositionFraction * (nextSpinePoint_.transform.position - transform.position);
+						posBefore = cachedTransform_.position - rotationPositionFraction * (nextSpinePoint_.cachedTransform_.position - transform.position);
 						if (DEBUG_ROTATIONS)
 						{
 							debugSB.Append( "\nPosBefore linear from next = " ).Append( (Vector3)posBefore );
@@ -261,10 +258,10 @@ namespace RJWard.Tube
 					if (previousSpinePoint_ != null && nextSpinePoint_ != null && nextSpinePoint_.nextSpinePoint != null)
 					{
 						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
-							(	previousSpinePoint_.transform.position,
-								transform.position,
-								nextSpinePoint_.transform.position,
-								nextSpinePoint_.nextSpinePoint.transform.position );
+							(	previousSpinePoint_.cachedTransform_.position,
+								cachedTransform_.position,
+								nextSpinePoint_.cachedTransform_.position,
+								nextSpinePoint_.nextSpinePoint.cachedTransform_.position );
 
 						posAfter = interpolator.Interpolate( rotationPositionFraction );
 
@@ -275,7 +272,7 @@ namespace RJWard.Tube
 					}
 					else if (nextSpinePoint_ != null)
 					{
-						posAfter = transform.position + rotationPositionFraction * (nextSpinePoint_.transform.position - transform.position);
+						posAfter = cachedTransform_.position + rotationPositionFraction * (nextSpinePoint_.cachedTransform_.position - cachedTransform_.position);
 						if (DEBUG_ROTATIONS)
 						{
 							debugSB.Append( "\nPosAfter linear from next = " ).Append( (Vector3)posAfter );
@@ -283,7 +280,7 @@ namespace RJWard.Tube
 					}
 					else if (previousSpinePoint_ != null)
 					{
-						posAfter = transform.position + rotationPositionFraction * (transform.position - previousSpinePoint_.transform.position);
+						posAfter = cachedTransform_.position + rotationPositionFraction * (cachedTransform_.position - previousSpinePoint_.cachedTransform_.position);
 						if (DEBUG_ROTATIONS)
 						{
 							debugSB.Append( "\nPosAfter linear from previous = " ).Append( (Vector3)posAfter );
@@ -294,7 +291,7 @@ namespace RJWard.Tube
 					{
 						Vector3 dirn = (Vector3)posAfter - (Vector3)posBefore;
 
-						transform.LookAt( transform.position + dirn );
+						cachedTransform_.LookAt( cachedTransform_.position + dirn );
 						rotationIsDirty_ = false;
 						if (DEBUG_ROTATIONS)
 						{
@@ -305,7 +302,7 @@ namespace RJWard.Tube
 					}
 					else if (posAfter != null)
 					{
-						transform.LookAt( (Vector3)posAfter );
+						cachedTransform_.LookAt( (Vector3)posAfter );
 						rotationIsDirty_ = false;
 						if (DEBUG_ROTATIONS)
 						{
@@ -325,7 +322,6 @@ namespace RJWard.Tube
 						}
 					}
 				}
-//				spine_.SetDirty( );
 				if (debugSB.Length > 0)
 				{
 					Debug.Log( debugSB );
@@ -337,14 +333,14 @@ namespace RJWard.Tube
 		public void Init( Spine sp,  Vector3 pos, Vector3? rot)
 		{
 			spine_ = sp;
-			transform.localPosition = pos;
+			cachedTransform_.localPosition = pos;
 			if (rot != null)
 			{
-				transform.localRotation = Quaternion.Euler( (Vector3)rot );
+				cachedTransform_.localRotation = Quaternion.Euler( (Vector3)rot );
 			}
 			else
 			{
-				transform.localRotation = Quaternion.identity;
+				cachedTransform_.localRotation = Quaternion.identity;
 			}
 			if (hoop_ == null)
 			{
@@ -372,7 +368,6 @@ namespace RJWard.Tube
 			hoop.CreateHoopPointsExplicit( hde );
 		}
 
-
 		private void MakeHoopCircular( int numPoints, float rad )
 		{
 			hoop.CreateHoopPointsCircular(numPoints, rad);
@@ -386,9 +381,9 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void DebugDescribe(System.Text.StringBuilder sb)
+		override protected void DebugDescribeDetails( System.Text.StringBuilder sb )
 		{
-			sb.Append( "SPS " ).Append( gameObject.name ).Append( " @" ).Append( transform.position );
+			sb.Append( "Linear " ).Append( gameObject.name ).Append( " @" ).Append( cachedTransform_.position );
 			sb.Append( " P/N = (" );
 			if (previousSpinePoint_ == null)
 			{

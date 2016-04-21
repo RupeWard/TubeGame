@@ -49,7 +49,6 @@ namespace RJWard.Tube
 			HoopDefinition_Base previous = null;
 			if (settings.firstHoop != null)
 			{
-				Debug.LogError( "Not checked" );
 				defn.AddHoopDefn( settings.firstHoop );
 				previous = settings.firstHoop;
 				sb.Append( "\n COPIED first hoop defn :" ).DebugDescribe( settings.firstHoop);
