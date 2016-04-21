@@ -8,7 +8,75 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	static private readonly bool DEBUG_LOCAL = false;
 
 	public SpineCamera mainCamera;
-	public TubeTester tubeTester;
+	//	public TubeTester tubeTester;
+
+	public Transform pos1 = null;
+	public Transform pos2 = null;
+	public int num = 5;
+	public float startRadius = 5f;
+	public float endRadius = 8f;
+
+	public int delaySecs = 10;
+
+	public int numHoopPoints = 10;
+
+	public Material tubeWallMaterial;
+
+	public Transform testTubeContainer;
+
+	public TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
+
+	public Tube tube_ = null;
+
+	// Use this for initialization
+	void Start( )
+	{
+		TubeFactory.Instance.tubeWallMaterial = tubeWallMaterial;
+		GameObject tubeGO = new GameObject( "Tube" );
+		tubeGO.transform.position = Vector3.zero;
+		tubeGO.transform.localScale = Vector3.one;
+		tube_ = tubeGO.AddComponent<Tube>( );
+	}
+
+	public void NewFromSources( )
+	{
+		TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, HandleTubeSectionMade );
+	}
+
+	public void ClearTube( )
+	{
+		tube_.DeleteAllSections( );
+	}
+
+	private void HandleTubeSectionMade( TubeSection_Linear ts )
+	{
+		tube_.AddToEnd( ts );
+	}
+
+	public SpinePoint_Base GetFirstSpinePoint( )
+	{
+		SpinePoint_Base result = null;
+		if (tube_ != null)
+		{
+			result = tube_.FirstSpinePoint( );
+		}
+		return result;
+	}
+
+	public void CreateRandomSection( )
+	{
+		//			Debug.Log( "Randomising" );
+		randLinearSectionDefn.firstHoop = null;
+		if (tube_ != null)
+		{
+			Hoop lastHoop = tube_.LastHoop( );
+			if (lastHoop != null)
+			{
+				randLinearSectionDefn.firstHoop = lastHoop.ExplicitDefinition( );
+			}
+		}
+		TubeFactory.Instance.CreateRandomLinearSection( randLinearSectionDefn, HandleTubeSectionMade );
+	}
 
 	public Transform cameraHook;
 
@@ -16,8 +84,6 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	private Vector3 originalPosition_ = Vector3.zero;
 	private Quaternion originalRotation_ = Quaternion.identity;
-
-	public TubeFactory.RandLinearSectionDefn randLinearSectionDefn = new TubeFactory.RandLinearSectionDefn( );
 
 	public void SetCameraOffHook()
 	{
@@ -53,7 +119,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void SetCameraToFirstSpinePoint()
 	{
-		SpinePoint_Base firstSpinePoint = tubeTester.GetFirstSpinePoint( );
+		SpinePoint_Base firstSpinePoint = GetFirstSpinePoint( );
 		if (firstSpinePoint != null )
 		{
 			mainCamera.enabled = true;
@@ -96,16 +162,16 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public void HandleRandomTubeSectionButtonPressed( )
 	{
 //		Debug.Log( "Randomising" );
-		tubeTester.CreateRandomSection( );
+		CreateRandomSection( );
 	}
 
 	public void HandleSourcesButtonPressed()
 	{
-		tubeTester.NewFromSources( );
+		NewFromSources( );
 	}
 
 	public void HandleClearButtonPressed()
 	{
-		tubeTester.ClearTube( );
+		ClearTube( );
 	}
 }
