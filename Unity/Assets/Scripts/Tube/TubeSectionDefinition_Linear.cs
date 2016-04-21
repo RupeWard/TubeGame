@@ -6,10 +6,16 @@ namespace RJWard.Tube
 {
 	public class TubeSectionDefinition_Linear
 	{
+		static readonly bool DEBUG_LOCAL = false;
+
 		static private int s_counter = 0;
 
 		public TubeSectionDefinition_Linear()
 		{
+			if (DEBUG_LOCAL)
+			{
+				Debug.Log( "Creating TubesectionDefinition_Linear #" + s_counter );
+			}
 			id_ = s_counter;
 			s_counter++;
 		}
@@ -32,6 +38,10 @@ namespace RJWard.Tube
 			{
 				result = hoopDefns_[index];
 			}
+			else
+			{
+				Debug.LogError( "Can't get hoop #" + index + " from " + NumSpinePoints );
+			}
 			return result;
 		}
 
@@ -45,37 +55,11 @@ namespace RJWard.Tube
 			{
 				if (numHoopPoints_ != hdb.numHoopPoints)
 				{
-					Debug.LogError( "mismacth" );
+					Debug.LogError( "mismatch" );
 				}
 			}
 			hoopDefns_.Add( hdb );
 		}
 	}
-	/*
-	public class TubeSectionDefinition_Linear
-	{
-		private List< SpinePointDefinition > spinePointDefns_ = new List< SpinePointDefinition >( );
-
-		public int NumSpinePoints
-		{
-			get { return spinePointDefns_.Count;  }
-		}
-
-		public SpinePointDefinition GetSpinePointDefn(int index)
-		{
-			SpinePointDefinition result = null;
-			if (index >= 0 && index < NumSpinePoints)
-			{
-				result = spinePointDefns_[index];
-			}
-			return result;
-		}
-
-		public void AddSpinePointDefn( SpinePointDefinition spd )
-		{
-			spinePointDefns_.Add( spd );
-		}
-	}
-	*/
 
 }
