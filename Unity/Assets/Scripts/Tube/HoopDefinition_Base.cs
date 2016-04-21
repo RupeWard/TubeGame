@@ -40,7 +40,7 @@ namespace RJWard.Tube
 
 		public void DebugDescribe(System.Text.StringBuilder sb)
 		{
-			sb.Append( "HOOP @" ).Append( position ).Append( " R=" );
+			sb.Append( "[HOOP @" ).Append( position ).Append( " R=" );
 			if (rotation != null)
 			{
 				sb.Append( rotation );
@@ -51,11 +51,10 @@ namespace RJWard.Tube
 			}
 			sb.Append( " N=" ).Append( numHoopPoints_ );
 			DebugDescribeDetails( sb );
+			sb.Append( "]" );
 		}
 
-		protected virtual void DebugDescribeDetails( System.Text.StringBuilder sb)
-		{
-		}
+		abstract protected void DebugDescribeDetails( System.Text.StringBuilder sb );
 
 		abstract public void AddToSpine( Spine sp, bool fixedRotation );
 	}

@@ -6,33 +6,22 @@ namespace RJWard.Tube
 {
 	public class HoopDefinition_Explicit : HoopDefinition_Base
 	{
-		private List<Vector3> positions_ = new List<Vector3>();
+		private Vector3[] positions_ = null;
 
 		private void InitialisePositions(int n)
 		{
-			positions_.Clear();
-			if (n==0)
-			{
-				Debug.LogError( "N=0" );
-			}
-			else
-			{
-				for (int i = 0; i < n; i++)
-				{
-						positions_.Add(new Vector3());
-				}
-			}
+			positions_ = new Vector3[n];
 		}
 
 		public Vector3 GetHoopPointPosition(int n)
 		{
 			return positions_[ n ];
 		}
+
 		public HoopDefinition_Explicit( Vector3 p, Vector3? ro, int nh )
 			: base( p, ro, nh )
 		{
 			InitialisePositions( nh );
-//			positions_ = new List<Vector3>( nh );
 		}
 
 		public HoopDefinition_Explicit( Hoop hoop )
@@ -45,14 +34,12 @@ namespace RJWard.Tube
 			else
 			{
 				InitialisePositions( numHoopPoints );
-//				positions_ = new List<Vector3>( numHoopPoints );
 				for (int i = 0; i < numHoopPoints; i++)
 				{
 					Vector3 pos = hoop.GetHoopPoint( i ).transform.localPosition;
-					Debug.Log( "i=" + i + " pos = " + pos );
-					if (i<0 || i >= positions_.Count)
+					if (i<0 || i >= positions_.Length)
 					{
-						Debug.LogError( "i=" + i + " pc=" + positions_.Count );
+						Debug.LogError( "i=" + i + " pc=" + positions_.Length);
 					}
 					else
 					{
@@ -67,7 +54,7 @@ namespace RJWard.Tube
 		protected override void DebugDescribeDetails(System.Text.StringBuilder sb)
 		{
 			sb.Append( "EXPL ");
-			for (int i = 0; i < positions_.Count; i++)
+			for (int i = 0; i < positions_.Length; i++)
 			{
 				sb.Append( positions_[i] );
 			}
@@ -77,15 +64,6 @@ namespace RJWard.Tube
 		{
 			sp.AddExplicitSpinePoint( this, fixedRotation );
 		}
-/*
-		override public void AddToSpine( Spine sp, HoopDefinition_Explicit hde )
-		{
-			sp.AddExplicitSpinePoint( hde, false);
-
-			Debug.LogError( "Not implemented" );
-			throw new System.InvalidOperationException( "not implememted" );
-		}
-*/
 	}
 }
 
