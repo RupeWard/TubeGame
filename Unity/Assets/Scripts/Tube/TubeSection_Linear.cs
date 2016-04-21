@@ -6,14 +6,14 @@ namespace RJWard.Tube
 {
 	public class TubeSection_Linear : MonoBehaviour
 	{
-		public void ConnectAfterSpinePoint(SpinePoint_Simple sp)
+		public void ConnectAfterSpinePoint(SpinePoint_Linear sp)
 		{
 			if (spine_ != null && spine_.NumSpinePoints > 0)
 			{
-				SpinePoint_Simple firstSp = spine_.GetSpinePoint( 0 );
+				SpinePoint_Linear firstSp = spine_.GetSpinePoint( 0 );
 				firstSp.previousSpinePoint = sp;
 				
-				SpinePoint_Simple mySp = spine_.GetSpinePoint( 1 );
+				SpinePoint_Linear mySp = spine_.GetSpinePoint( 1 );
 				mySp.previousSpinePoint = sp;
 				if (sp != null)
 				{
@@ -62,7 +62,7 @@ namespace RJWard.Tube
 			Hoop result = null;
 			if (spine_ != null)
 			{
-				SpinePoint_Simple sp = spine_.GetSpinePoint( spine_.NumSpinePoints - 1 );
+				SpinePoint_Linear sp = spine_.GetSpinePoint( spine_.NumSpinePoints - 1 );
 				if (sp != null)
 				{
 					result = sp.hoop;
@@ -84,7 +84,7 @@ namespace RJWard.Tube
 			Hoop result = null;
 			if (spine_ != null)
 			{
-				SpinePoint_Simple sp = spine_.GetSpinePoint( 0 );
+				SpinePoint_Linear sp = spine_.GetSpinePoint( 0 );
 				if (sp != null)
 				{
 					result = sp.hoop;
@@ -161,7 +161,7 @@ namespace RJWard.Tube
 			int numHoopPoints = int.MaxValue;
 			for (int i = 0; !abort && i < srcTs.spine_.NumSpinePoints; i++)
 			{
-				SpinePoint_Simple spt = srcTs.spine_.GetSpinePoint( i );
+				SpinePoint_Linear spt = srcTs.spine_.GetSpinePoint( i );
 				if (numHoopPoints != int.MaxValue && numHoopPoints != spt.hoop.numPoints( ))
 				{
 					Debug.LogError( "NumPoints mismatch" );
@@ -238,7 +238,7 @@ namespace RJWard.Tube
 
 					for (int ptNum = 0; ptNum < numNewPoints; ptNum++)
 					{
-						SpinePoint_Simple spinePoint = spine_.GetSpinePoint( ptNum );
+						SpinePoint_Linear spinePoint = spine_.GetSpinePoint( ptNum );
 						if (spinePoint == null)
 						{
 							Debug.LogError( "No spine point " + ptNum );

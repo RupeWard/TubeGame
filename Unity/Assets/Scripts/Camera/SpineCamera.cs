@@ -15,10 +15,10 @@ namespace RJWard.Tube.Camera
 		public float camMaxSpeed = 1f;
 		public float camDrag = 1f;
 
-		private SpinePoint_Simple spinePoint_ = null;
+		private SpinePoint_Linear spinePoint_ = null;
 
 #if UNITY_EDITOR
-		public SpinePoint_Simple modSpinePoint = null;
+		public SpinePoint_Linear modSpinePoint = null;
 #endif
 		private float currentSpeed = 0f;
 		private float currentAcc = 0f;
@@ -71,7 +71,7 @@ namespace RJWard.Tube.Camera
 #if UNITY_EDITOR
 			if (modSpinePoint != spinePoint_)
 			{
-				SpinePoint_Simple pointToMod = modSpinePoint;
+				SpinePoint_Linear pointToMod = modSpinePoint;
 				modSpinePoint = null;
 				if (DEBUG_LOCAL)
 				{
@@ -125,7 +125,7 @@ namespace RJWard.Tube.Camera
 //							Debug.Log( "Reverse, NewT=" + newT );
 						}
 						int numJumps = 0;
-						SpinePoint_Simple foundSpinePoint = lastSpinePoint_;
+						SpinePoint_Linear foundSpinePoint = lastSpinePoint_;
 						while (newT < 0f)
 						{
 							newT += 1f;
@@ -182,7 +182,7 @@ namespace RJWard.Tube.Camera
 						Debug.Log( "Forward, NewT=" + newT );
 					}
 					int numJumps = 0;
-					SpinePoint_Simple foundSpinePoint = lastSpinePoint_;
+					SpinePoint_Linear foundSpinePoint = lastSpinePoint_;
 					while (newT >= 1f)
 					{
 						newT -= 1f;
@@ -228,7 +228,7 @@ namespace RJWard.Tube.Camera
 			camera_ = GetComponent<UnityEngine.Camera>( );
 		}
 
-		private RJWard.Tube.SpinePoint_Simple lastSpinePoint_ = null;
+		private RJWard.Tube.SpinePoint_Linear lastSpinePoint_ = null;
 		private float t_ = 0f;
 
 		public void InitStationary( SpinePoint_Base sp, float t )
@@ -241,7 +241,7 @@ namespace RJWard.Tube.Camera
 		{
 			// TODO this all needs refactoring for more generic spinepoints
 
-			SpinePoint_Simple sp = spb as SpinePoint_Simple;
+			SpinePoint_Linear sp = spb as SpinePoint_Linear;
 			if (sp == null)
 			{
 				throw new System.InvalidOperationException( "Non spinepointsimple not yet implemented" );

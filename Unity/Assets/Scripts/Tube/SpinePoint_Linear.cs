@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
-	public class SpinePoint_Simple : SpinePoint_Base
+	public class SpinePoint_Linear : SpinePoint_Base
 	{
 		private Hoop hoop_ = null;
 		public Hoop hoop
@@ -27,8 +27,8 @@ namespace RJWard.Tube
 			return nextSpinePoint_ == null;
 		}
 
-		private SpinePoint_Simple nextSpinePoint_ = null;
-		public SpinePoint_Simple nextSpinePoint
+		private SpinePoint_Linear nextSpinePoint_ = null;
+		public SpinePoint_Linear nextSpinePoint
 		{
 			get { return nextSpinePoint_;  }
 			set
@@ -58,8 +58,8 @@ namespace RJWard.Tube
 			}
 		}
 
-		private SpinePoint_Simple previousSpinePoint_ = null;
-		public SpinePoint_Simple previousSpinePoint
+		private SpinePoint_Linear previousSpinePoint_ = null;
+		public SpinePoint_Linear previousSpinePoint
 		{
 			get { return previousSpinePoint_;  }
 			set

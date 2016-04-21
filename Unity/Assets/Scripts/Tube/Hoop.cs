@@ -24,8 +24,8 @@ namespace RJWard.Tube
 
 		private List<HoopPoint> hoopPoints_ = new List<HoopPoint>( );
 
-		private SpinePoint_Simple spinePoint_ = null;
-		public SpinePoint_Simple spinePoint
+		private SpinePoint_Linear spinePoint_ = null;
+		public SpinePoint_Linear spinePoint
 		{
 			get { return spinePoint_; }
 		}
@@ -40,7 +40,7 @@ namespace RJWard.Tube
 			return hoopPoints_[index];
 		}
 
-		public void Init( SpinePoint_Simple sp )
+		public void Init( SpinePoint_Linear sp )
 		{
 			gameObject.name = "H" + sp.gameObject.name;
 

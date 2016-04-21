@@ -171,12 +171,12 @@ namespace RJWard.Tube
 			System.Text.StringBuilder debugsb = new System.Text.StringBuilder( );
 			debugsb.Append( "Recalculating interpolators" );
 
-			List<SpinePoint_Simple> spinePoints = new List<SpinePoint_Simple>( );
+			List<SpinePoint_Linear> spinePoints = new List<SpinePoint_Linear>( );
 			List<Vector3> spinePointPositions = new List<Vector3>( );
 
 			if (tubeSections_.Count > 0)
 			{
-				SpinePoint_Simple spinePoint = tubeSections_[0].FirstHoop().spinePoint;
+				SpinePoint_Linear spinePoint = tubeSections_[0].FirstHoop().spinePoint;
 				while (spinePoint != null)
 				{
 					spinePoints.Add( spinePoint );
