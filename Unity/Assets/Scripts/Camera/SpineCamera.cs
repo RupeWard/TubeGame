@@ -6,6 +6,8 @@ namespace RJWard.Tube.Camera
 	[RequireComponent (typeof(UnityEngine.Camera))]
 	public class SpineCamera : MonoBehaviour
 	{
+		static private readonly bool DEBUG_LOCAL = false;
+
 		private Transform cachedTransform_ = null;
 
 		public float camSpeedMult = 1f;
@@ -66,22 +68,29 @@ namespace RJWard.Tube.Camera
 
 		void Update()
 		{
+#if UNITY_EDITOR
 			if (modSpinePoint != spinePoint_)
 			{
 				SpinePoint_Simple pointToMod = modSpinePoint;
 				modSpinePoint = null;
-				Debug.Log( "Spine point changed" );
+				if (DEBUG_LOCAL)
+				{
+					Debug.Log( "Spine point changed in editor" );
+				}
 				InitStationary( pointToMod, 0f );
 				TestSceneManager.Instance.SetCameraOffHook();
 			}
-
+#endif
 			if (Mathf.Abs(currentAcc) > Mathf.Epsilon)
 			{
 				currentSpeed += currentAcc * Time.deltaTime;
 				if (currentSpeed > camMaxSpeed)
 				{
 					currentSpeed = camMaxSpeed;
-					Debug.Log( "Camera speed maxed at " + currentSpeed );
+					if (DEBUG_LOCAL)
+					{
+						Debug.Log( "Camera speed maxed at " + currentSpeed );
+					}
 					currentAcc = 0f;
 				}
 				else
@@ -96,7 +105,10 @@ namespace RJWard.Tube.Camera
 				if (currentSpeedSign != Mathf.Sign(currentSpeed))
 				{
 					currentSpeed = 0f;
-					Debug.Log( "Cam slowed to halt" );
+					if (DEBUG_LOCAL)
+					{
+						Debug.Log( "Cam slowed to halt" );
+					}
 				}
 			}
 
@@ -108,7 +120,10 @@ namespace RJWard.Tube.Camera
 				{
 					if (lastSpinePoint_.previousSpinePoint != null)
 					{
-						Debug.Log( "Reverse, NewT=" + newT );
+						if (DEBUG_LOCAL)
+						{
+//							Debug.Log( "Reverse, NewT=" + newT );
+						}
 						int numJumps = 0;
 						SpinePoint_Simple foundSpinePoint = lastSpinePoint_;
 						while (newT < 0f)
@@ -118,19 +133,24 @@ namespace RJWard.Tube.Camera
 							{
 								stop( );
 								newT = 0f;
-								Debug.Log( "Can't move back, at start" );
+								if (DEBUG_LOCAL)
+								{
+									Debug.Log( "Can't move back, at start" );
+								}
 							}
 							else
 							{
 								foundSpinePoint = foundSpinePoint.previousSpinePoint;
 								numJumps++;
-								Debug.Log( "Switching to previous spinepoint " + foundSpinePoint.gameObject.name + " (" + numJumps + " jumps" );
+								if (DEBUG_LOCAL)
+								{
+									Debug.Log( "Cam Switching to previous spinepoint " + foundSpinePoint.gameObject.name + " (" + numJumps + " jumps" );
+								}
 							}
 						}
-						if (numJumps > 0)
+						if (DEBUG_LOCAL && numJumps > 0)
 						{
 							Debug.LogWarning( "Rev NumJumps = " + numJumps + " fsp= " + foundSpinePoint.gameObject.name );
-							//	Init( foundSpinePoint, newT );
 						}
 
 						if (newT < 1f)
@@ -141,23 +161,14 @@ namespace RJWard.Tube.Camera
 						{
 							Debug.LogWarning( "Reverse NewT=" + newT );
 						}
-
-						/*
-						if (newT <=1 && newT >=0)
-						{
-							Debug.Log( "Switching to previous spinepoint" + lastSpinePoint_.previousSpinePoint.gameObject.name );
-							Init( lastSpinePoint_.previousSpinePoint, newT + 1 );
-						}
-						else
-						{
-							Debug.LogError( "Failed to switch on reverse with t="+t_+" newT = "+newT );
-							stop( );
-						}*/
 					}
 					else
 					{
 						stop( );
-						Debug.Log( "Can't move back, at start" );
+						if (DEBUG_LOCAL)
+						{
+							Debug.Log( "Can't move back, at start" );
+						}
 					}
 				}
 				else if (newT < 1f)
@@ -166,7 +177,10 @@ namespace RJWard.Tube.Camera
 				}
 				else
 				{
-					Debug.Log( "Forward, NewT=" + newT );
+					if (DEBUG_LOCAL)
+					{
+						Debug.Log( "Forward, NewT=" + newT );
+					}
 					int numJumps = 0;
 					SpinePoint_Simple foundSpinePoint = lastSpinePoint_;
 					while (newT >= 1f)
@@ -176,19 +190,24 @@ namespace RJWard.Tube.Camera
 						{
 							stop( );
 							newT = 0f;
-							Debug.Log( "Can't move fwd, at end" );
+							if (DEBUG_LOCAL)
+							{
+								Debug.Log( "Can't move fwd, at end" );
+							}
 						}
 						else
 						{
 							foundSpinePoint = foundSpinePoint.nextSpinePoint;
 							numJumps++;
-							Debug.Log( "Switching to next spinepoint "+foundSpinePoint.gameObject.name +" ("+numJumps+" jumps");
+							if (DEBUG_LOCAL)
+							{
+								Debug.Log( "Switching to next spinepoint " + foundSpinePoint.gameObject.name + " (" + numJumps + " jumps" );
+							}
 						}
 					}
-					if (numJumps > 0)
+					if (DEBUG_LOCAL && numJumps > 0)
 					{
 						Debug.LogWarning( "FWD NumJumps = " + numJumps + " fsp= "+foundSpinePoint.gameObject.name );
-					//	Init( foundSpinePoint, newT );
 					}
 
 					if (newT < 1f)
@@ -230,30 +249,24 @@ namespace RJWard.Tube.Camera
 
 			if (lastSpinePoint_ != sp)
 			{
-				Debug.Log( "Initing to new " + sp.gameObject.name );
+				if (DEBUG_LOCAL)
+				{
+					Debug.Log( "Initing to new " + sp.gameObject.name );
+				}
 			}
 			lastSpinePoint_ = sp;
 			t_ = t;
 
 			if (t>0f && lastSpinePoint_.nextSpinePoint == null)
 			{
-				Debug.LogWarning( "No next point with t=" + t_ +", clamping to zero");
+				if (DEBUG_LOCAL)
+				{
+					Debug.LogWarning( "No next point with t=" + t_ + ", clamping to zero" );
+				}
 				stop( );
 				t_ = 0f;
-				/*
-				if (lastSpinePoint_.previousSpinePoint != null)
-				{
-					Debug.LogWarning( "Initing on preultimate point instead with t="+t_ );
-					InitStationary( lastSpinePoint_.previousSpinePoint, 0.9f );
-					return;
-				}
-				else
-				{
-					Debug.LogError( "Can't init on only one point" );
-				}
-				*/
 			}
-//			else
+
 			{
 				Vector3 pos = Vector3.zero;
 				if (t < 0f || t > 1f)
@@ -262,7 +275,7 @@ namespace RJWard.Tube.Camera
 				}
 				if (lastSpinePoint_.InterpolateForwardWorld(t, ref pos))
 				{
-					transform.position = pos;
+					cachedTransform_.position = pos;
 
 					Vector3 lookAtPos = Vector3.zero;
 					float tdiff = 0.01f;
@@ -277,7 +290,7 @@ namespace RJWard.Tube.Camera
 						{
 							if (Vector3.Distance( pos, lookAtPos ) > 0.001f)
 							{
-								transform.LookAt( lookAtPos );
+								cachedTransform_.LookAt( lookAtPos );
 							}
 							else
 							{
@@ -286,7 +299,7 @@ namespace RJWard.Tube.Camera
 						}
 						else
 						{
-							Debug.LogError( "Stopped" );
+							Debug.LogWarning( "Stopped because failed to interpolate" );
 							stop( );
 						}
 					}
