@@ -92,7 +92,7 @@ namespace RJWard.Tube
 
 		public IEnumerator AddToEndCR(TubeSection_Linear ts)
 		{
-			Debug.Log( "Appending to end" );
+//			Debug.Log( "Appending to end" );
 			ts.transform.parent = transform;
 			ts.transform.localScale = Vector3.one;
 			ts.transform.localPosition = Vector3.zero;

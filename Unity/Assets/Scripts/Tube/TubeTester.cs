@@ -87,7 +87,7 @@ namespace RJWard.Tube
 
 		public void CreateRandomSection()
 		{
-			Debug.Log( "Randomising" );
+//			Debug.Log( "Randomising" );
 			randLinearSectionDefn.firstHoop = null;
 			if (tube_ != null)
 			{

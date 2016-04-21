@@ -148,7 +148,7 @@ namespace RJWard.Tube
 				if (hdb != null)
 				{
 					spine_.AddSpinePoint( hdb, i==0 );
-					yield return null;
+//					yield return null;
 					if (DEBUG_CIRCULAR)
 					{
 						debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( hdb );
@@ -271,7 +271,7 @@ namespace RJWard.Tube
 					else
 					{
 						hoopPointPositions[hoopIndex] = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldHoopPtPosns, numPerSection, null );
-						yield return null;
+						//yield return null;
 						if (DEBUG_SPLINAR)
 						{
 							debugSb.Append( "\n Interpolated hoop points " ).Append( hoopIndex ).Append( " from " ).Append( oldSpinePtPosns.Count ).Append( " to " ).Append( numSpinePoints );
@@ -325,13 +325,13 @@ namespace RJWard.Tube
 								{
 									Debug.LogError( "NRE when hoopPtNum = " + hoopPtNum + " and ptNum = " + ptNum );
 								}
-								yield return null;
+								//yield return null;
 							}
 							for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
 							{
 								HoopPoint hp = spinePoint.hoop.GetHoopPoint( hoopPtNum );
 								RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, spinePoint.hoop.GetColourForPoint( hp) );
-								yield return null;
+								//yield return null;
 							}
 
 							if (DEBUG_SPLINAR)

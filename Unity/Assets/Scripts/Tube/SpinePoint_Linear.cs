@@ -195,7 +195,7 @@ namespace RJWard.Tube
 		private float rotationPositionFraction = 0.1f;
 
 		System.Text.StringBuilder debugSB = new System.Text.StringBuilder( );
-		private bool DEBUG_ROTATIONS = true;
+		private bool DEBUG_ROTATIONS = false;
 
 		private void Update()
 		{
@@ -203,7 +203,10 @@ namespace RJWard.Tube
 			{
 				if (fixedRotation_)
 				{
-					Debug.LogWarning( "Rotation dirty but fixed on " + gameObject.name );
+					if (DEBUG_ROTATIONS)
+					{
+						Debug.LogWarning( "Rotation dirty but fixed on " + gameObject.name );
+					}
 				}
 				else
 				{

@@ -8,7 +8,7 @@ namespace RJWard.Tube
 		private Color firstPointColour_ = Color.green;
 		private Color endPointColor_ = Color.yellow;
 
-		private static readonly bool DEBUG_LOCAL = true;
+		private static readonly bool DEBUG_LOCAL = false;
 		private System.Text.StringBuilder debugSb_ = null;
 		private System.Text.StringBuilder debugSb
 		{
