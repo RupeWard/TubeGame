@@ -71,6 +71,24 @@ namespace RJWard.Tube
 			return Color.Lerp( firstPointColour_, endPointColor_, f );
 		}
 
+		public void CheckCentreing()
+		{
+			Vector3 sum = Vector3.zero;
+			for (int i =0; i<hoopPoints_.Count; i++)
+			{
+				sum += hoopPoints_[i].transform.localPosition;
+			}
+			Vector3 centre = sum / hoopPoints_.Count;
+			if (centre.sqrMagnitude > 0.001f)
+			{
+				Debug.Log( "centre " + centre + " (mag " + centre.magnitude + ")" );
+			}
+			for (int i =0; i< hoopPoints_.Count; i++)
+			{
+//				hoopPoints_[i].transform.localPosition = hoopPoints_[i].transform.localPosition + centre;
+			}
+		}
+
 		public void CreateHoopPointsExplicit( HoopDefinition_Explicit hde)
 		{
 			if (DEBUG_LOCAL)

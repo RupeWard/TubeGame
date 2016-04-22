@@ -340,6 +340,7 @@ namespace RJWard.Tube
 									.Append( " to hoop " ).Append( ptNum );
 							}
 						}
+						spinePoint.hoop.CheckCentreing( );
 					}
 				}
 			}
