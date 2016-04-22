@@ -14,6 +14,11 @@ namespace RJWard.Tube.UI
 			versionText.text = RJWard.Core.Version.versionNumber.DebugDescribe( );
 		}
 
+		public void HandleQuitButton()
+		{
+			Application.Quit( );
+		}
+
 		public void HandleCameraButton()
 		{
 			TestSceneManager.Instance.ToggleCamera( );
