@@ -6,7 +6,7 @@ namespace RJWard.Tube
 	abstract public class SpinePoint_Base : MonoBehaviour, RJWard.Core.IDebugDescribable
 	{
 		protected Transform cachedTransform_ = null;
-	//	public Transform cachedTransform {  get { return cachedTransform_; } }
+		public Transform cachedTransform {  get { return cachedTransform_; } }
 
 		protected Spine spine_ = null;
 
