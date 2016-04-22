@@ -7,11 +7,22 @@ namespace RJWard.Tube.UI
 	{
 		public RectTransform permanentPanel;
 		public UnityEngine.UI.Text cameraButtonText;
+		public UnityEngine.UI.Text versionText;
+
+		protected override void PostAwake( )
+		{
+			versionText.text = RJWard.Core.Version.versionNumber.DebugDescribe( );
+		}
 
 		public void HandleCameraButton()
 		{
 			TestSceneManager.Instance.ToggleCamera( );
 			
+		}
+
+		public void HandleDebugButton()
+		{
+			TestSceneManager.Instance.HandleDebugButtonPressed( );
 		}
 
 		public void HandleForwardButtonDown()
