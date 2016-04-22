@@ -33,6 +33,11 @@ namespace RJWard.Tube.UI
 		{
 			TestSceneManager.Instance.HandleCameraMotionButtonUp( );
 		}
+
+		public void HandleStopButton()
+		{
+			TestSceneManager.Instance.HandleCameraStopPressed( );
+		}
 	}
 
 }
