@@ -170,12 +170,12 @@ namespace RJWard.Tube
 			System.Text.StringBuilder debugsb = new System.Text.StringBuilder( );
 			debugsb.Append( "Recalculating interpolators" );
 
-			List<SpinePoint_Linear> spinePoints = new List<SpinePoint_Linear>( );
+			List<SpinePoint_Simple> spinePoints = new List<SpinePoint_Simple>( );
 			List<Vector3> spinePointPositions = new List<Vector3>( );
 
 			if (tubeSections_.Count > 0)
 			{
-				SpinePoint_Linear spinePoint = tubeSections_[0].FirstHoop().spinePoint;
+				SpinePoint_Simple spinePoint = tubeSections_[0].FirstHoop().spinePoint;
 				while (spinePoint != null)
 				{
 					spinePoints.Add( spinePoint );
@@ -205,6 +205,7 @@ namespace RJWard.Tube
 					else
 					{
 						spinePoints[i].forwardInterpolator = spinePointInterpolators[i];
+//						SpinePointConnection connection = new SpinePointConnection( spinePoints[i], spinePoints[i + 1], spinePointInterpolators[i] );
 					}
 					if (i> 0)
 					{
