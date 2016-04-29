@@ -33,7 +33,7 @@ namespace RJWard.Tube
 
 		public bool remakeMeshWhenDirty = false;
 
-		private Spine spine_ = null;
+		private Spine_Linear spine_ = null;
 		private Material tubeWallMaterial_;
 
 		private bool isMeshDirty_ = false;
@@ -132,7 +132,7 @@ namespace RJWard.Tube
 			Init( n, mat, debugSb );
 
 			GameObject spineGO = new GameObject( "SP"+n );
-			spine_ = spineGO.AddComponent<Spine>( );
+			spine_ = spineGO.AddComponent<Spine_Linear>( );
 			spine_.Init( this );
 
 			yield return null;
@@ -197,7 +197,7 @@ namespace RJWard.Tube
 			}
 
 			GameObject spineGO = new GameObject( "Sp");
-			spine_ = spineGO.AddComponent<Spine>( );
+			spine_ = spineGO.AddComponent<Spine_Linear>( );
 			spine_.Init( this );
 			yield return null;
 
@@ -240,7 +240,7 @@ namespace RJWard.Tube
 
 				List<RJWard.Core.CatMullRom3D> spinePointInterpolators = new List<Core.CatMullRom3D>( );
 				List<Vector3> spinePointPositions = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldSpinePtPosns, numPerSection, spinePointInterpolators );
-				yield return null;
+				// yield return null;
 
 				if (spinePointPositions.Count != (spinePointInterpolators.Count * numPerSection +1))
 				{

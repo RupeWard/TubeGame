@@ -56,7 +56,7 @@ namespace RJWard.Tube
 
 		abstract protected void DebugDescribeDetails( System.Text.StringBuilder sb );
 
-		abstract public void AddToSpine( Spine sp, bool fixedRotation );
+		abstract public void AddToSpine( Spine_Linear sp, bool fixedRotation );
 	}
 }
 

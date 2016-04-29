@@ -8,7 +8,27 @@ namespace RJWard.Tube
 		protected Transform cachedTransform_ = null;
 		public Transform cachedTransform {  get { return cachedTransform_; } }
 
-		protected Spine spine_ = null;
+		protected Spine_Linear spine_ = null;
+
+		protected bool fixedRotation_ = false;
+		public void fixRotation( )
+		{
+			fixedRotation_ = true;
+		}
+
+		protected bool rotationIsDirty_ = false;
+		public void SetRotationDirty( )
+		{
+			//			if (!fixedRotation_)
+			{
+				rotationIsDirty_ = true;
+			}
+			//			else
+			//			{
+			//				Debug.LogWarning( "Setting rotation dirty when fixed" );
+			//			}
+		}
+
 
 		public void SetDirty( )
 		{
@@ -23,6 +43,43 @@ namespace RJWard.Tube
 			cachedTransform_ = transform;
 		}
 
+		abstract public SpinePointConnection GetConnectionOut( SpinePointPathChooser chooser );
+		virtual public SpinePoint_Base GetSpinePointOut(SpinePointPathChooser chooser)
+		{
+			SpinePoint_Base result = null;
+			SpinePointConnection connection = GetConnectionOut( chooser );
+			if (connection != null)
+			{
+#if UNITY_EDITOR
+				if (connection.startPoint != this)
+				{
+					Debug.LogError( "Dodgy start point on "+this.DebugDescribe() );
+				}
+#endif
+				result = connection.endPoint;
+			}
+			return result;
+		}
+
+		abstract public SpinePointConnection GetConnectionIn( SpinePointPathChooser chooser );
+		virtual public SpinePoint_Base GetSpinePointIn( SpinePointPathChooser chooser )
+		{
+			SpinePoint_Base result = null;
+			SpinePointConnection connection = GetConnectionIn( chooser );
+			if (connection != null)
+			{
+#if UNITY_EDITOR
+				if (connection.endPoint != this)
+				{
+					Debug.LogError( "Dodgy end point on " + this.DebugDescribe( ) );
+				}
+#endif
+				result = connection.startPoint;
+			}
+			return result;
+		}
+
+
 		public void DebugDescribe(System.Text.StringBuilder sb)
 		{
 			sb.Append( "[SP" );
@@ -31,7 +88,77 @@ namespace RJWard.Tube
 		}
 
 		abstract protected void DebugDescribeDetails( System.Text.StringBuilder sb );
-    }
+
+//		abstract public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result );
+
+//		abstract public bool InterpolateBackwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result );
+
+		virtual public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result )
+		{
+			bool success = false;
+			result = Vector3.zero;
+
+			if (t < 0f || t > 1f)
+			{
+				Debug.LogWarning( "t = " + t );
+				//				return false;
+			}
+			t = Mathf.Clamp01( t );
+
+			if (t == 0f)
+			{
+				result = cachedTransform_.position;
+				success = true;
+			}
+			else
+			{
+				SpinePointConnection connection = GetConnectionOut( chooser );
+				if (connection != null)
+				{
+					result = connection.InterpolatePosition( t );
+					success = true;
+				}
+				else
+				{
+					Debug.LogWarning( "Spine_Linear pt has no out connection " + this.DebugDescribe( ) );
+				}
+			}
+			return success;
+		}
+
+		virtual public bool InterpolateBackwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result )
+		{
+			bool success = false;
+			result = Vector3.zero;
+
+			if (t < 0f || t > 1f)
+			{
+				Debug.LogWarning( "t = " + t );
+			}
+			t = Mathf.Clamp01( t );
+
+			if (t == 0)
+			{
+				result = cachedTransform_.position;
+				success = true;
+			}
+			else
+			{
+				SpinePointConnection connection = GetConnectionIn( chooser );
+				if (connection != null)
+				{
+					result = connection.InterpolatePosition( 1 - t );
+					success = true;
+				}
+				else
+				{
+					Debug.LogWarning( "Spine_Linear pt has no in connection " + this.DebugDescribe( ) );
+				}
+			}
+			return success;
+		}
+
+	}
 
 
 

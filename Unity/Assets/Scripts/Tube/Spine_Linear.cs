@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RJWard.Tube
 {
-	public class Spine : MonoBehaviour
+	public class Spine_Linear : MonoBehaviour
 	{
 		private TubeSection_Linear tubeSection_ = null;
 

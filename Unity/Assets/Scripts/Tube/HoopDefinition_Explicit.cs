@@ -60,7 +60,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		override public void AddToSpine( Spine sp, bool fixedRotation )
+		override public void AddToSpine( Spine_Linear sp, bool fixedRotation )
 		{
 			sp.AddExplicitSpinePoint( this, fixedRotation );
 		}

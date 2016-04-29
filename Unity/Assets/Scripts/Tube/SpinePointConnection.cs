@@ -11,12 +11,12 @@ namespace RJWard.Tube
 
 		RJWard.Core.CatMullRom3D interpolator_ = null;
 
-		SpinePoint_Base startPoint
+		public SpinePoint_Base startPoint
 		{
 			get { return startPoint_; }
 		}
 
-		SpinePoint_Base endPoint
+		public SpinePoint_Base endPoint
 		{
 			get { return endPoint_; }
 		}

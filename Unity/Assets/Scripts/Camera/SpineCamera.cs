@@ -273,7 +273,7 @@ namespace RJWard.Tube.Camera
 				{
 					Debug.LogError( "t=" + t );
 				}
-				if (lastSpinePoint_.InterpolateForwardWorld(t, ref pos))
+				if (lastSpinePoint_.InterpolateForwardWorld(null, t, ref pos))
 				{
 					cachedTransform_.position = pos;
 
@@ -286,7 +286,7 @@ namespace RJWard.Tube.Camera
 					}
 					if (newT <= 1f)
 					{
-						if (lastSpinePoint_.InterpolateForwardWorld( (newT), ref lookAtPos ))
+						if (lastSpinePoint_.InterpolateForwardWorld(null, (newT), ref lookAtPos ))
 						{
 							if (Vector3.Distance( pos, lookAtPos ) > 0.001f)
 							{

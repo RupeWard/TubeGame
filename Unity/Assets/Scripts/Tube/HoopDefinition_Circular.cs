@@ -25,8 +25,7 @@ namespace RJWard.Tube
 			sb.Append( "CIRC,R=" ).Append( radius );
 		}
 
-
-		override public void AddToSpine( Spine sp, bool fixedRotation )
+		override public void AddToSpine( Spine_Linear sp, bool fixedRotation )
 		{
 			sp.AddCircularSpinePoint( this, fixedRotation );
 		}

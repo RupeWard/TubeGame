@@ -130,7 +130,13 @@ namespace RJWard.Tube
 					{
 						lastHoopOfPrevious.spinePoint.fixRotation( );
 						firstHoop.transform.rotation = Quaternion.identity;
-						ts.ConnectAfterSpinePoint( lastHoopOfPrevious.spinePoint );
+
+						// TODO multi
+						if (lastHoopOfPrevious.spinePoint != null && lastHoopOfPrevious.spinePoint as SpinePoint_Simple == null)
+						{
+							Debug.Log( "Non-Simple SPinePoint not implemented" );
+						}
+						ts.ConnectAfterSpinePoint( lastHoopOfPrevious.spinePoint as SpinePoint_Simple);
 						yield return null;
 						while (ts.isMeshDirty)
 						{
@@ -175,12 +181,14 @@ namespace RJWard.Tube
 
 			if (tubeSections_.Count > 0)
 			{
-				SpinePoint_Simple spinePoint = tubeSections_[0].FirstHoop().spinePoint;
-				while (spinePoint != null)
-				{
-					spinePoints.Add( spinePoint );
+				SpinePoint_Base spb = tubeSections_[0].FirstHoop( ).spinePoint;
+				SpinePoint_Simple spinePoint = spb as SpinePoint_Simple;
+				while (spb != null)
+				{ 
+                    spinePoints.Add( spinePoint );
 					spinePointPositions.Add( spinePoint.transform.position );
 					spinePoint = spinePoint.nextSpinePoint;
+					spb = spinePoint;
 				}
 			}
 			int numSpinePoints = spinePoints.Count;

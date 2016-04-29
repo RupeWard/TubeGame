@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace RJWard.Tube
 {
@@ -11,12 +12,6 @@ namespace RJWard.Tube
 			get { return hoop_; }
 		}
 
-		private bool fixedRotation_ = false;
-		public void fixRotation()
-		{
-			fixedRotation_ = true;
-		}
-
 		override public bool isFirst( )
 		{
 			return previousSpinePoint_ == null;
@@ -26,6 +21,27 @@ namespace RJWard.Tube
 		{
 			return nextSpinePoint_ == null;
 		}
+
+		public override SpinePointConnection GetConnectionOut( SpinePointPathChooser chooser )
+		{
+			SpinePointConnection connection = null;
+            if (nextSpinePoint_ != null)
+			{
+				connection = new SpinePointConnection( this, nextSpinePoint_, forwardInterpolator );
+			}
+			return connection;
+		}
+
+		public override SpinePointConnection GetConnectionIn( SpinePointPathChooser chooser )
+		{
+			SpinePointConnection connection = null;
+			if (previousSpinePoint_ != null)
+			{
+				connection = new SpinePointConnection( previousSpinePoint_, this, previousSpinePoint_.forwardInterpolator );
+			}
+			return connection;
+		}
+
 
 		private SpinePoint_Simple nextSpinePoint_ = null;
 		public SpinePoint_Simple nextSpinePoint
@@ -92,7 +108,7 @@ namespace RJWard.Tube
 		public RJWard.Core.CatMullRom3D forwardInterpolator = null;
 		public RJWard.Core.CatMullRom3D backInterpolator = null;
 		
-		public bool InterpolateForwardWorld(float t, ref Vector3 result)
+		override public bool InterpolateForwardWorld(SpinePointPathChooser chooser, float t, ref Vector3 result)
 		{
 			bool success = false;
 			result = Vector3.zero;
@@ -115,7 +131,7 @@ namespace RJWard.Tube
 				{
 					if (nextSpinePoint_ == null)
 					{
-						Debug.LogWarning( "Spine pt has a forward interpolator but no next point!" );
+						Debug.LogWarning( "Spine_Linear pt has a forward interpolator but no next point!" );
 					}
 					result = forwardInterpolator.Interpolate( t );
 					success = true;
@@ -124,7 +140,7 @@ namespace RJWard.Tube
 				{
 					if (nextSpinePoint_ == null)
 					{
-						Debug.LogWarning( "Spine pt has no forward interpolator and no next point, can't interpolate!" );
+						Debug.LogWarning( "Spine_Linear pt has no forward interpolator and no next point, can't interpolate!" );
 					}
 					else
 					{
@@ -136,7 +152,7 @@ namespace RJWard.Tube
 			return success;
 		}
 
-		public bool InterpolateBackwardWorld( float t, out Vector3 result )
+		override public bool InterpolateBackwardWorld(SpinePointPathChooser chooser, float t, ref Vector3 result )
 		{
 			bool success = false;
 			result = Vector3.zero;
@@ -158,7 +174,7 @@ namespace RJWard.Tube
 				{
 					if (previousSpinePoint_ == null)
 					{
-						Debug.LogWarning( "Spine pt has a back interpolator but no prev point!" );
+						Debug.LogWarning( "Spine_Linear pt has a back interpolator but no prev point!" );
 					}
 					result = backInterpolator.Interpolate( 1 - t );
 					success = true;
@@ -167,7 +183,7 @@ namespace RJWard.Tube
 				{
 					if (previousSpinePoint_ == null)
 					{
-						Debug.LogWarning( "Spine pt has no back interpolator and no previous point, can't interpolate!" );
+						Debug.LogWarning( "Spine_Linear pt has no back interpolator and no previous point, can't interpolate!" );
 					}
 					else
 					{
@@ -179,6 +195,7 @@ namespace RJWard.Tube
 			return success;
 		}
 
+		/*
 		private bool rotationIsDirty_ = false;
 		public void SetRotationDirty()
 		{
@@ -191,6 +208,7 @@ namespace RJWard.Tube
 //				Debug.LogWarning( "Setting rotation dirty when fixed" );
 //			}
 		}
+		*/
 
 		private float rotationPositionFraction = 0.1f;
 
@@ -333,7 +351,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		public void Init( Spine sp,  Vector3 pos, Vector3? rot)
+		public void Init( Spine_Linear sp,  Vector3 pos, Vector3? rot)
 		{
 			spine_ = sp;
 			cachedTransform_.localPosition = pos;
@@ -354,13 +372,13 @@ namespace RJWard.Tube
 			rotationIsDirty_ = true;
 		}
 
-		public void InitCircular( Spine sp, Vector3 pos, Vector3? rot, int num, float rad )
+		public void InitCircular( Spine_Linear sp, Vector3 pos, Vector3? rot, int num, float rad )
 		{
 			Init( sp, pos, rot );
 			MakeHoopCircular( num, rad );
 		}
 
-		public void InitExplicit( Spine sp, HoopDefinition_Explicit hde )
+		public void InitExplicit( Spine_Linear sp, HoopDefinition_Explicit hde )
 		{
 			Init( sp, hde.position, hde.rotation);
 			MakeHoopExplicit( hde);
