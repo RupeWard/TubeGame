@@ -132,11 +132,11 @@ namespace RJWard.Tube
 						firstHoop.transform.rotation = Quaternion.identity;
 
 						// TODO multi
-						if (lastHoopOfPrevious.spinePoint != null && lastHoopOfPrevious.spinePoint as SpinePoint_Simple == null)
+						if (lastHoopOfPrevious.spinePoint != null && lastHoopOfPrevious.spinePoint as SpinePoint_Linear == null)
 						{
 							Debug.Log( "Non-Simple SPinePoint not implemented" );
 						}
-						ts.ConnectAfterSpinePoint( lastHoopOfPrevious.spinePoint as SpinePoint_Simple);
+						ts.ConnectAfterSpinePoint( lastHoopOfPrevious.spinePoint as SpinePoint_Linear);
 						yield return null;
 						while (ts.isMeshDirty)
 						{
@@ -176,13 +176,13 @@ namespace RJWard.Tube
 			System.Text.StringBuilder debugsb = new System.Text.StringBuilder( );
 			debugsb.Append( "Recalculating interpolators" );
 
-			List<SpinePoint_Simple> spinePoints = new List<SpinePoint_Simple>( );
+			List<SpinePoint_Linear> spinePoints = new List<SpinePoint_Linear>( );
 			List<Vector3> spinePointPositions = new List<Vector3>( );
 
 			if (tubeSections_.Count > 0)
 			{
 				SpinePoint_Base spb = tubeSections_[0].FirstHoop( ).spinePoint;
-				SpinePoint_Simple spinePoint = spb as SpinePoint_Simple;
+				SpinePoint_Linear spinePoint = spb as SpinePoint_Linear;
 				while (spb != null)
 				{ 
                     spinePoints.Add( spinePoint );

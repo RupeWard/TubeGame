@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace RJWard.Tube
 {
@@ -11,29 +12,22 @@ namespace RJWard.Tube
 			get { return hoop_; }
 		}
 
-		private List<SpinePointConnection> connectionsOut = new List<SpinePointConnection>( );
-		private List<SpinePointConnection> connectionsIn = new List<SpinePointConnection>( );
-
-		override public bool isFirst(  )
+		override public bool isFirst( )
 		{
-			return connectionsIn.Count == 0;
+			return previousSpinePoint_ == null;
 		}
 
 		override public bool isLast( )
 		{
-			return connectionsOut.Count == 0;
+			return nextSpinePoint_ == null;
 		}
 
 		public override SpinePointConnection GetConnectionOut( SpinePointPathChooser chooser )
 		{
 			SpinePointConnection connection = null;
-			if (connectionsOut.Count == 0)
+            if (nextSpinePoint_ != null)
 			{
-				Debug.Log( "No connectionns out " + this.DebugDescribe( ) );
-			}
-			else
-			{
-				connection = connectionsOut[0]; // TODO use chooser
+				connection = new SpinePointConnection( this, nextSpinePoint_, forwardInterpolator );
 			}
 			return connection;
 		}
@@ -41,19 +35,80 @@ namespace RJWard.Tube
 		public override SpinePointConnection GetConnectionIn( SpinePointPathChooser chooser )
 		{
 			SpinePointConnection connection = null;
-			if (connectionsIn.Count == 0)
+			if (previousSpinePoint_ != null)
 			{
-				Debug.Log( "No connectionns in " + this.DebugDescribe( ) );
-			}
-			else
-			{
-				connection = connectionsIn[0]; // TODO use chooser
+				connection = new SpinePointConnection( previousSpinePoint_, this, previousSpinePoint_.forwardInterpolator );
 			}
 			return connection;
 		}
 
-		/*
-		override public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result )
+
+		private SpinePoint_Linear nextSpinePoint_ = null;
+		public SpinePoint_Linear nextSpinePoint
+		{
+			get { return nextSpinePoint_;  }
+			set
+			{
+				if (value == this)
+				{
+					Debug.LogError( "Can't set nextspinepoint to " + value.gameObject.name + " on " + this.gameObject.name );
+					return;
+				}
+				if (value != nextSpinePoint_)
+				{
+					SetRotationDirty();
+				}
+				nextSpinePoint_ = value;
+				if (nextSpinePoint_ != null)
+				{
+					nextSpinePoint_.SetRotationDirty( );
+					if (nextSpinePoint_.nextSpinePoint != null)
+					{
+						nextSpinePoint_.nextSpinePoint.SetRotationDirty( );
+					}
+				}
+				else
+				{
+					Debug.LogWarning( "Why setting nextSpinePoint to null?" );
+				}
+			}
+		}
+
+		private SpinePoint_Linear previousSpinePoint_ = null;
+		public SpinePoint_Linear previousSpinePoint
+		{
+			get { return previousSpinePoint_;  }
+			set
+			{
+				if (value == this)
+				{
+					Debug.LogError( "Can't set previousspinepoint to " + value.gameObject.name + " on " + this.gameObject.name );
+					return;
+				}
+				if (value != previousSpinePoint_)
+				{
+					SetRotationDirty();
+				}
+				previousSpinePoint_ = value;
+				if (previousSpinePoint_ != null)
+				{
+					previousSpinePoint_.SetRotationDirty( );
+					if (previousSpinePoint_.previousSpinePoint != null)
+					{
+						previousSpinePoint_.previousSpinePoint.SetRotationDirty( );
+					}
+				}
+				else
+				{
+					Debug.LogWarning( "Why setting previousSpinePoint to null?" );
+				}
+			}
+		}
+
+		public RJWard.Core.CatMullRom3D forwardInterpolator = null;
+		public RJWard.Core.CatMullRom3D backInterpolator = null;
+		
+		override public bool InterpolateForwardWorld(SpinePointPathChooser chooser, float t, ref Vector3 result)
 		{
 			bool success = false;
 			result = Vector3.zero;
@@ -72,21 +127,32 @@ namespace RJWard.Tube
 			}
 			else
 			{
-				SpinePointConnection connection = GetConnectionOut( chooser );
-				if (connection != null)
+				if (forwardInterpolator != null)
 				{
-					result = connection.InterpolatePosition(t );
+					if (nextSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine_Linear pt has a forward interpolator but no next point!" );
+					}
+					result = forwardInterpolator.Interpolate( t );
 					success = true;
 				}
 				else
 				{
-					Debug.LogWarning( "Spine_Linear pt has no out connection "+this.DebugDescribe() );
+					if (nextSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine_Linear pt has no forward interpolator and no next point, can't interpolate!" );
+					}
+					else
+					{
+						result = Vector3.Lerp( cachedTransform_.position, nextSpinePoint_.cachedTransform_.position, t );
+						success = true;
+					}
 				}
 			}
 			return success;
 		}
 
-		override public bool InterpolateBackwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result )
+		override public bool InterpolateBackwardWorld(SpinePointPathChooser chooser, float t, ref Vector3 result )
 		{
 			bool success = false;
 			result = Vector3.zero;
@@ -104,20 +170,32 @@ namespace RJWard.Tube
 			}
 			else
 			{
-				SpinePointConnection connection = GetConnectionIn( chooser );
-				if (connection != null)
+				if (backInterpolator != null)
 				{
-					result = connection.InterpolatePosition( 1 - t );
+					if (previousSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine_Linear pt has a back interpolator but no prev point!" );
+					}
+					result = backInterpolator.Interpolate( 1 - t );
 					success = true;
 				}
 				else
 				{
-					Debug.LogWarning( "Spine_Linear pt has no in connection " + this.DebugDescribe( ) );
+					if (previousSpinePoint_ == null)
+					{
+						Debug.LogWarning( "Spine_Linear pt has no back interpolator and no previous point, can't interpolate!" );
+					}
+					else
+					{
+						result = Vector3.Lerp( cachedTransform_.position, previousSpinePoint_.cachedTransform_.position, t );
+						success = true;
+					}
 				}
 			}
 			return success;
 		}
 
+		/*
 		private bool rotationIsDirty_ = false;
 		public void SetRotationDirty()
 		{
@@ -161,29 +239,72 @@ namespace RJWard.Tube
 					}
 					Vector3? posBefore = null;
 
-					SpinePointConnection connectionIn = GetConnectionIn( null );
-					if (connectionIn != null)
+					if (previousSpinePoint_ != null && previousSpinePoint_.previousSpinePoint != null && nextSpinePoint_ != null)
 					{
-						posBefore = connectionIn.InterpolatePosition( 1f - rotationPositionFraction );
+
+						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
+							( previousSpinePoint_.previousSpinePoint.cachedTransform_.position,
+								previousSpinePoint_.cachedTransform_.position,
+								cachedTransform_.position,
+								nextSpinePoint_.cachedTransform_.position );
+
+						posBefore = interpolator.Interpolate( 1f - rotationPositionFraction );
 
 						if (DEBUG_ROTATIONS)
 						{
-							debugSB.Append( "\nPosBefore from connection = " ).Append( (Vector3)posBefore );
+							debugSB.Append( "\nPosBefore from cmspline = " ).Append( (Vector3)posBefore );
+						}
+					}
+					else if (previousSpinePoint_ != null)
+					{
+						posBefore = cachedTransform_.position - rotationPositionFraction * (cachedTransform_.position - previousSpinePoint_.cachedTransform_.position);
+						if (DEBUG_ROTATIONS)
+						{
+							debugSB.Append( "\nPosBefore linear from previous = " ).Append( (Vector3)posBefore );
+						}
+					}
+					else if (nextSpinePoint_ != null)
+					{
+						posBefore = cachedTransform_.position - rotationPositionFraction * (nextSpinePoint_.cachedTransform_.position - transform.position);
+						if (DEBUG_ROTATIONS)
+						{
+							debugSB.Append( "\nPosBefore linear from next = " ).Append( (Vector3)posBefore );
 						}
 					}
 
 					// Pos after - if 2 pts after use catmullrom
 					//             if 1 pt after use linear
 					//              if 0 pt before use reverse linear wrt previous
-					SpinePointConnection connectionOut = GetConnectionOut( null );
 					Vector3? posAfter = null;
-					if (connectionOut != null)
+					if (previousSpinePoint_ != null && nextSpinePoint_ != null && nextSpinePoint_.nextSpinePoint != null)
 					{
-						posAfter = connectionOut.InterpolatePosition( rotationPositionFraction );
+						RJWard.Core.CatMullRom3D interpolator = RJWard.Core.CatMullRom3D.CreateCentripetal
+							(	previousSpinePoint_.cachedTransform_.position,
+								cachedTransform_.position,
+								nextSpinePoint_.cachedTransform_.position,
+								nextSpinePoint_.nextSpinePoint.cachedTransform_.position );
+
+						posAfter = interpolator.Interpolate( rotationPositionFraction );
 
 						if (DEBUG_ROTATIONS)
 						{
-							debugSB.Append( "\nPosAfter from connection = " ).Append( (Vector3)posAfter);
+							debugSB.Append( "\nPosAfter from cmspline = " ).Append( (Vector3)posAfter);
+						}
+					}
+					else if (nextSpinePoint_ != null)
+					{
+						posAfter = cachedTransform_.position + rotationPositionFraction * (nextSpinePoint_.cachedTransform_.position - cachedTransform_.position);
+						if (DEBUG_ROTATIONS)
+						{
+							debugSB.Append( "\nPosAfter linear from next = " ).Append( (Vector3)posAfter );
+						}
+					}
+					else if (previousSpinePoint_ != null)
+					{
+						posAfter = cachedTransform_.position + rotationPositionFraction * (cachedTransform_.position - previousSpinePoint_.cachedTransform_.position);
+						if (DEBUG_ROTATIONS)
+						{
+							debugSB.Append( "\nPosAfter linear from previous = " ).Append( (Vector3)posAfter );
 						}
 					}
 
@@ -284,15 +405,23 @@ namespace RJWard.Tube
 		override protected void DebugDescribeDetails( System.Text.StringBuilder sb )
 		{
 			sb.Append( "Linear " ).Append( gameObject.name ).Append( " @" ).Append( cachedTransform_.position );
-			sb.Append( " IN = (" ).Append(connectionsIn.Count ).Append(":");
-			for (int i = 0; i<connectionsIn.Count; i++)
+			sb.Append( " P/N = (" );
+			if (previousSpinePoint_ == null)
 			{
-				sb.Append(" ").Append( connectionsIn[i].startPoint.gameObject.name );
+				sb.Append( "NONE" );
 			}
-			sb.Append( ") OUT = (" ).Append(connectionsOut.Count).Append(":");
-			for (int i = 0; i < connectionsOut.Count; i++)
+			else
 			{
-				sb.Append( " " ).Append( connectionsOut[i].startPoint.gameObject.name );
+				sb.Append( previousSpinePoint_.gameObject.name );
+			}
+			sb.Append( " / " );
+			if (nextSpinePoint_ == null)
+			{
+				sb.Append( "NONE" );
+			}
+			else
+			{
+				sb.Append( nextSpinePoint_.gameObject.name );
 			}
 			sb.Append( ")" );
 		}

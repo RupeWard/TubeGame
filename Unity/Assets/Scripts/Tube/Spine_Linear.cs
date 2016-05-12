@@ -7,7 +7,7 @@ namespace RJWard.Tube
 	{
 		private TubeSection_Linear tubeSection_ = null;
 
-		private List< SpinePoint_Simple > spinePoints_ = new List< SpinePoint_Simple >( );
+		private List< SpinePoint_Linear > spinePoints_ = new List< SpinePoint_Linear >( );
 
 		public int NumSpinePoints
 		{
@@ -25,9 +25,9 @@ namespace RJWard.Tube
 			tubeSection_.SetMeshDirty( false );
 		}
 
-		public SpinePoint_Simple GetSpinePoint(int index)
+		public SpinePoint_Linear GetSpinePoint(int index)
 		{
-			SpinePoint_Simple result = null;
+			SpinePoint_Linear result = null;
 			if (index >= 0  && index < NumSpinePoints)
 			{
 				result = spinePoints_[index];
@@ -45,10 +45,10 @@ namespace RJWard.Tube
 		}
 		*/
 
-		public SpinePoint_Simple AddHoopLess(Vector3 pos, bool fixedRotation)
+		public SpinePoint_Linear AddHoopLess(Vector3 pos, bool fixedRotation)
 		{
 			GameObject spGo = new GameObject( "SP_" + spinePoints_.Count.ToString( ) );
-			SpinePoint_Simple spinePoint = spGo.AddComponent<SpinePoint_Simple>( );
+			SpinePoint_Linear spinePoint = spGo.AddComponent<SpinePoint_Linear>( );
 			if (fixedRotation)
 			{
 				spinePoint.fixRotation( );
@@ -83,7 +83,7 @@ namespace RJWard.Tube
 
 		private void AddCircularSpinePoint( Vector3 pos, Vector3? rot, int num,  float radius, bool fixedRotation )
 		{
-			SpinePoint_Simple spinePoint = AddHoopLess( pos, fixedRotation );
+			SpinePoint_Linear spinePoint = AddHoopLess( pos, fixedRotation );
 			spinePoint.InitCircular( this, pos, rot, num, radius );
 			if (spinePoints_.Count > 1)
 			{
@@ -94,7 +94,7 @@ namespace RJWard.Tube
 
 		public void AddExplicitSpinePoint(HoopDefinition_Explicit hde, bool fixedRotation)
 		{
-			SpinePoint_Simple spinePoint = AddHoopLess( hde.position, fixedRotation );
+			SpinePoint_Linear spinePoint = AddHoopLess( hde.position, fixedRotation );
 			spinePoint.InitExplicit( this, hde );
 			if (spinePoints_.Count > 1)
 			{
