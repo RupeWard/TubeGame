@@ -98,9 +98,9 @@ namespace RJWard.Tube.UI
 			Application.Quit( );
 		}
 
-		public void HandleCameraButton()
+		public void HandleExtCamHookButton()
 		{
-			TestSceneManager.Instance.ToggleCamera( );
+			TestSceneManager.Instance.ToggleExtCamOnHook( );
 			
 		}
 
@@ -109,27 +109,27 @@ namespace RJWard.Tube.UI
 			TestSceneManager.Instance.HandleDebugButtonPressed( );
 		}
 
-		public void HandleForwardButtonDown()
+		public void HandleExtCamForwardButtonDown()
 		{
 			TestSceneManager.Instance.HandleCameraForwardDown( );
 		}
 
-		public void HandleForwardButtonUp( )
+		public void HandleExtCamForwardButtonUp( )
 		{
 			TestSceneManager.Instance.HandleCameraMotionButtonUp( );
 		}
 
-		public void HandleBackButtonDown( )
+		public void HandleExtCamBackButtonDown( )
 		{
 			TestSceneManager.Instance.HandleCameraBackDown( );
 		}
 
-		public void HandleBackButtonUp( )
+		public void HandleExtCamBackButtonUp( )
 		{
 			TestSceneManager.Instance.HandleCameraMotionButtonUp( );
 		}
 
-		public void HandleStopButton()
+		public void HandleStopExtCameraButton()
 		{
 			TestSceneManager.Instance.HandleCameraStopPressed( );
 		}
@@ -146,14 +146,21 @@ namespace RJWard.Tube.UI
 				case EMode.ExternalCam:
 					{
 						ChangeMode( EMode.MainGame);
+						TestSceneManager.Instance.StartPlayMode( );
 						break;
 					}
 				case EMode.MainGame:
 					{
+						TestSceneManager.Instance.EndPlayMode( );
 						ChangeMode( EMode.Debug);
 						break;
 					}
 			}
+		}
+
+		public void HandleStartPlayerButton()
+		{
+			TestSceneManager.Instance.StartPlayer( );
 		}
 	}
 

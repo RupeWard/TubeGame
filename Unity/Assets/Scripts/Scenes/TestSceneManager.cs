@@ -26,7 +26,9 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
 
-	public Tube tube_ = null;
+	private Tube tube_ = null;
+
+	public RJWard.Tube.Player.Player player;
 
 	// Use this for initialization
 	void Start( )
@@ -100,7 +102,32 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		cameraOnHook_ = true;
 	}
 
-	public void ToggleCamera()
+	public void EndPlayMode()
+	{
+		player.gameObject.SetActive( false );
+		mainCamera.gameObject.SetActive( true );
+	}
+
+	public void StartPlayMode()
+	{
+		player.gameObject.SetActive( true );
+		mainCamera.gameObject.SetActive( false );
+	}
+
+	public void StartPlayer()
+	{
+		SpinePoint_Base firstSpinePoint = GetFirstSpinePoint( );
+		if (firstSpinePoint != null)
+		{
+			player.InitialiseAt( firstSpinePoint.transform );
+		}
+		else
+		{
+			Debug.LogWarning( "Can't start player with no tube" );
+		}
+	}
+
+	public void ToggleExtCamOnHook()
 	{
 		if (cameraOnHook_)
 		{

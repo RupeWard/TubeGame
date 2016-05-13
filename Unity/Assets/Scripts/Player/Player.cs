@@ -5,11 +5,24 @@ namespace RJWard.Tube.Player
 {
 	public class Player : MonoBehaviour
 	{
-		public Transform cachedTransform;
+		private Transform cachedTransform_;
+		private Rigidbody body_;
+		public PlayerCam cam;
 
 		private void Awake()
 		{
-			cachedTransform = transform;
+			cachedTransform_ = transform;
+			body_ = GetComponent<Rigidbody>( );
+		}
+
+		public void InitialiseAt(Transform t)
+		{
+			cachedTransform_.position = t.position;
+			cachedTransform_.rotation = t.rotation;
+
+			body_.velocity = Vector3.zero;
+
+			cam.gameObject.SetActive( true );
 		}
 	}
 }
