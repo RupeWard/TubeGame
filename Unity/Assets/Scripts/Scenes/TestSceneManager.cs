@@ -36,6 +36,9 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		tubeGO.transform.position = Vector3.zero;
 		tubeGO.transform.localScale = Vector3.one;
 		tube_ = tubeGO.AddComponent<Tube>( );
+
+		RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( mainCamera.GetComponent<Camera>( ) );
+
 	}
 
 	public void NewFromSources( )
