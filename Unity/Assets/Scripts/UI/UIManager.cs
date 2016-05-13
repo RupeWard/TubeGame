@@ -162,6 +162,16 @@ namespace RJWard.Tube.UI
 		{
 			TestSceneManager.Instance.StartPlayer( );
 		}
+
+		public void HandlePlayerForwardButtonDown()
+		{
+			TestSceneManager.Instance.PlayerForwardDown( );
+		}
+
+		public void HandlePlayerForwardButtonUp( )
+		{
+			TestSceneManager.Instance.PlayerForwardUp( );
+		}
 	}
 
 }

@@ -9,6 +9,16 @@ namespace RJWard.Tube.Player
 		private Rigidbody body_;
 		public PlayerCam cam;
 
+		public Rigidbody body
+		{
+			get { return body_; }
+		}
+
+		public Transform cachedTransform
+		{
+			get { return cachedTransform_; }
+		}
+
 		private void Awake()
 		{
 			cachedTransform_ = transform;
@@ -24,5 +34,6 @@ namespace RJWard.Tube.Player
 
 			cam.gameObject.SetActive( true );
 		}
+
 	}
 }

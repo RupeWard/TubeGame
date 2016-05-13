@@ -35,6 +35,7 @@ namespace RJWard.Tube
 
 		private Spine_Linear spine_ = null;
 		private Material tubeWallMaterial_;
+		private MeshCollider meshCollider_ = null;
 
 		private bool isMeshDirty_ = false;
 		public void SetMeshDirty (bool force)
@@ -435,6 +436,12 @@ namespace RJWard.Tube
 
 				reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
 				reverseNormals.Init( Core.ReverseNormals.EState.Inside );
+
+				if (meshCollider_ == null)
+				{
+					meshCollider_ = gameObject.AddComponent<MeshCollider>( );
+				}
+				meshCollider_.sharedMesh = mesh;
 			}
 			isMeshDirty_ = false;
 		}

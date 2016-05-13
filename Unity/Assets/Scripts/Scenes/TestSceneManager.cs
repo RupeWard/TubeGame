@@ -127,6 +127,27 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		}
 	}
 
+	public float forwardPowerMult = 1f;
+	private float forwardPower_ = 0f;
+
+	private void FixedUpdate()
+	{
+		if (forwardPower_ != 0f)
+		{
+			player.body.AddForce( player.cachedTransform.forward * forwardPower_ * Time.deltaTime, ForceMode.Impulse );
+		}
+	}
+
+	public void PlayerForwardDown()
+	{
+		forwardPower_ = forwardPowerMult;
+	}
+
+	public void PlayerForwardUp( )
+	{
+		forwardPower_ = 0f;
+	}
+
 	public void ToggleExtCamOnHook()
 	{
 		if (cameraOnHook_)
