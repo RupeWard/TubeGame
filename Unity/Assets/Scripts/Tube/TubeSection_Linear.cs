@@ -567,6 +567,8 @@ namespace RJWard.Tube
 			//			reverseNormals.Init( Core.ReverseNormals.EState.Inside );
 
 			// set collider mesh
+			meshCollider.convex = true;
+			meshCollider.isTrigger = true;
 			meshCollider.sharedMesh = mesh;
 
 			if (debugsb != null)
@@ -576,6 +578,7 @@ namespace RJWard.Tube
 
 			// Set up flowzone
 			result = go.AddComponent<FlowZone_Linear>( );
+			result.Init( sp0 );
 
 			if (debugsb != null)
 			{
