@@ -455,7 +455,7 @@ namespace RJWard.Tube
 					{
 						debugsb.Append( "\nFlowZone #" ).Append( i );
 					}
-					FlowZone fz = makeLinearFlowZone( spine_.GetSpinePoint( i ), debugsb );
+					FlowZone_Linear fz = makeLinearFlowZone( spine_.GetSpinePoint( i ), debugsb );
 				}
 			}
 			isMeshDirty_ = false;
@@ -466,11 +466,11 @@ namespace RJWard.Tube
 			}
 		}
 
-		FlowZone makeLinearFlowZone( SpinePoint_Linear sp0, System.Text.StringBuilder debugsb)
+		FlowZone_Linear makeLinearFlowZone( SpinePoint_Linear sp0, System.Text.StringBuilder debugsb)
 		{
 			SpinePoint_Linear sp1 = sp0.nextSpinePoint;
 
-            FlowZone result = null;
+            FlowZone_Linear result = null;
 			GameObject go = new GameObject( "FlowZone" + sp0.gameObject.name );
 			MeshFilter meshFilter = go.AddComponent<MeshFilter>( );
 			MeshCollider meshCollider = go.AddComponent<MeshCollider>( );
@@ -575,7 +575,7 @@ namespace RJWard.Tube
 			}
 
 			// Set up flowzone
-			result = go.AddComponent<FlowZone>( );
+			result = go.AddComponent<FlowZone_Linear>( );
 
 			if (debugsb != null)
 			{

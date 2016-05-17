@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FlowZone : MonoBehaviour {
+public class FlowZone_Linear : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
