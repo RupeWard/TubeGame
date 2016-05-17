@@ -42,7 +42,7 @@ namespace RJWard.Tube
 				{
 					if (vertexNumber != value)
 					{
-						Debug.LogWarning( "VertexNumber being changed from " + vertexNumber_ + " to " + value );
+//						Debug.LogWarning( "VertexNumber being changed from " + vertexNumber_ + " to " + value );
 					}
 				}
 #endif
@@ -60,7 +60,7 @@ namespace RJWard.Tube
 				{
 					if (altVertexNumber_ != value)
 					{
-						Debug.LogWarning( "AltVertexNumber being changed from " + altVertexNumber_ + " to " + value );
+//						Debug.LogWarning( "AltVertexNumber being changed from " + altVertexNumber_ + " to " + value );
 					}
 				}
 #endif
