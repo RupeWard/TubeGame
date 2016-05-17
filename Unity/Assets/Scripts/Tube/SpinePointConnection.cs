@@ -21,8 +21,8 @@ namespace RJWard.Tube
 			get { return endPoint_; }
 		}
 
-		float totalDistance_ = -1f;
-		float TotalDistance
+		private float totalDistance_ = -1f;
+		public float TotalDistance
 		{
 			get
 			{

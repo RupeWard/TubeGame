@@ -455,7 +455,7 @@ namespace RJWard.Tube
 					{
 						debugsb.Append( "\nFlowZone #" ).Append( i );
 					}
-					FlowZone_Linear fz = makeLinearFlowZone( spine_.GetSpinePoint( i ), debugsb );
+					makeLinearFlowZone( spine_.GetSpinePoint( i ), debugsb );
 				}
 			}
 			isMeshDirty_ = false;

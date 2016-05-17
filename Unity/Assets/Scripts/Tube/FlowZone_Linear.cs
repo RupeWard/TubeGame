@@ -8,6 +8,11 @@ namespace RJWard.Tube
 		static readonly bool DEBUG_COLLISIONS = true;
 
 		private SpinePoint_Linear firstSpinePoint_;
+		public SpinePoint_Linear firstSpinePoint
+		{
+			get { return firstSpinePoint_; }
+		}
+
 		public Vector3 directionVector = Vector3.zero;
 
 		public void Init( SpinePoint_Linear sp)

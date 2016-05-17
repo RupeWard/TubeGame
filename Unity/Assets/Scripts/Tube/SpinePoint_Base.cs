@@ -89,9 +89,10 @@ namespace RJWard.Tube
 
 		abstract protected void DebugDescribeDetails( System.Text.StringBuilder sb );
 
-//		abstract public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result );
+		//		abstract public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result );
 
-//		abstract public bool InterpolateBackwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result );
+		//		abstract public bool InterpolateBackwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result );
+
 
 		virtual public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result )
 		{

@@ -140,6 +140,10 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void PlayerForwardDown()
 	{
+		if (player. currentFlowZone == null)
+		{
+			SetCameraToFirstSpinePoint( );
+		}
 		forwardPower_ = forwardPowerMult;
 	}
 

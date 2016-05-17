@@ -11,13 +11,17 @@ namespace RJWard.Tube.Player
 		private Rigidbody body_;
 		public PlayerCam cam;
 
-		private FlowZone_Linear currentFlowZone = null;
+		private FlowZone_Linear currentFlowZone_ = null;
+		public FlowZone_Linear currentFlowZone
+		{
+			get { return currentFlowZone_; }
+		}
 
 		private void FixedUpdate()
 		{
-			if (currentFlowZone != null)
+			if (currentFlowZone_ != null)
 			{
-				body.AddForce( currentFlowZone.directionVector * Time.deltaTime, ForceMode.Impulse );
+				body.AddForce( currentFlowZone_.directionVector * Time.deltaTime, ForceMode.Impulse );
 			}
 		}
 
@@ -35,6 +39,13 @@ namespace RJWard.Tube.Player
 		{
 			cachedTransform_ = transform;
 			body_ = GetComponent<Rigidbody>( );
+			cam.Init( this );
+		}
+
+		public float camTargetDistance = 5f;
+
+		public void Update()
+		{
 		}
 
 		public void InitialiseAt(Transform t)
@@ -56,17 +67,52 @@ namespace RJWard.Tube.Player
 			FlowZone_Linear newFz = other.gameObject.GetComponent<FlowZone_Linear>( );
 			if (newFz != null)
 			{
-				if (newFz != currentFlowZone)
+				if (newFz != currentFlowZone_)
 				{
 					if (DEBUG_COLLISIONS)
 					{
-						Debug.Log( "TRIGGER ENTER PLAYER: '" + gameObject.name + "' to new flow zone '" + other.gameObject.name +"' from "+currentFlowZone);
+						Debug.Log( "TRIGGER ENTER PLAYER: '" + gameObject.name + "' to new flow zone '" + other.gameObject.name +"' from "+currentFlowZone_);
 					}
-					currentFlowZone = newFz;
+					currentFlowZone_ = newFz;
+
+					SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
+					Vector3 pos = spinePoint.cachedTransform.position;
+					float distGone = camTargetDistance;
+					bool posFound = false;
+
+					int numSkipped = 0;
+
+					while (distGone > 0f)
+					{
+						SpinePointConnection spc = spinePoint.GetConnectionOut( null );
+                        if (distGone < spc.TotalDistance)
+						{
+							if (spinePoint.InterpolateForwardWorld( null, distGone / spc.TotalDistance, ref pos ))
+							{
+								posFound = true;
+							}
+							else
+							{
+								Debug.LogError( "Failed to interpolate" );
+							}
+							distGone = 0f;
+                        }
+						else
+						{
+							numSkipped++;
+							distGone -= spc.TotalDistance;
+							spinePoint = spc.endPoint as SpinePoint_Linear;
+						}
+					}
+					if (posFound)
+					{
+						Debug.Log( "Set target (" + numSkipped + ") to " + pos );
+						cam.SetCamTarget( pos );
+					}
 				}
 				else
 				{
-					Debug.LogWarning( "TRIGGER ENTER PLAYER: '" + gameObject.name + "' to SAME flow zone '" + other.gameObject.name + "' from " + currentFlowZone.gameObject.name );
+					Debug.LogWarning( "TRIGGER ENTER PLAYER: '" + gameObject.name + "' to SAME flow zone '" + other.gameObject.name + "' from " + currentFlowZone_.gameObject.name );
 				}
 			}
 		}
@@ -75,7 +121,18 @@ namespace RJWard.Tube.Player
 		{
 			if (DEBUG_COLLISIONS)
 			{
-				Debug.Log( "TRIGGER EXIT: " + gameObject.name + " " + other.gameObject.name );
+				FlowZone_Linear fz = other.gameObject.GetComponent<FlowZone_Linear>( );
+				if (fz != null)
+				{
+					if (fz == currentFlowZone_)
+					{
+						currentFlowZone_ = null;
+					}
+				}
+				else
+				{
+					Debug.LogWarning( "TRIGGER EXIT: " + gameObject.name + " flowzone '" + other.gameObject.name+"' when currently in fz '"+currentFlowZone_.gameObject.name+"'" );
+				}
 			}
 		}
 
