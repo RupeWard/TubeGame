@@ -375,9 +375,11 @@ namespace RJWard.Tube
 
 		private void MakeMesh()
 		{
+			System.Text.StringBuilder debugsb = null;
 			if (DEBUG_MESH)
 			{
-				Debug.Log( "Make Mesh for " + this.gameObject );
+				debugsb = new System.Text.StringBuilder( );
+				debugsb.Append( "Make Mesh for ").Append(this.gameObject .name);
 			}
 
 			RJWard.Core.ReverseNormals reverseNormals = GetComponent<RJWard.Core.ReverseNormals>( );
@@ -407,6 +409,10 @@ namespace RJWard.Tube
 			}
 			else
 			{
+				if (debugsb != null)
+				{
+					debugsb.Append( "\n! Warning! Remaking mesh" );
+				}
 				Debug.LogError( "Remaking mesh" );
 			}
 			mesh.Clear( );
@@ -418,9 +424,9 @@ namespace RJWard.Tube
 				List<Vector3> normals = new List<Vector3>( );
 
 				spine_.AddAllVertexInfoToLists( verts, normals, uvs );
-				if (DEBUG_MESH)
+				if (debugsb != null)
 				{
-					Debug.Log( "Verts count = " + verts.Count );
+					debugsb.Append( "Verts count = ").Append(verts.Count );
 				}
 
 				List<int> triVerts = new List<int>( );
@@ -442,9 +448,146 @@ namespace RJWard.Tube
 					meshCollider_ = gameObject.AddComponent<MeshCollider>( );
 				}
 				meshCollider_.sharedMesh = mesh;
+
+				for (int i = 0; i<(spine_.NumSpinePoints-1); i++)
+				{
+					if (debugsb != null)
+					{
+						debugsb.Append( "\nFlowZone #" ).Append( i );
+					}
+					FlowZone fz = makeLinearFlowZone( spine_.GetSpinePoint( i ), debugsb );
+				}
 			}
 			isMeshDirty_ = false;
+			if (debugsb != null)
+			{
+				Debug.Log( debugsb.ToString( ) );
+
+			}
+		}
+
+		FlowZone makeLinearFlowZone( SpinePoint_Linear sp0, System.Text.StringBuilder debugsb)
+		{
+			SpinePoint_Linear sp1 = sp0.nextSpinePoint;
+
+            FlowZone result = null;
+			GameObject go = new GameObject( "FlowZone" + sp0.gameObject.name );
+			MeshFilter meshFilter = go.AddComponent<MeshFilter>( );
+			MeshCollider meshCollider = go.AddComponent<MeshCollider>( );
+
+			Mesh mesh = meshFilter.sharedMesh;
+			if (mesh == null)
+			{
+				meshFilter.sharedMesh = new Mesh( );
+				mesh = meshFilter.sharedMesh;
+			}
+			mesh.Clear( );
+
+			if (debugsb!=null)
+			{
+				debugsb.Append( "\n Made mesh. " );
+			}
+			List<Vector3> verts = new List<Vector3>( );
+			List<Vector2> uvs = new List<Vector2>( );
+			List<Vector3> normals = new List<Vector3>( );
+
+			// Add spine0 to list
+			verts.Add( sp0.cachedTransform.position );
+			uvs.Add( Vector2.zero );
+			normals.Add( Vector3.zero );//normals?
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " sp0" );
+			}
+
+			// Add spine1 to list
+			verts.Add( sp1.cachedTransform.position );
+			uvs.Add( Vector2.zero );
+			normals.Add( Vector3.zero );//normals?
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " sp1" );
+			}
+			
+			// Add hoop1 to list
+			sp0.hoop.ExtractAllVertexInfo( verts, normals, uvs, 0f );
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " h0" );
+			}
+
+			// Add hoop2 to list
+			sp1.hoop.ExtractAllVertexInfo( verts, normals, uvs, 0f );
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " h1" );
+			}
+
+			List<int> triVerts = new List<int>( );
+
+			// Add disc tris spine0
+			sp0.hoop.ExtractDiscTriVerts( triVerts, 0, false );
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " t0" );
+			}
+
+			// Add disc tris spine1
+			sp1.hoop.ExtractDiscTriVerts( triVerts, 1, true );
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " t1" );
+			}
+
+			// Add joining hoops tris
+
+			Hoop.ExtractConnectingTriVerts( sp0.hoop, sp1.hoop, triVerts );
+			if (debugsb != null)
+			{
+				debugsb.Append( " wall" );
+			}
+
+			// generate mesh
+			mesh.vertices = verts.ToArray( );
+			mesh.triangles = triVerts.ToArray( );
+			mesh.uv = uvs.ToArray( );
+			mesh.normals = normals.ToArray( );
+
+			mesh.RecalculateBounds( );
+			mesh.Optimize( );
+
+			// reverse normals
+			//			reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
+			//			reverseNormals.Init( Core.ReverseNormals.EState.Inside );
+
+			// set collider mesh
+			meshCollider.sharedMesh = mesh;
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " MADE MESH" );
+			}
+
+			// Set up flowzone
+			result = go.AddComponent<FlowZone>( );
+
+			if (debugsb != null)
+			{
+				debugsb.Append( " FZ" );
+			}
+
+			//parentage & position
+			result.transform.parent = sp0.transform;
+			
+            return result;
 		}
 	}
+
 
 }

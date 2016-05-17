@@ -243,6 +243,27 @@ namespace RJWard.Tube
 			normals.Add( dirn.normalized );
 		}
 
+		public void ExtractDiscTriVerts( List<int> triVerts, int spineIndex, bool reverse )
+		{
+			List<int> newVerts = new List<int>( );
+			for (int i = 0; i < numPoints(); i++)
+			{
+				int j = i + 1;
+				if (j == numPoints( ))
+				{
+					j = 0;
+				}
+				newVerts.Add( spineIndex );
+				newVerts.Add( GetHoopPoint( i ).vertexNumber);
+				newVerts.Add( GetHoopPoint( j ).getVertexNumber(j==0));
+			}
+			if (reverse)
+			{
+				newVerts.Reverse( );
+			}
+			triVerts.AddRange( newVerts );
+		}
+
 		public static void ExtractConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts )
 		{
 			if (A.hoopPoints_.Count != B.hoopPoints_.Count)
