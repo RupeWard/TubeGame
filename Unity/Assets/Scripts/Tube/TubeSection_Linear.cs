@@ -16,7 +16,7 @@ namespace RJWard.Tube
 			if (spine_ != null && spine_.NumSpinePoints > 0)
 			{
 				SpinePoint_Linear firstSp = spine_.GetSpinePoint( 0 );
-				firstSp.previousSpinePoint = sp;
+				firstSp.previousSpinePoint = sp.previousSpinePoint;
 				
 				SpinePoint_Linear mySp = spine_.GetSpinePoint( 1 );
 				mySp.previousSpinePoint = sp;

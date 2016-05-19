@@ -49,7 +49,7 @@ namespace RJWard.Tube
 				}
 				else
 				{
-					Debug.LogWarning( "No previous spine point when working out flow zone direction" );
+//					Debug.LogWarning( "No previous spine point when working out flow zone direction" );
 				}
 				Vector3 firstDirection = Vector3.Slerp( directionVector_, prevDirection, 0.5f );
 				result = Vector3.Slerp( firstDirection, directionVector_, dFraction/0.5f);
