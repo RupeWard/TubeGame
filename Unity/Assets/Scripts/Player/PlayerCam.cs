@@ -19,13 +19,15 @@ namespace RJWard.Tube.Player
 
 		private void Awake( )
 		{
-			cachedTransform = transform;	
+			cachedTransform = transform;
+			camera_ = GetComponent<UnityEngine.Camera>( );
+			RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( camera_);
+
 		}
 
 		public void Init(Player p)
 		{
 			player_ = p;
-			camera_ = GetComponent<UnityEngine.Camera>( );
 		}
 
 		public void toggleDebugObjects( )
