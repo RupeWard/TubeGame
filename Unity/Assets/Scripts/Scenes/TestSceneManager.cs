@@ -114,6 +114,10 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void StartPlayMode()
 	{
+		if (tube_.FirstSection() == null)
+		{
+			CreateRandomSection( );
+		}
 		player.gameObject.SetActive( true );
 		mainCamera.gameObject.SetActive( false );
 	}
