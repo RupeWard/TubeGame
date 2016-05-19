@@ -5,6 +5,8 @@ namespace RJWard.Tube.Player
 {
 	public class PlayerCam : MonoBehaviour
 	{
+		private Vector3 direction_ = Vector3.back;
+
 		public Transform cachedTransform;
 		private Player player_;
 
@@ -30,15 +32,25 @@ namespace RJWard.Tube.Player
 			isDirty_ = true;
 		}
 
+		public float camSpeed = 1f;
+
 		private void Update()
 		{
-//			if (isDirty_)
+			player_.UpdateDirection( ref direction_ );
+			cachedTransform.position = Vector3.MoveTowards( cachedTransform.position, 
+				player_.cachedTransform.position + direction_ * distanceFromPlayer,
+				camSpeed * Time.deltaTime);
+			cachedTransform.LookAt( player_.cachedTransform );
+
+			/*
+			//			if (isDirty_)
 			{
 				Vector3 direction = (camTarget.position - player_.cachedTransform.position).normalized;
 				cachedTransform.position = player_.cachedTransform.position - direction * distanceFromPlayer;
 				cachedTransform.LookAt( camTarget );
 				isDirty_ = false;
 			}
+			*/
 		}
 	}
 }

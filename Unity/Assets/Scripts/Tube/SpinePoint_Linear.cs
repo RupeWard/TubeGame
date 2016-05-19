@@ -12,6 +12,13 @@ namespace RJWard.Tube
 			get { return hoop_; }
 		}
 
+		private FlowZone_Linear flowZone_ = null;
+		public FlowZone_Linear flowZone
+		{
+			get { return flowZone_;  }
+			set { flowZone_ = value; }
+		}
+
 		override public bool isFirst( )
 		{
 			return previousSpinePoint_ == null;

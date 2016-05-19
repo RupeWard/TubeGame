@@ -5,7 +5,7 @@ namespace RJWard.Tube.Player
 {
 	public class Player : MonoBehaviour
 	{
-		static readonly bool DEBUG_COLLISIONS = true;
+		static readonly bool DEBUG_COLLISIONS = false;
 
 		private Transform cachedTransform_;
 		private Rigidbody body_;
@@ -21,8 +21,18 @@ namespace RJWard.Tube.Player
 		{
 			if (currentFlowZone_ != null)
 			{
-				body.AddForce( currentFlowZone_.directionVector * Time.deltaTime, ForceMode.Impulse );
+				body.AddForce( currentFlowZone_.directionAtPosition(cachedTransform.position) * Time.deltaTime, ForceMode.Impulse );
 			}
+		}
+
+		public bool UpdateDirection(ref Vector3 dir)
+		{
+			bool success = false;
+			if (currentFlowZone_ != null)
+			{
+				dir = -1f * currentFlowZone_.directionAtPosition( cachedTransform.position );
+			}
+			return success;
 		}
 
 		public Rigidbody body
@@ -69,9 +79,9 @@ namespace RJWard.Tube.Player
 			{
 				if (newFz != currentFlowZone_)
 				{
-					if (DEBUG_COLLISIONS)
+//					if (DEBUG_COLLISIONS)
 					{
-						Debug.Log( "TRIGGER ENTER PLAYER: '" + gameObject.name + "' to new flow zone '" + other.gameObject.name +"' from "+currentFlowZone_);
+						Debug.Log( "TRIGGER ENTER PLAYER: '" + gameObject.name + "' to new flow zone '" + other.gameObject.name +"' from "+currentFlowZone_+" with dirn = "+newFz.directionVector);
 					}
 					currentFlowZone_ = newFz;
 
@@ -85,25 +95,35 @@ namespace RJWard.Tube.Player
 					while (distGone > 0f)
 					{
 						SpinePointConnection spc = spinePoint.GetConnectionOut( null );
-                        if (distGone < spc.TotalDistance)
+						if (spc != null)
 						{
-							if (spinePoint.InterpolateForwardWorld( null, distGone / spc.TotalDistance, ref pos ))
+							if (distGone < spc.TotalDistance)
 							{
-								posFound = true;
+								if (spinePoint.InterpolateForwardWorld( null, distGone / spc.TotalDistance, ref pos ))
+								{
+									posFound = true;
+								}
+								else
+								{
+									Debug.LogError( "Failed to interpolate" );
+								}
+								distGone = 0f;
 							}
 							else
 							{
-								Debug.LogError( "Failed to interpolate" );
+								numSkipped++;
+								distGone -= spc.TotalDistance;
+								spinePoint = spc.endPoint as SpinePoint_Linear;
 							}
-							distGone = 0f;
-                        }
+						}
 						else
 						{
-							numSkipped++;
-							distGone -= spc.TotalDistance;
-							spinePoint = spc.endPoint as SpinePoint_Linear;
+							Debug.LogWarning( "Nowhere to go!" );
+							distGone = 0f;
+							posFound = false;
 						}
 					}
+
 					if (posFound)
 					{
 						Debug.Log( "Set target (" + numSkipped + ") to " + pos );

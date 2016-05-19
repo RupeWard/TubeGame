@@ -587,7 +587,8 @@ namespace RJWard.Tube
 
 			//parentage & position
 			result.transform.parent = sp0.transform;
-			
+
+			sp0.flowZone = result;
             return result;
 		}
 	}

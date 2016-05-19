@@ -53,7 +53,7 @@ namespace RJWard.Tube
 			ComputeTotalDistance( );
 		}
 
-		static private readonly bool DEBUG_DISTANCE = true;
+		static private readonly bool DEBUG_DISTANCE = false;
 		static private int s_numSectionsForDistance = 10;
 		private void ComputeTotalDistance()
 		{
@@ -68,7 +68,10 @@ namespace RJWard.Tube
 			if (interpolator_ == null)
 			{
 				float total = Vector3.Distance( startPoint_.cachedTransform.position, endPoint_.cachedTransform.position );
-				sb.Append( "\nNO INTERPOLATOR, D= "+total+" (was "+totalDistance_+")" );
+				if (sb != null)
+				{
+					sb.Append( "\nNO INTERPOLATOR, D= " + total + " (was " + totalDistance_ + ")" );
+				}
 				totalDistance_ = total;
 				Debug.LogWarning( "No interpolator for " + this.DebugDescribe( ) );
 			}
