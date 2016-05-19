@@ -19,6 +19,9 @@ namespace RJWard.Tube
 			get { return directionVector_; }
 		}
 
+		public float weight = 1f;
+		public float speed = 1f;
+
 		public Vector3 directionAtPosition(Vector3 pos)
 		{
 			return directionVector_;
@@ -85,6 +88,9 @@ namespace RJWard.Tube
 
 		public void Init( SpinePoint_Linear sp)
 		{
+			weight = TestSceneManager.Instance.FlowZone_defaultWeight;
+			speed = TestSceneManager.Instance.FlowZone_defaultSpeed;
+
 			firstSpinePoint_ = sp;
 			directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
 		}

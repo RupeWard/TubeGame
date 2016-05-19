@@ -171,10 +171,17 @@ namespace RJWard.Tube
 			RecalculateInterpolatorsLinear( );
 		}
 
+		private static bool DEBUG_INTERPOLATORS = false;
+
 		public void RecalculateInterpolatorsLinear( )
 		{
-			System.Text.StringBuilder debugsb = new System.Text.StringBuilder( );
-			debugsb.Append( "Recalculating interpolators" );
+			System.Text.StringBuilder debugsb = null;
+
+			if (DEBUG_INTERPOLATORS)
+			{
+				debugsb = new System.Text.StringBuilder( );
+				debugsb.Append( "Recalculating interpolators" );
+			}
 
 			List<SpinePoint_Linear> spinePoints = new List<SpinePoint_Linear>( );
 			List<Vector3> spinePointPositions = new List<Vector3>( );
@@ -192,7 +199,10 @@ namespace RJWard.Tube
 				}
 			}
 			int numSpinePoints = spinePoints.Count;
-			debugsb.Append( "\nFound " + numSpinePoints + " spine points" );
+			if (debugsb != null)
+			{
+				debugsb.Append( "\nFound " + numSpinePoints + " spine points" );
+			}
 
 			List<RJWard.Core.CatMullRom3D> spinePointInterpolators = new List<Core.CatMullRom3D>( );
 			RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( spinePointPositions, 1, spinePointInterpolators );
@@ -202,7 +212,10 @@ namespace RJWard.Tube
 				if (i == spinePointPositions.Count - 1)
 				{
 					spinePoints[i].forwardInterpolator = null;
-					debugsb.Append( "\nNo interpolator for last point" );
+					if (debugsb != null)
+					{
+						debugsb.Append( "\nNo interpolator for last point" );
+					}
 				}
 				else
 				{
@@ -226,7 +239,7 @@ namespace RJWard.Tube
 					}
 				}
 			}
-			if (debugsb.Length >0)
+			if (debugsb != null && debugsb.Length >0)
 			{
 				Debug.Log( debugsb.ToString( ) );
 			}

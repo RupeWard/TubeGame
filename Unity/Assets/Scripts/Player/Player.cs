@@ -17,11 +17,26 @@ namespace RJWard.Tube.Player
 			get { return currentFlowZone_; }
 		}
 
+		private bool shouldLogNoSpeedExcess = true;
+
 		private void FixedUpdate()
 		{
 			if (currentFlowZone_ != null)
 			{
-				body.AddForce( currentFlowZone_.directionAtPosition(cachedTransform.position) * Time.deltaTime, ForceMode.Impulse );
+				float speedExcess = currentFlowZone_.speed - body_.velocity.magnitude;
+				if (speedExcess > 0)
+				{
+					shouldLogNoSpeedExcess = true;
+                    body.AddForce( speedExcess * currentFlowZone_.weight * currentFlowZone_.directionAtPosition( cachedTransform.position ) * Time.deltaTime, ForceMode.Impulse );
+				}
+				else
+				{
+					if (shouldLogNoSpeedExcess)
+					{
+						Debug.Log( "Stopped adding force" );
+					}
+					shouldLogNoSpeedExcess = false;
+				}
 			}
 		}
 
@@ -70,6 +85,8 @@ namespace RJWard.Tube.Player
 
 		public int maxSpinePointsToGap = 10;
 
+		private bool shouldExtend = false;
+
 		private void OnTriggerEnter( Collider other )
 		{
 			if (DEBUG_COLLISIONS)
@@ -82,17 +99,25 @@ namespace RJWard.Tube.Player
 			{
 				if (newFz != currentFlowZone_)
 				{
-//					if (DEBUG_COLLISIONS)
-					{
-						Debug.Log( "TRIGGER ENTER PLAYER: '" + gameObject.name + "' to new flow zone '" + other.gameObject.name +"' from "+currentFlowZone_+" with dirn = "+newFz.directionVector);
-					}
 					currentFlowZone_ = newFz;
 
 					SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
 					int minToGap = spinePoint.MinSpinePointsToEnd( );
-					if (minToGap < 10)
+					//					if (DEBUG_COLLISIONS)
 					{
-						spinePoint.spine.tubeSection.HandlePlayerEnterSection( );
+						Debug.Log( "TRIGGER ENTER " + gameObject.name + " in " + other.gameObject.name + " with " + minToGap + " to end " + " from spine point " + spinePoint.DebugDescribe( ) + "' from FZ " + currentFlowZone_ + " with dirn = " + newFz.directionVector );
+					}	
+                    if (minToGap > maxSpinePointsToGap)
+					{
+						shouldExtend = true;
+					}
+					else
+					{
+						if (shouldExtend)
+						{
+							spinePoint.spine.tubeSection.HandlePlayerEnterSection( );
+							shouldExtend = false;
+						}
 					}
 
 					/*

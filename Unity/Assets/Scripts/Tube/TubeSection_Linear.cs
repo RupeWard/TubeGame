@@ -500,6 +500,14 @@ namespace RJWard.Tube
 
 		FlowZone_Linear makeLinearFlowZone( SpinePoint_Linear sp0, System.Text.StringBuilder debugsb)
 		{
+			if (sp0.flowZone != null)
+			{
+				debugsb.Append( " (destroying)" );
+				Debug.LogWarning( "Destroying flowzone" );
+				GameObject.Destroy( sp0.flowZone.gameObject );
+				sp0.flowZone = null;
+			}
+
 			SpinePoint_Linear sp1 = sp0.nextSpinePoint;
 
             FlowZone_Linear result = null;
