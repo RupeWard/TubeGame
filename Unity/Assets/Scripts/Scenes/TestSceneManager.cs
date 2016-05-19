@@ -16,6 +16,9 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public float startRadius = 5f;
 	public float endRadius = 8f;
 
+	public float FlowZone_defaultWeight = 1f;
+	public float FlowZone_defaultSpeed = 1f;
+
 	public int delaySecs = 10;
 
 	public int numHoopPoints = 10;
