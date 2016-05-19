@@ -15,9 +15,18 @@ namespace RJWard.Tube
 		private FlowZone_Linear flowZone_ = null;
 		public FlowZone_Linear flowZone
 		{
-			get { return flowZone_;  }
+			get
+			{
+				if (flowZoneProxy != null)
+				{
+					return flowZoneProxy.flowZone;
+				}
+				return flowZone_;
+			}
 			set { flowZone_ = value; }
 		}
+
+		public SpinePoint_Linear flowZoneProxy = null;
 
 		override public bool isFirst( )
 		{

@@ -43,7 +43,7 @@ namespace RJWard.Tube
 					}
 					else
 					{
-						Debug.LogWarning( "No flow zone in " + firstSpinePoint_.previousSpinePoint.DebugDescribe( ) +
+						Debug.LogWarning( "No Prev flow zone in " + firstSpinePoint_.previousSpinePoint.DebugDescribe( ) +
 							"which is before " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction");
                     }
 				}
@@ -65,7 +65,7 @@ namespace RJWard.Tube
 					}
 					else
 					{
-						Debug.LogWarning( "No flow zone in " + firstSpinePoint_.nextSpinePoint.DebugDescribe( ) +
+						Debug.LogWarning( "No Next flow zone in " + firstSpinePoint_.nextSpinePoint.DebugDescribe( ) +
 							"which is next after " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction" );
 					}
 				}
@@ -80,38 +80,11 @@ namespace RJWard.Tube
 
 			return result;
 
-			/*
-
-
-			float factor0 = 0f;
-			float factor1 = 0f;
-			float factor2 = 0f;
-
-			if (dFraction < 0.5f)
-			{
-				factor0 = (0.5f - dFraction);
-				factor1 = 0.5f + dFraction;
-			}
-			else if (dFraction > 0.5f)
-			{
-				factor1 = 0.5f + (1f - dFraction);
-				factor2 = 0.5f - (1f - dFraction);
-			}
-			else
-			{
-				factor1 = 1f;
-			}
-
-			Vector3 result = factor0 * prevDirection
-				+ factor1 * directionVector_
-				+ factor2 * nextDirection;
-			result = result.normalized;
-			return result;
-			*/
 		}
 
 		public void Init( SpinePoint_Linear sp)
 		{
+			sp.flowZone = this;
 			weight = TestSceneManager.Instance.FlowZone_defaultWeight;
 			speed = TestSceneManager.Instance.FlowZone_defaultSpeed;
 

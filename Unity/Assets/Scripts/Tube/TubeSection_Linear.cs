@@ -22,6 +22,10 @@ namespace RJWard.Tube
 				mySp.previousSpinePoint = sp;
 				if (sp != null)
 				{
+					if (sp.flowZone == null)
+					{
+						sp.flowZoneProxy = firstSp;
+					}
 					sp.nextSpinePoint = mySp;
 				}
 			}
@@ -498,7 +502,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		FlowZone_Linear makeLinearFlowZone( SpinePoint_Linear sp0, System.Text.StringBuilder debugsb)
+        FlowZone_Linear makeLinearFlowZone( SpinePoint_Linear sp0, System.Text.StringBuilder debugsb)
 		{
 			if (sp0.flowZone != null)
 			{
@@ -618,6 +622,7 @@ namespace RJWard.Tube
 
 			// Set up flowzone
 			result = go.AddComponent<FlowZone_Linear>( );
+
 			result.Init( sp0 );
 
 			if (debugsb != null)
@@ -628,8 +633,8 @@ namespace RJWard.Tube
 			//parentage & position
 			result.transform.parent = sp0.transform;
 
-			sp0.flowZone = result;
-            return result;
+			
+			return result;
 		}
 	}
 
