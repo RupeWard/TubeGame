@@ -11,6 +11,8 @@ namespace RJWard.Tube.UI
 		public UnityEngine.UI.Text cameraButtonText;
 		public UnityEngine.UI.Text versionText;
 
+		public RJWard.Tube.Player.Player player_;
+
 		private Rect viewPort_ = new Rect( );
 		public RectTransform bottomPanelRT;
 		public RectTransform viewPortRT;

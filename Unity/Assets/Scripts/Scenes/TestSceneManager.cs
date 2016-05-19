@@ -221,7 +221,8 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public void HandleDebugButtonPressed()
 	{
 		mainCamera.toggleDebugObjects( );
-	}
+		player.playerCamera.toggleDebugObjects( );
+    }
 
 	public void HandleRandomTubeSectionButtonPressed( )
 	{

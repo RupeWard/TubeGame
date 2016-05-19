@@ -6,6 +6,7 @@ namespace RJWard.Tube.Player
 	public class PlayerCam : MonoBehaviour
 	{
 		private Vector3 direction_ = Vector3.back;
+		private UnityEngine.Camera camera_ = null;
 
 		public Transform cachedTransform;
 		private Player player_;
@@ -24,7 +25,29 @@ namespace RJWard.Tube.Player
 		public void Init(Player p)
 		{
 			player_ = p;
+			camera_ = GetComponent<UnityEngine.Camera>( );
 		}
+
+		public void toggleDebugObjects( )
+		{
+			int debugObjectsLayer = 1 << LayerMask.NameToLayer( "DebugObjects" );
+			bool isShowing = (camera_.cullingMask & debugObjectsLayer) != 0;
+			showDebugObjects( !isShowing );
+		}
+
+		public void showDebugObjects( bool show )
+		{
+			int debugObjectsLayer = 1 << LayerMask.NameToLayer( "DebugObjects" );
+			if (show)
+			{
+				camera_.cullingMask = camera_.cullingMask | debugObjectsLayer;
+			}
+			else
+			{
+				camera_.cullingMask = camera_.cullingMask & ~debugObjectsLayer;
+			}
+		}
+
 
 		/*
 		public void SetCamTarget(Vector3 pos)
