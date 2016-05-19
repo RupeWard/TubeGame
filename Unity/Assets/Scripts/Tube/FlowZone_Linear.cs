@@ -5,6 +5,8 @@ namespace RJWard.Tube
 {
 	public class FlowZone_Linear : MonoBehaviour
 	{
+		static public readonly int FLOWZONELAYER = 12;
+
 		static readonly bool DEBUG_COLLISIONS = false;
 
 		private SpinePoint_Linear firstSpinePoint_;

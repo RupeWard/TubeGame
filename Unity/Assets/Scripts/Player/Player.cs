@@ -91,7 +91,7 @@ namespace RJWard.Tube.Player
 		{
 			if (DEBUG_COLLISIONS)
 			{
-				Debug.Log( "TRIGGER ENTER: " + gameObject.name + " " + other.gameObject.name );
+//				Debug.Log( "TRIGGER ENTER: " + gameObject.name + " " + other.gameObject.name );
 			}
 			
 			FlowZone_Linear newFz = other.gameObject.GetComponent<FlowZone_Linear>( );
@@ -103,7 +103,7 @@ namespace RJWard.Tube.Player
 
 					SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
 					int minToGap = spinePoint.MinSpinePointsToEnd( );
-					//					if (DEBUG_COLLISIONS)
+					if (DEBUG_COLLISIONS)
 					{
 						Debug.Log( "TRIGGER ENTER " + gameObject.name + " in " + other.gameObject.name + " with " + minToGap + " to end " + " from spine point " + spinePoint.DebugDescribe( ) + "' from FZ " + currentFlowZone_ + " with dirn = " + newFz.directionVector );
 					}	
@@ -120,51 +120,6 @@ namespace RJWard.Tube.Player
 						}
 					}
 
-					/*
-					Vector3 pos = spinePoint.cachedTransform.position;
-					float distGone = camTargetDistance;
-					bool posFound = false;
-
-					int numSkipped = 0;
-
-					while (distGone > 0f)
-					{
-						SpinePointConnection spc = spinePoint.GetConnectionOut( null );
-						if (spc != null)
-						{
-							if (distGone < spc.TotalDistance)
-							{
-								if (spinePoint.InterpolateForwardWorld( null, distGone / spc.TotalDistance, ref pos ))
-								{
-									posFound = true;
-								}
-								else
-								{
-									Debug.LogError( "Failed to interpolate" );
-								}
-								distGone = 0f;
-							}
-							else
-							{
-								numSkipped++;
-								distGone -= spc.TotalDistance;
-								spinePoint = spc.endPoint as SpinePoint_Linear;
-							}
-						}
-						else
-						{
-							Debug.LogWarning( "Nowhere to go!" );
-							distGone = 0f;
-							posFound = false;
-						}
-					}
-
-					if (posFound)
-					{
-						Debug.Log( "Set target (" + numSkipped + ") to " + pos );
-						cam.SetCamTarget( pos );
-					}
-					*/
 				}
 				else
 				{

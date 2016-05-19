@@ -516,6 +516,8 @@ namespace RJWard.Tube
 
             FlowZone_Linear result = null;
 			GameObject go = new GameObject( "FlowZone" + sp0.gameObject.name );
+			go.layer = FlowZone_Linear.FLOWZONELAYER;
+
 			MeshFilter meshFilter = go.AddComponent<MeshFilter>( );
 			MeshCollider meshCollider = go.AddComponent<MeshCollider>( );
 

@@ -60,12 +60,52 @@ namespace RJWard.Tube.Player
 
 		public float camSpeed = 1f;
 
+		public float camDistFromObjMultipler = 10f;
+
 		private void Update()
 		{
 			player_.UpdateDirection( ref direction_ );
-			cachedTransform.position = Vector3.MoveTowards( cachedTransform.position, 
-				player_.cachedTransform.position + direction_ * distanceFromPlayer,
-				camSpeed * Time.deltaTime);
+
+			
+			float moveDist = camSpeed * Time.deltaTime;
+
+			Ray lookRay = new Ray( cachedTransform.position, direction_ );
+			
+			RaycastHit hitInfo;
+			bool rayCastHit = Physics.Raycast( lookRay, out hitInfo, camDistFromObjMultipler * moveDist );
+
+			if (rayCastHit && hitInfo.collider.gameObject.layer != FlowZone_Linear.FLOWZONELAYER)
+			{
+				float dist = Vector3.Distance( cachedTransform.position, player_.cachedTransform.position );
+                if ( dist > distanceFromPlayer)
+				{
+					float distToTest = Mathf.Min( camSpeed * Time.deltaTime, dist );
+					distToTest = Mathf.Max( distToTest, camera_.nearClipPlane );
+
+                    cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
+						player_.cachedTransform.position,
+						distToTest
+						);
+					Debug.LogWarning( "against T" + hitInfo.collider.gameObject.name );
+				}
+				else if (dist < distanceFromPlayer)
+				{
+					cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
+						player_.cachedTransform.position,
+						-1f * Mathf.Min( camSpeed * Time.deltaTime, dist ) );
+					Debug.LogWarning( "against A " + hitInfo.collider.gameObject.name );
+				}
+				else
+				{
+					Debug.LogWarning( "against 0 " + hitInfo.collider.gameObject.name );
+				}
+			}
+			else
+			{
+				cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
+					player_.cachedTransform.position + direction_ * distanceFromPlayer,
+					camSpeed * Time.deltaTime );
+			}
 			cachedTransform.LookAt( player_.cachedTransform );
 
 			/*
