@@ -9,6 +9,10 @@ namespace RJWard.Tube
 		public Transform cachedTransform {  get { return cachedTransform_; } }
 
 		protected Spine_Linear spine_ = null;
+		public Spine_Linear spine
+		{
+			get { return spine_;  }
+		}
 
 		protected bool fixedRotation_ = false;
 		public void fixRotation( )

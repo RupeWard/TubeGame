@@ -68,12 +68,15 @@ namespace RJWard.Tube.Player
 			cam.gameObject.SetActive( true );
 		}
 
+		public int maxSpinePointsToGap = 10;
+
 		private void OnTriggerEnter( Collider other )
 		{
 			if (DEBUG_COLLISIONS)
 			{
 				Debug.Log( "TRIGGER ENTER: " + gameObject.name + " " + other.gameObject.name );
 			}
+			
 			FlowZone_Linear newFz = other.gameObject.GetComponent<FlowZone_Linear>( );
 			if (newFz != null)
 			{
@@ -86,6 +89,13 @@ namespace RJWard.Tube.Player
 					currentFlowZone_ = newFz;
 
 					SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
+					int minToGap = spinePoint.MinSpinePointsToEnd( );
+					if (minToGap < 10)
+					{
+						spinePoint.spine.tubeSection.HandlePlayerEnterSection( );
+					}
+
+					/*
 					Vector3 pos = spinePoint.cachedTransform.position;
 					float distGone = camTargetDistance;
 					bool posFound = false;
@@ -129,6 +139,7 @@ namespace RJWard.Tube.Player
 						Debug.Log( "Set target (" + numSkipped + ") to " + pos );
 						cam.SetCamTarget( pos );
 					}
+					*/
 				}
 				else
 				{

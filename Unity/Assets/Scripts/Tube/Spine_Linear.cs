@@ -6,6 +6,10 @@ namespace RJWard.Tube
 	public class Spine_Linear : MonoBehaviour
 	{
 		private TubeSection_Linear tubeSection_ = null;
+		public TubeSection_Linear tubeSection
+		{
+			get { return tubeSection_; }
+		}
 
 		private List< SpinePoint_Linear > spinePoints_ = new List< SpinePoint_Linear >( );
 

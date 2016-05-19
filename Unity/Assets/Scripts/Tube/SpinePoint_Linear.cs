@@ -29,6 +29,18 @@ namespace RJWard.Tube
 			return nextSpinePoint_ == null;
 		}
 
+		public int MinSpinePointsToEnd()
+		{
+			int result = 0;
+			SpinePoint_Linear next = nextSpinePoint_;
+			while (next != null)
+			{
+				next = next.nextSpinePoint_;
+				result++;
+			}
+			return result;
+		}
+
 		public override SpinePointConnection GetConnectionOut( SpinePointPathChooser chooser )
 		{
 			SpinePointConnection connection = null;

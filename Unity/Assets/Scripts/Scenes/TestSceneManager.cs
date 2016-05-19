@@ -45,7 +45,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void NewFromSources( )
 	{
-		TubeFactory.Instance.CreateFromSourcesInContainer( testTubeContainer, numHoopPoints, tubeWallMaterial, HandleTubeSectionMade );
+		TubeFactory.Instance.CreateFromSourcesInContainer( tube_ , testTubeContainer, numHoopPoints, tubeWallMaterial, HandleTubeSectionMade );
 	}
 
 	public void ClearTube( )
@@ -68,9 +68,10 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		return result;
 	}
 
+	
 	public void CreateRandomSection( )
 	{
-		//			Debug.Log( "Randomising" );
+		Debug.Log( "Randomising" );
 		randLinearSectionDefn.firstHoop = null;
 		if (tube_ != null)
 		{
@@ -80,7 +81,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 				randLinearSectionDefn.firstHoop = lastHoop.ExplicitDefinition( );
 			}
 		}
-		TubeFactory.Instance.CreateRandomLinearSection( randLinearSectionDefn, HandleTubeSectionMade );
+		TubeFactory.Instance.CreateRandomLinearSection( tube_, randLinearSectionDefn, HandleTubeSectionMade );
 	}
 
 	public Transform cameraHook;

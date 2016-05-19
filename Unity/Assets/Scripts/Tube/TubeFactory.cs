@@ -29,12 +29,12 @@ namespace RJWard.Tube
 		public Material tubeWallMaterial;
 
 
-		public void CreateRandomLinearSection( RandLinearSectionDefn settings, System.Action<TubeSection_Linear> onCreatedAction )
+		public void CreateRandomLinearSection( Tube t, RandLinearSectionDefn settings, System.Action<TubeSection_Linear> onCreatedAction )
 		{
-			StartCoroutine( CreateRandomLinearSectionCR( settings, onCreatedAction ) );
+			StartCoroutine( CreateRandomLinearSectionCR( t, settings, onCreatedAction ) );
 		}
 
-		public IEnumerator CreateRandomLinearSectionCR( RandLinearSectionDefn settings, System.Action<TubeSection_Linear > onCreatedAction )
+		public IEnumerator CreateRandomLinearSectionCR(Tube t, RandLinearSectionDefn settings, System.Action<TubeSection_Linear > onCreatedAction )
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder( );
 			sb.Append( "Creating Random Linear Section \n from " ).DebugDescribe( settings );
@@ -82,12 +82,12 @@ namespace RJWard.Tube
 				direction = rot * direction;
 
 			}
-			yield return StartCoroutine( CreateSectionFromDefinitionCR( defn, settings.numPerSection, onCreatedAction, sb ) );
+			yield return StartCoroutine( CreateSectionFromDefinitionCR(t, defn, settings.numPerSection, onCreatedAction, sb ) );
 			Debug.Log( sb.ToString( ) );
 		}
 
 
-		public IEnumerator CreateCircularCR( string n, TubeSectionDefinition_Linear tsd, Material mat, System.Action< TubeSection_Linear > onCreatedAction )
+		public IEnumerator CreateCircularCR(Tube t, string n, TubeSectionDefinition_Linear tsd, Material mat, System.Action< TubeSection_Linear > onCreatedAction )
 		{
 			if (tmpTubeSection_ != null)
 			{
@@ -95,7 +95,7 @@ namespace RJWard.Tube
 			}
 			GameObject tsGo = new GameObject( n );
 			tmpTubeSection_ = tsGo.AddComponent<TubeSection_Linear>( );
-			yield return StartCoroutine(tmpTubeSection_.InitCircularCR( n, tsd, mat ));
+			yield return StartCoroutine(tmpTubeSection_.InitCircularCR(t, n, tsd, mat ));
 			yield return null;
 			if (onCreatedAction != null)
 			{
@@ -103,7 +103,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		public IEnumerator CreateSplinar( string n, TubeSection_Linear ts, int numPerSection, Material mat, System.Action<TubeSection_Linear> onCreatedAction )
+		public IEnumerator CreateSplinar(Tube t, string n, TubeSection_Linear ts, int numPerSection, Material mat, System.Action<TubeSection_Linear> onCreatedAction )
 		{
 			if (tmpTubeSection_ != null)
 			{
@@ -111,7 +111,7 @@ namespace RJWard.Tube
 			}
 			GameObject tsGo = new GameObject( n );
 			tmpTubeSection_= tsGo.AddComponent<TubeSection_Linear>( );
-			yield return StartCoroutine(tmpTubeSection_.InitSplinarCR( n, ts, numPerSection, mat ));
+			yield return StartCoroutine(tmpTubeSection_.InitSplinarCR(t, n, ts, numPerSection, mat ));
 			yield return null;
 			if (onCreatedAction != null)
 			{
@@ -122,13 +122,13 @@ namespace RJWard.Tube
 		private TubeSection_Linear tmpTubeSection_ = null;
 		private int tsNumber = 0;
 
-		public void CreateFromSourcesInContainer( Transform container, int numHoopPoints, Material tubeWallMaterial, System.Action<TubeSection_Linear> onTubeSectionMadeAction )
+		public void CreateFromSourcesInContainer(Tube t, Transform container, int numHoopPoints, Material tubeWallMaterial, System.Action<TubeSection_Linear> onTubeSectionMadeAction )
 		{
 
-			StartCoroutine( CreateFromSourcesInContainerCR( container, numHoopPoints, tubeWallMaterial, onTubeSectionMadeAction ) );
+			StartCoroutine( CreateFromSourcesInContainerCR(t, container, numHoopPoints, tubeWallMaterial, onTubeSectionMadeAction ) );
 		}
 
-		private IEnumerator CreateSectionFromDefinitionCR( TubeSectionDefinition_Linear defn, int numPerSection, System.Action<TubeSection_Linear> onTubeSectionMadeAction, System.Text.StringBuilder sb )
+		private IEnumerator CreateSectionFromDefinitionCR(Tube t, TubeSectionDefinition_Linear defn, int numPerSection, System.Action<TubeSection_Linear> onTubeSectionMadeAction, System.Text.StringBuilder sb )
 		{
 			yield return null;
 
@@ -153,7 +153,7 @@ namespace RJWard.Tube
 					sb.Append( "\n  Added as " ).DebugDescribe( hdb );
 				}
 
-				yield return StartCoroutine(CreateCircularCR( "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ));
+				yield return StartCoroutine(CreateCircularCR(t, "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ));
 				//container.gameObject.SetActive( false );
 				tsNumber++;
 
@@ -162,7 +162,7 @@ namespace RJWard.Tube
 					yield return null;
 					TubeSection_Linear firstTubeSection = tmpTubeSection_;
 					tmpTubeSection_ = null;
-					yield return StartCoroutine(CreateSplinar( "SPLINAR", firstTubeSection, numPerSection, tubeWallMaterial, null ));
+					yield return StartCoroutine(CreateSplinar(t, "SPLINAR", firstTubeSection, numPerSection, tubeWallMaterial, null ));
 					GameObject.Destroy( firstTubeSection.gameObject );
 					yield return null;
 					if (tmpTubeSection_ != null)
@@ -187,7 +187,7 @@ namespace RJWard.Tube
 		}
 
 
-		private IEnumerator CreateFromSourcesInContainerCR( Transform container, int numHoopPoints, Material tubeWallMaterial, System.Action<TubeSection_Linear> onTubeSectionMadeAction )
+		private IEnumerator CreateFromSourcesInContainerCR( Tube t, Transform container, int numHoopPoints, Material tubeWallMaterial, System.Action<TubeSection_Linear> onTubeSectionMadeAction )
 		{
 			yield return null;
 
@@ -224,7 +224,7 @@ namespace RJWard.Tube
 
 				Debug.Log( sb.ToString( ) );
 
-				yield return StartCoroutine( CreateCircularCR( "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ) );
+				yield return StartCoroutine( CreateCircularCR(t, "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ) );
 				container.gameObject.SetActive( false );
 				tsNumber++;
 
@@ -233,7 +233,7 @@ namespace RJWard.Tube
 					yield return null;
 					TubeSection_Linear firstTubeSection = tmpTubeSection_;
 					tmpTubeSection_ = null;
-					yield return StartCoroutine( CreateSplinar( "SPLINAR", firstTubeSection, 5, tubeWallMaterial, null ) );
+					yield return StartCoroutine( CreateSplinar( t, "SPLINAR", firstTubeSection, 5, tubeWallMaterial, null ) );
 					GameObject.Destroy( firstTubeSection.gameObject );
 					yield return null;
 					if (tmpTubeSection_ != null)

@@ -109,8 +109,11 @@ namespace RJWard.Tube
 			return result;
 		}
 
-		private void Init(string n, Material mat, System.Text.StringBuilder debugsb)
+		private Tube tube_ = null;
+
+		private void Init(Tube t, string n, Material mat, System.Text.StringBuilder debugsb)
 		{
+			tube_ = t;
 			gameObject.name = id_.ToString()+"_" +n;
 			tubeWallMaterial_ = mat;
 			if (debugsb != null)
@@ -119,7 +122,36 @@ namespace RJWard.Tube
 			}
 		}
 
-		public IEnumerator InitCircularCR( string n, TubeSectionDefinition_Linear tsd, Material mat )
+		private bool isExtending_ = false;
+		public void HandlePlayerEnterSection()
+		{
+			ExtendSection( TestSceneManager.Instance.randLinearSectionDefn, tube_.AddToEnd);
+		}
+
+		private void ExtendSection(TubeFactory.RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )
+		{ 
+			if (!isExtending_)
+			{
+				Debug.Log( "ExtendSection "+this.gameObject.name );
+				isExtending_ = true;
+				Hoop lastHoop = LastHoop( );
+				if (lastHoop != null)
+				{
+					randLinearSectionDefn.firstHoop = lastHoop.ExplicitDefinition( );
+				}
+				if (!lastHoop.spinePoint.isLast())
+				{
+					Debug.LogError( "SpinePoint of last hoop should be last when extending!" );
+				}
+				else
+				{
+					TubeFactory.Instance.CreateRandomLinearSection(tube_, randLinearSectionDefn, onCompleteAction );
+				}
+			}
+		}
+
+
+		public IEnumerator InitCircularCR(Tube t, string n, TubeSectionDefinition_Linear tsd, Material mat )
 		{
             System.Text.StringBuilder debugSb = null;
 
@@ -130,7 +162,7 @@ namespace RJWard.Tube
 				debugSb.Append( "TubeSection_Linear.InitCircular" );
 			}
 
-			Init( n, mat, debugSb );
+			Init(t, n, mat, debugSb );
 
 			GameObject spineGO = new GameObject( "SP"+n );
 			spine_ = spineGO.AddComponent<Spine_Linear>( );
@@ -178,7 +210,7 @@ namespace RJWard.Tube
         }
 		*/
 
-		public IEnumerator InitSplinarCR(string n, TubeSection_Linear srcTs, int numPerSection, Material mat)
+		public IEnumerator InitSplinarCR(Tube t, string n, TubeSection_Linear srcTs, int numPerSection, Material mat)
 		{
 			System.Text.StringBuilder debugSb = null;
 
@@ -190,7 +222,7 @@ namespace RJWard.Tube
 			}
 			remakeMeshWhenDirty = false;
 			
-			Init( n + "_SPL", mat, debugSb );
+			Init(t, n + "_SPL", mat, debugSb );
 
 			if (DEBUG_SPLINAR)
 			{

@@ -21,6 +21,8 @@ namespace RJWard.Tube
 
 		public Vector3 directionAtPosition(Vector3 pos)
 		{
+			return directionVector_;
+			/*
 			Vector3 prevDirection = directionVector_;
 			if (firstSpinePoint_.previousSpinePoint != null)
 			{
@@ -52,7 +54,7 @@ namespace RJWard.Tube
 			float d1 = Vector3.Distance( pos, firstSpinePoint_.nextSpinePoint.cachedTransform.position );
 			float dtotal = d0 + d1;
 
-			float dFraction = d0 / d1;
+			float dFraction = d0 / dtotal;
 
 			float factor0 = 0f;
 			float factor1 = 0f;
@@ -78,6 +80,7 @@ namespace RJWard.Tube
 				+ factor2 * nextDirection;
 			result = result.normalized;
 			return result;
+			*/
 		}
 
 		public void Init( SpinePoint_Linear sp)

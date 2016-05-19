@@ -14,7 +14,7 @@ namespace RJWard.Tube.Player
 
 		public float distanceFromPlayer = 5f;
 
-		private bool isDirty_ = false;
+//		private bool isDirty_ = false;
 
 		private void Awake( )
 		{
@@ -26,11 +26,12 @@ namespace RJWard.Tube.Player
 			player_ = p;
 		}
 
+		/*
 		public void SetCamTarget(Vector3 pos)
 		{
 			camTarget.position = pos;
 			isDirty_ = true;
-		}
+		}*/
 
 		public float camSpeed = 1f;
 
