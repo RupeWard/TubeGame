@@ -61,43 +61,86 @@ namespace RJWard.Tube.Player
 		public float camSpeed = 1f;
 
 		public float camDistFromObjMultipler = 10f;
+		public float minDistFromObj = 1f;
 
+		private Vector3 currentForceDirection_ = Vector3.zero;
+		private float currentForce_ = 0f;
+		public float wallForce = 2f;
+		public float wallForceReduction = 1f;
+
+		public bool tmpCheckUsingRaycast = true;
 		private void Update()
 		{
 			player_.UpdateDirection( ref direction_ );
-
 			
 			float moveDist = camSpeed * Time.deltaTime;
 
-			Ray lookRay = new Ray( cachedTransform.position, direction_ );
-			
-			RaycastHit hitInfo;
-			bool rayCastHit = Physics.Raycast( lookRay, out hitInfo, camDistFromObjMultipler * moveDist );
-
-			if (rayCastHit && hitInfo.collider.gameObject.layer != FlowZone_Linear.FLOWZONELAYER)
+			Vector3 forceAdjustment = Vector3.zero;
+			if (currentForce_ > 0f)
 			{
-				float dist = Vector3.Distance( cachedTransform.position, player_.cachedTransform.position );
-                if ( dist > distanceFromPlayer)
-				{
-					float distToTest = Mathf.Min( camSpeed * Time.deltaTime, dist );
-					distToTest = Mathf.Max( distToTest, camera_.nearClipPlane );
+				forceAdjustment = currentForce_ * currentForceDirection_;
+                cachedTransform.position = cachedTransform.position + forceAdjustment * Time.deltaTime;
 
-                    cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
-						player_.cachedTransform.position,
-						distToTest
-						);
-					Debug.LogWarning( "against T" + hitInfo.collider.gameObject.name );
-				}
-				else if (dist < distanceFromPlayer)
+				currentForce_ -= wallForceReduction * Time.deltaTime;
+				if (currentForce_ < 0f)
 				{
-					cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
-						player_.cachedTransform.position,
-						-1f * Mathf.Min( camSpeed * Time.deltaTime, dist ) );
-					Debug.LogWarning( "against A " + hitInfo.collider.gameObject.name );
+					currentForce_ = 0f;
+					Debug.Log( "Force depleted" );
+				}
+			}
+			if (tmpCheckUsingRaycast)
+			{
+				Ray lookRay = new Ray( cachedTransform.position, direction_ );
+
+				RaycastHit hitInfo;
+
+				float lookDist = Mathf.Max( camDistFromObjMultipler * moveDist, minDistFromObj );
+				bool rayCastHit = Physics.Raycast( lookRay, out hitInfo, lookDist );
+
+				if (rayCastHit && hitInfo.collider.gameObject.layer != FlowZone_Linear.FLOWZONELAYER)
+				{
+					
+					currentForceDirection_ = -1f * direction_;
+					if (currentForce_ == 0f)
+					{
+						currentForce_ = wallForce;
+						Debug.Log( "Applying force" );
+					}
+					else
+					{
+						Debug.Log( "reapplying force" );
+					}
+					{
+						float dist = Vector3.Distance( cachedTransform.position, player_.cachedTransform.position );
+						if (dist > distanceFromPlayer)
+						{
+							float distToTest = Mathf.Min( camSpeed * Time.deltaTime, dist );
+							distToTest = Mathf.Max( distToTest, camera_.nearClipPlane );
+
+							cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
+								player_.cachedTransform.position,
+								distToTest
+								);
+							Debug.LogWarning( "against T" + hitInfo.collider.gameObject.name );
+						}
+						else if (dist < distanceFromPlayer)
+						{
+							cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
+								player_.cachedTransform.position,
+								-1f * Mathf.Min( camSpeed * Time.deltaTime, dist ) );
+							Debug.LogWarning( "against A " + hitInfo.collider.gameObject.name );
+						}
+						else
+						{
+							Debug.LogWarning( "against 0 " + hitInfo.collider.gameObject.name );
+						}
+					}
 				}
 				else
 				{
-					Debug.LogWarning( "against 0 " + hitInfo.collider.gameObject.name );
+					cachedTransform.position = Vector3.MoveTowards( cachedTransform.position,
+						player_.cachedTransform.position + direction_ * distanceFromPlayer,
+						camSpeed * Time.deltaTime );
 				}
 			}
 			else
@@ -118,5 +161,23 @@ namespace RJWard.Tube.Player
 			}
 			*/
 		}
+		static readonly bool DEBUG_COLLISIONS = true;
+
+		private void OnCollisionEnter( Collision collision )
+		{
+			if (DEBUG_COLLISIONS)
+			{
+				Debug.Log( "COLLISION ENTER: " + gameObject.name + " " + collision.gameObject.name );
+			}
+		}
+
+		private void OnCollisionExit( Collision collision )
+		{
+			if (DEBUG_COLLISIONS)
+			{
+				Debug.Log( "COLLISION EXIT: " + gameObject.name + " " + collision.gameObject.name );
+			}
+		}
+
 	}
 }
