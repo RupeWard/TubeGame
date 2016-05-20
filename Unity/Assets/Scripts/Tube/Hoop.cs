@@ -227,20 +227,33 @@ namespace RJWard.Tube
 			{
 				hoopPoints_[i].vertexNumber = verts.Count;
 				verts.Add( hoopPoints_[i].transform.position );
-				uvs.Add( new Vector2( (float)i / (hoopPoints_.Count), v ) );
+				if (uvs != null)
+				{
+					uvs.Add( new Vector2( (float)i / (hoopPoints_.Count), v ) );
+				}
 
 				dirn = spinePoint.transform.position - hoopPoints_[i].transform.position;
-				Vector3 normedDirn = dirn.normalized;
 
-				normals.Add( normedDirn );
+				if (normals != null)
+				{
+					Vector3 normedDirn = dirn.normalized;
+					normals.Add( normedDirn );
+				}
+
 				hoopPoints_[i].LookAt( spinePoint.transform );
 			}
 			hoopPoints_[0].altVertexNumber = verts.Count;
 			verts.Add( hoopPoints_[0].transform.position );
-			uvs.Add( new Vector2( 1f, v ) );
+			if (uvs != null)
+			{
+				uvs.Add( new Vector2( 1f, v ) );
+			}
+			if (normals != null)
+			{
+				dirn = spinePoint.transform.position - hoopPoints_[0].transform.position;
+				normals.Add( dirn.normalized );
+			}
 
-			dirn = spinePoint.transform.position - hoopPoints_[0].transform.position;
-			normals.Add( dirn.normalized );
 		}
 
 		public void ExtractDiscTriVerts( List<int> triVerts, int spineIndex, bool reverse )
@@ -264,7 +277,7 @@ namespace RJWard.Tube
 			triVerts.AddRange( newVerts );
 		}
 
-		public static void ExtractConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts )
+		public static void ExtractConnectingTriVerts( Hoop A, Hoop B, List<int> triVerts, bool reverse )
 		{
 			if (A.hoopPoints_.Count != B.hoopPoints_.Count)
 			{
@@ -272,6 +285,8 @@ namespace RJWard.Tube
 			}
 			else
 			{
+				List<int> newVerts = new List<int>( );
+
 				int numPoints = A.hoopPoints_.Count;
 				for (int i = 0; i < numPoints; i++)
 				{
@@ -280,14 +295,19 @@ namespace RJWard.Tube
 					{
 						nextIndex = 0;
 					}
-					triVerts.Add( A.hoopPoints_[i].vertexNumber );
-					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
-					triVerts.Add( B.hoopPoints_[i].vertexNumber );
+					newVerts.Add( A.hoopPoints_[i].vertexNumber );
+					newVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
+					newVerts.Add( B.hoopPoints_[i].vertexNumber );
 
-					triVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
-					triVerts.Add( B.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
-					triVerts.Add( B.hoopPoints_[i].vertexNumber );
+					newVerts.Add( A.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
+					newVerts.Add( B.hoopPoints_[nextIndex].getVertexNumber( nextIndex == 0 ) );
+					newVerts.Add( B.hoopPoints_[i].vertexNumber );
 				}
+				if (reverse)
+				{
+					newVerts.Reverse( );
+				}
+				triVerts.AddRange( newVerts );
 			}
 		}
 

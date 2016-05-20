@@ -143,14 +143,11 @@ namespace RJWard.Tube
 							yield return null;
 						}
 
-						Debug.Log( "Moving to match prev section, rotation is "+ts.transform.rotation);				
+//						Debug.Log( "Moving to match prev section, rotation is "+ts.transform.rotation);				
 
 						ts.transform.rotation = lastHoopOfPrevious.spinePoint.transform.rotation; // SEEMS RIGHT
 						yield return null;
-//						ts.transform.rotation = Quaternion.Euler( lastHoopOfPrevious.spinePoint.transform.rotation.eulerAngles - firstHoop.spinePoint.transform.rotation.eulerAngles) * ts.transform.rotation;
 						ts.transform.position = lastHoopOfPrevious.spinePoint.transform.position  ;
-
-						// need to rotate ts so first hoop at same orientation as previous
 
 //						Debug.Log( "Rotated by " + lastHoopOfPrevious.transform.rotation +" to give "+ ts.transform.rotation );
 						//						ts.transform.rotation = Quaternion.Euler(-1f*firstHoopRot) * ts.transform.rotation;

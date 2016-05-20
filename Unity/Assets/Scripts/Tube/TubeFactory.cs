@@ -36,8 +36,13 @@ namespace RJWard.Tube
 
 		public IEnumerator CreateRandomLinearSectionCR(Tube t, RandLinearSectionDefn settings, System.Action<TubeSection_Linear > onCreatedAction )
 		{
-			System.Text.StringBuilder sb = new System.Text.StringBuilder( );
-			sb.Append( "Creating Random Linear Section \n from " ).DebugDescribe( settings );
+			System.Text.StringBuilder sb = null;
+
+			if (TubeSection_Linear.DEBUG_MESH)
+			{
+				sb = new System.Text.StringBuilder( );
+				sb.Append( "Creating Random Linear Section \n from " ).DebugDescribe( settings );
+			}
 			if (settings.numHoops < 1)
 			{
 				throw new System.InvalidOperationException( "No hoops" );
@@ -51,14 +56,20 @@ namespace RJWard.Tube
 			{
 				defn.AddHoopDefn( settings.firstHoop );
 				previous = settings.firstHoop;
-				sb.Append( "\n COPIED first hoop defn :" ).DebugDescribe( settings.firstHoop);
+				if (sb!= null)
+				{
+					sb.Append( "\n COPIED first hoop defn :" ).DebugDescribe( settings.firstHoop );
+				}
 			}
 			else
 			{
 				HoopDefinition_Circular hdc = new HoopDefinition_Circular( Vector3.zero, Vector3.forward, settings.numHoopPoints, radius );
 				defn.AddHoopDefn( hdc );
 				previous = hdc;
-				sb.Append( "\n CREATED first hoop defn :" ).DebugDescribe( hdc );
+				if (sb != null)
+				{
+					sb.Append( "\n CREATED first hoop defn :" ).DebugDescribe( hdc );
+				}
 			}
 			yield return null;
 
@@ -73,8 +84,10 @@ namespace RJWard.Tube
 				HoopDefinition_Circular hdcnew = new HoopDefinition_Circular( pos, null, settings.numHoopPoints, radius );
 				defn.AddHoopDefn( hdcnew );
 				previous = hdcnew;
-				sb.Append( "\n created hoop defn ").Append(i).Append(":" ).DebugDescribe( hdcnew );
-
+				if (sb != null)
+				{
+					sb.Append( "\n created hoop defn " ).Append( i ).Append( ":" ).DebugDescribe( hdcnew );
+				}
 				float xAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD);
 				float yAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD );
 
@@ -83,7 +96,10 @@ namespace RJWard.Tube
 
 			}
 			yield return StartCoroutine( CreateSectionFromDefinitionCR(t, defn, settings.numPerSection, onCreatedAction, sb ) );
-			Debug.Log( sb.ToString( ) );
+			if (sb != null)
+			{
+				Debug.Log( sb.ToString( ) );
+			}
 		}
 
 
@@ -137,20 +153,29 @@ namespace RJWard.Tube
 	
 				TubeSectionDefinition_Linear tsd = new TubeSectionDefinition_Linear( );
 
-				sb.Append( "Building Tube Section" );
+				if (sb != null)
+				{
+					sb.Append( "Building Tube Section" );
+				}
 
 				for (int i = 0; i < defn.NumSpinePoints; i++)
 				{
 					HoopDefinition_Base hdb = defn.GetHoopDefn(i);
-					sb.Append( "\n " ).Append( i ).Append( ": " ).DebugDescribe( hdb );
+					if (sb != null)
+					{
+						sb.Append( "\n " ).Append( i ).Append( ": " ).DebugDescribe( hdb );
+					}
 
-//					Vector3 pos = hdb.position;
-	//				Vector3? rot = hdb.rotation;
-		//			float rad = hdb.radius;
-			//		HoopDefinition_Circular hdb = new HoopDefinition_Circular( pos, rot, numHoopPoints, rad );
-                    tsd.AddHoopDefn(hdb);
+					//					Vector3 pos = hdb.position;
+					//				Vector3? rot = hdb.rotation;
+					//			float rad = hdb.radius;
+					//		HoopDefinition_Circular hdb = new HoopDefinition_Circular( pos, rot, numHoopPoints, rad );
+					tsd.AddHoopDefn(hdb);
 					
-					sb.Append( "\n  Added as " ).DebugDescribe( hdb );
+					if (sb != null)
+					{
+						sb.Append( "\n  Added as " ).DebugDescribe( hdb );
+					}
 				}
 
 				yield return StartCoroutine(CreateCircularCR(t, "TS" + tsNumber.ToString( ), tsd, tubeWallMaterial, null ));

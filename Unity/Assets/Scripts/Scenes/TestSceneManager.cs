@@ -19,6 +19,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public float FlowZone_defaultWeight = 1f;
 	public float FlowZone_defaultSpeed = 1f;
 
+	public float flowZoneConvexAdjust = 0.2f;
 	public int delaySecs = 10;
 
 	public int numHoopPoints = 10;
@@ -74,7 +75,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	
 	public void CreateRandomSection( )
 	{
-		Debug.Log( "Randomising" );
+//		Debug.Log( "Randomising" );
 		randLinearSectionDefn.firstHoop = null;
 		if (tube_ != null)
 		{

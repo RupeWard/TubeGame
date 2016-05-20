@@ -125,7 +125,7 @@ namespace RJWard.Tube
 					Hoop hoopA = spinePoints_[i].hoop;
 					Hoop hoopB = spinePoints_[i + 1].hoop;
 
-					Hoop.ExtractConnectingTriVerts( hoopA, hoopB, triVerts );
+					Hoop.ExtractConnectingTriVerts( hoopA, hoopB, triVerts, false );
 				}
 			}
 		}

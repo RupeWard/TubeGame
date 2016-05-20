@@ -9,7 +9,7 @@ namespace RJWard.Tube
 		static private readonly bool DEBUG_LOCAL = false;
 		static private readonly bool DEBUG_CIRCULAR = false;
 		static private readonly bool DEBUG_SPLINAR = false;
-		static private readonly bool DEBUG_MESH = false;
+		static public  readonly bool DEBUG_MESH = false;
 
 		public void ConnectAfterSpinePoint(SpinePoint_Linear sp)
 		{
@@ -136,7 +136,10 @@ namespace RJWard.Tube
 		{ 
 			if (!isExtending_)
 			{
-				Debug.Log( "ExtendSection "+this.gameObject.name );
+				if (DEBUG_MESH)
+				{
+					Debug.Log( "ExtendSection " + this.gameObject.name );
+				}
 				isExtending_ = true;
 				Hoop lastHoop = LastHoop( );
 				if (lastHoop != null)
@@ -531,16 +534,18 @@ namespace RJWard.Tube
 
 			if (debugsb!=null)
 			{
-				debugsb.Append( "\n Made mesh. " );
+				debugsb.Append( " MM." );
 			}
 			List<Vector3> verts = new List<Vector3>( );
 			List<Vector2> uvs = new List<Vector2>( );
 			List<Vector3> normals = new List<Vector3>( );
 
 			// Add spine0 to list
-			verts.Add( sp0.cachedTransform.position );
+			verts.Add( sp0.cachedTransform.position - sp0.cachedTransform.forward * TestSceneManager.Instance.flowZoneConvexAdjust );
 			uvs.Add( Vector2.zero );
-			normals.Add( Vector3.zero );//normals?
+			Vector3 sp0norm = -1f * sp0.cachedTransform.forward;
+			normals.Add( sp0norm );
+
 
 			if (debugsb != null)
 			{
@@ -548,9 +553,11 @@ namespace RJWard.Tube
 			}
 
 			// Add spine1 to list
-			verts.Add( sp1.cachedTransform.position );
-			uvs.Add( Vector2.zero );
-			normals.Add( Vector3.zero );//normals?
+			verts.Add( sp1.cachedTransform.position + sp0.cachedTransform.forward * TestSceneManager.Instance.flowZoneConvexAdjust );
+			uvs.Add( Vector2.one );
+
+			Vector3 sp1norm = sp1.cachedTransform.forward;
+			normals.Add( sp1norm );
 
 			if (debugsb != null)
 			{
@@ -558,7 +565,19 @@ namespace RJWard.Tube
 			}
 			
 			// Add hoop1 to list
-			sp0.hoop.ExtractAllVertexInfo( verts, normals, uvs, 0f );
+			sp0.hoop.ExtractAllVertexInfo( verts, null, null, 0f );
+			for (int i = 0; i <= sp0.hoop.numPoints(); i++)
+			{
+				if (i % 2 == 0)
+				{
+					uvs.Add( new Vector2( 1f, 0f ) );
+				}
+				else
+				{
+					uvs.Add( new Vector2( 1f, 1f ) );
+				}
+				normals.Add( sp0norm );
+			}
 
 			if (debugsb != null)
 			{
@@ -566,7 +585,19 @@ namespace RJWard.Tube
 			}
 
 			// Add hoop2 to list
-			sp1.hoop.ExtractAllVertexInfo( verts, normals, uvs, 0f );
+			sp1.hoop.ExtractAllVertexInfo( verts, null, null, 0f );
+			for (int i = 0; i <= sp1.hoop.numPoints( ); i++)
+			{
+				if (i % 2 == 0)
+				{
+					uvs.Add( new Vector2( 1f, 0f ) );
+				}
+				else
+				{
+					uvs.Add( new Vector2( 1f, 1f ) );
+				}
+				normals.Add( sp1norm );
+			}
 
 			if (debugsb != null)
 			{
@@ -576,7 +607,7 @@ namespace RJWard.Tube
 			List<int> triVerts = new List<int>( );
 
 			// Add disc tris spine0
-			sp0.hoop.ExtractDiscTriVerts( triVerts, 0, false );
+			sp0.hoop.ExtractDiscTriVerts( triVerts, 0, true );
 
 			if (debugsb != null)
 			{
@@ -584,7 +615,7 @@ namespace RJWard.Tube
 			}
 
 			// Add disc tris spine1
-			sp1.hoop.ExtractDiscTriVerts( triVerts, 1, true );
+			sp1.hoop.ExtractDiscTriVerts( triVerts, 1, false );
 
 			if (debugsb != null)
 			{
@@ -593,7 +624,7 @@ namespace RJWard.Tube
 
 			// Add joining hoops tris
 
-			Hoop.ExtractConnectingTriVerts( sp0.hoop, sp1.hoop, triVerts );
+			Hoop.ExtractConnectingTriVerts( sp0.hoop, sp1.hoop, triVerts, false);
 			if (debugsb != null)
 			{
 				debugsb.Append( " wall" );
