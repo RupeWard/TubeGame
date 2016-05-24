@@ -17,6 +17,8 @@ namespace RJWard.Tube.Player
 			get { return currentFlowZone_; }
 		}
 
+		public float speed;
+
 		private bool shouldLogNoSpeedExcess = true;
 
 		private void FixedUpdate()
@@ -27,7 +29,7 @@ namespace RJWard.Tube.Player
 				if (speedExcess > 0)
 				{
 					shouldLogNoSpeedExcess = true;
-                    body.AddForce( speedExcess * currentFlowZone_.weight * currentFlowZone_.directionAtPosition( cachedTransform.position ) * Time.deltaTime, ForceMode.Impulse );
+                    body.AddForce( speed * speedExcess * currentFlowZone_.flowAtPosition( cachedTransform.position ) * Time.deltaTime, ForceMode.Impulse );
 				}
 				else
 				{

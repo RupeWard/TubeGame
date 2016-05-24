@@ -29,6 +29,11 @@ namespace RJWard.Tube
 //			directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
 //		}
 
+		public Vector3 flowAtPosition (Vector3 pos)
+		{
+			return weight * directionAtPosition( pos );
+		}
+
 		public Vector3 directionAtPosition(Vector3 pos)
 		{
 			Vector3 result = directionVector;
