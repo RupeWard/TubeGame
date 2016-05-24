@@ -9,7 +9,7 @@ namespace RJWard.Tube.Player
 
 		private Transform cachedTransform_;
 		private Rigidbody body_;
-		public PlayerCam1 playerCamera;
+		public PlayerCam playerCamera;
 
 		private FlowZone_Linear currentFlowZone_ = null;
 		public FlowZone_Linear currentFlowZone
