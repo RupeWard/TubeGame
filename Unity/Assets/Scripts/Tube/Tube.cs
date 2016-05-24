@@ -150,6 +150,25 @@ namespace RJWard.Tube
 						ts.transform.position = lastHoopOfPrevious.spinePoint.transform.position  ;
 
 						ts.FirstHoop( ).spinePoint.fixRotation( false );
+
+
+						// This is a bit of hack to make sure the spine points get rotated properly.
+						// Without it, SP_1 doesn't get properly rotated in its new position. 
+						SpinePoint_Linear spinePoint = FirstHoop( ).spinePoint as SpinePoint_Linear;
+						if (spinePoint != null)
+						{
+							while (spinePoint != null)
+							{
+								spinePoint.SetRotationDirty( );
+								spinePoint = spinePoint.nextSpinePoint;
+							}
+							yield return null;
+						}
+						else
+						{
+							throw new System.Exception( "Not implemented spinepoint type " + FirstHoop( ).spinePoint.GetType( ).ToString( ) );
+						}
+
 //						Debug.Log( "Rotated by " + lastHoopOfPrevious.transform.rotation +" to give "+ ts.transform.rotation );
 						//						ts.transform.rotation = Quaternion.Euler(-1f*firstHoopRot) * ts.transform.rotation;
 						//						ts.transform.Translate( lastHoopOfPrevious.transform.position - firstHoop.transform.position );
