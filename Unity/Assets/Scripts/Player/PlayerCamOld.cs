@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace RJWard.Tube.Player
 {
-	public class PlayerCam1	 : MonoBehaviour
+	public class PlayerCamOld : MonoBehaviour
 	{
 		private Vector3 direction_ = Vector3.back;
 		private UnityEngine.Camera camera_ = null;
@@ -71,28 +71,10 @@ namespace RJWard.Tube.Player
 		private static readonly bool DEBUG_FORCE = true;
 
 		public bool tmpCheckUsingRaycast = true;
-
-		private Vector3 lastRelativePosition_ = Vector3.zero;
-
 		private void FixedUpdate()
 		{
 			player_.UpdateDirection( ref direction_ );
-			Vector3 desiredPosition = player_.cachedTransform.position + direction_ * distanceFromPlayer;
-
-			Ray playerLookRay = new Ray( player_.cachedTransform.position, desiredPosition - player_.cachedTransform.position );
-			RaycastHit playerLookHitInfo;
-
-			bool playerLookHit = Physics.Raycast( playerLookRay, out playerLookHitInfo, Vector3.Distance(player_.cachedTransform.position, desiredPosition) );
-			if (playerLookHit && playerLookHitInfo.collider.gameObject.layer != FlowZone_Linear.FLOWZONELAYER)
-			{
-				Debug.Log( "Hit " + playerLookHitInfo.collider.gameObject.name );
-			}
-			else
-			{
-				cachedTransform.position = Vector3.MoveTowards( cachedTransform.position, desiredPosition, camSpeed * Time.fixedDeltaTime );
-			}
-
-			/*
+			
 			float moveDist = camSpeed * Time.deltaTime;
 
 			Vector3 forceAdjustment = Vector3.zero;
@@ -139,8 +121,8 @@ namespace RJWard.Tube.Player
 							Debug.Log( "reapplying force" );
 						}
 					}
-				
-				{
+					/*
+					{
 						float dist = Vector3.Distance( cachedTransform.position, player_.cachedTransform.position );
 						if (dist > distanceFromPlayer)
 						{
@@ -164,7 +146,7 @@ namespace RJWard.Tube.Player
 						{
 							Debug.LogWarning( "against 0 " + hitInfo.collider.gameObject.name );
 						}
-					}
+					}*/
 				}
 				else
 				{
@@ -179,7 +161,6 @@ namespace RJWard.Tube.Player
 					player_.cachedTransform.position + direction_ * distanceFromPlayer,
 					camSpeed * Time.fixedDeltaTime );
 			}
-			*/
 			cachedTransform.LookAt( player_.cachedTransform );
 
 			/*
