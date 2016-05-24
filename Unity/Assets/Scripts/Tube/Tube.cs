@@ -128,7 +128,7 @@ namespace RJWard.Tube
 					}
 					else
 					{
-						lastHoopOfPrevious.spinePoint.fixRotation( );
+						lastHoopOfPrevious.spinePoint.fixRotation( true);
 						firstHoop.transform.rotation = Quaternion.identity;
 
 						// TODO multi
@@ -149,6 +149,7 @@ namespace RJWard.Tube
 						yield return null;
 						ts.transform.position = lastHoopOfPrevious.spinePoint.transform.position  ;
 
+						ts.FirstHoop( ).spinePoint.fixRotation( false );
 //						Debug.Log( "Rotated by " + lastHoopOfPrevious.transform.rotation +" to give "+ ts.transform.rotation );
 						//						ts.transform.rotation = Quaternion.Euler(-1f*firstHoopRot) * ts.transform.rotation;
 						//						ts.transform.Translate( lastHoopOfPrevious.transform.position - firstHoop.transform.position );

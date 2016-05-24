@@ -371,6 +371,16 @@ namespace RJWard.Tube
 						}
 					}
 				}
+				/*
+				if (flowZone  != null)
+				{
+					flowZone.HandleDirectionChange( );
+					if (previousSpinePoint_ != null && previousSpinePoint_.flowZone != null)
+					{
+						previousSpinePoint_.flowZone.HandleDirectionChange( );
+                    }
+				}
+				*/
 				if (debugSB.Length > 0)
 				{
 					Debug.Log( debugSB );

@@ -15,18 +15,23 @@ namespace RJWard.Tube
 			get { return firstSpinePoint_; }
 		}
 
-		private Vector3 directionVector_ = Vector3.zero;
+//		private Vector3 directionVector_ = Vector3.zero;
 		public Vector3 directionVector
 		{
-			get { return directionVector_; }
+			get { return (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized; }
 		}
 
 		public float weight = 1f;
 		public float speed = 1f;
 
+//		public void HandleDirectionChange()
+//		{
+//			directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
+//		}
+
 		public Vector3 directionAtPosition(Vector3 pos)
 		{
-			Vector3 result = directionVector_;
+			Vector3 result = directionVector;
 
 			float d0 = Vector3.Distance( pos, firstSpinePoint_.cachedTransform.position );
 			float d1 = Vector3.Distance( pos, firstSpinePoint_.nextSpinePoint.cachedTransform.position );
@@ -36,12 +41,12 @@ namespace RJWard.Tube
 
 			if (dFraction < 0.5f)
 			{
-				Vector3 prevDirection = directionVector_;
+				Vector3 prevDirection = directionVector;
 				if (firstSpinePoint.previousSpinePoint != null)
 				{
 					if (firstSpinePoint_.previousSpinePoint.flowZone != null)
 					{
-						prevDirection = firstSpinePoint_.previousSpinePoint.flowZone.directionVector_;
+						prevDirection = firstSpinePoint_.previousSpinePoint.flowZone.directionVector;
 					}
 					else
 					{
@@ -53,17 +58,17 @@ namespace RJWard.Tube
 				{
 //					Debug.LogWarning( "No previous spine point when working out flow zone direction" );
 				}
-				Vector3 firstDirection = Vector3.Slerp( directionVector_, prevDirection, 0.5f );
-				result = Vector3.Slerp( firstDirection, directionVector_, dFraction/0.5f);
+				Vector3 firstDirection = Vector3.Slerp( directionVector, prevDirection, 0.5f );
+				result = Vector3.Slerp( firstDirection, directionVector, dFraction/0.5f);
 			}
 			else
 			{
-				Vector3 nextDirection = directionVector_;
+				Vector3 nextDirection = directionVector;
 				if (firstSpinePoint_.nextSpinePoint != null)
 				{
 					if (firstSpinePoint_.nextSpinePoint.flowZone != null)
 					{
-						nextDirection = firstSpinePoint_.nextSpinePoint.flowZone.directionVector_;
+						nextDirection = firstSpinePoint_.nextSpinePoint.flowZone.directionVector;
 					}
 					else
 					{
@@ -75,8 +80,8 @@ namespace RJWard.Tube
 				{
 					Debug.LogWarning( "No next spine point when working out flow zone direction" );
 				}
-				Vector3 endDirection = Vector3.Slerp( directionVector_, nextDirection, 0.5f );
-				result = Vector3.Slerp( directionVector_, endDirection, dFraction / 0.5f );
+				Vector3 endDirection = Vector3.Slerp( directionVector, nextDirection, 0.5f );
+				result = Vector3.Slerp( directionVector, endDirection, dFraction / 0.5f );
 
 			}
 
@@ -91,7 +96,7 @@ namespace RJWard.Tube
 			speed = TestSceneManager.Instance.FlowZone_defaultSpeed;
 
 			firstSpinePoint_ = sp;
-			directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
+			//directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
 		}
 
 		private void OnTriggerEnter( Collider other )

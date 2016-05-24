@@ -15,7 +15,7 @@ namespace RJWard.Tube
 		}
 
 		protected bool fixedRotation_ = false;
-		public void fixRotation( )
+		public void fixRotation( bool b)
 		{
 			fixedRotation_ = true;
 		}

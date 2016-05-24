@@ -86,7 +86,7 @@ namespace RJWard.Tube
 				previous = hdcnew;
 				if (sb != null)
 				{
-					sb.Append( "\n created hoop defn " ).Append( i ).Append( ":" ).DebugDescribe( hdcnew );
+					sb.Append( "\n created circular hoop defn " ).Append( i ).Append( ":" ).DebugDescribe( hdcnew );
 				}
 				float xAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD);
 				float yAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD );

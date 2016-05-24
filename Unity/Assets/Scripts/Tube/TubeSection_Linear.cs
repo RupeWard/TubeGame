@@ -7,8 +7,8 @@ namespace RJWard.Tube
 	public class TubeSection_Linear : MonoBehaviour
 	{
 		static private readonly bool DEBUG_LOCAL = false;
-		static private readonly bool DEBUG_CIRCULAR = false;
-		static private readonly bool DEBUG_SPLINAR = false;
+		static private readonly bool DEBUG_CIRCULAR = true;
+		static private readonly bool DEBUG_SPLINAR = true;
 		static public  readonly bool DEBUG_MESH = false;
 
 		public void ConnectAfterSpinePoint(SpinePoint_Linear sp)
@@ -208,6 +208,8 @@ namespace RJWard.Tube
 			{
 				Debug.Log( debugSb.ToString( ) );
 			}
+			yield return null;
+			yield return null;
 		}
 
 		/*

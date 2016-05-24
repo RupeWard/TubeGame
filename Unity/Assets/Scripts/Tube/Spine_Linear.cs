@@ -55,7 +55,7 @@ namespace RJWard.Tube
 			SpinePoint_Linear spinePoint = spGo.AddComponent<SpinePoint_Linear>( );
 			if (fixedRotation)
 			{
-				spinePoint.fixRotation( );
+				spinePoint.fixRotation(true );
 			}
 			spinePoint.Init( this, pos, null );
 			spGo.transform.parent = this.transform;
