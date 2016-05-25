@@ -180,6 +180,12 @@ namespace RJWard.Tube.Player
 					camSpeed * Time.fixedDeltaTime );
 			}
 			*/
+
+			/*
+			Vector3 directionToPlayer = player_.cachedTransform.position - cachedTransform.position;
+			Quaternion lookRotation = Quaternion.LookRotation( directionToPlayer );
+			cachedTransform.rotation = Quaternion.Slerp( cachedTransform.rotation, lookRotation, 0.5f );
+			*/
 			cachedTransform.LookAt( player_.cachedTransform );
 
 			/*
