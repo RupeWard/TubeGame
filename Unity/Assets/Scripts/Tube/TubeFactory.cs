@@ -26,8 +26,15 @@ namespace RJWard.Tube
 			}
         }
 
+		protected override void PostAwake( )
+		{
+			tubeWallPhysics = Resources.Load( "PhysicsMaterials/TubeWallPhys" ) as PhysicMaterial;
+
+		}
+
 		public Material tubeWallMaterial;
 
+		public PhysicMaterial tubeWallPhysics = null;
 
 		public void CreateRandomLinearSection( Tube t, RandLinearSectionDefn settings, System.Action<TubeSection_Linear> onCreatedAction )
 		{

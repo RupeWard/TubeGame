@@ -7,8 +7,8 @@ namespace RJWard.Tube
 	public class TubeSection_Linear : MonoBehaviour
 	{
 		static private readonly bool DEBUG_LOCAL = false;
-		static private readonly bool DEBUG_CIRCULAR = true;
-		static private readonly bool DEBUG_SPLINAR = true;
+		static private readonly bool DEBUG_CIRCULAR = false;
+		static private readonly bool DEBUG_SPLINAR = false;
 		static public  readonly bool DEBUG_MESH = false;
 
 		public void ConnectAfterSpinePoint(SpinePoint_Linear sp)
@@ -489,6 +489,7 @@ namespace RJWard.Tube
 					meshCollider_ = gameObject.AddComponent<MeshCollider>( );
 				}
 				meshCollider_.sharedMesh = mesh;
+				meshCollider_.sharedMaterial = TubeFactory.Instance.tubeWallPhysics;
 
 				for (int i = 0; i<(spine_.NumSpinePoints-1); i++)
 				{
