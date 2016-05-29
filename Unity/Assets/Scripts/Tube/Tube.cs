@@ -28,7 +28,7 @@ namespace RJWard.Tube
 			{
 				while (tubeSections_.Count > maxSections)
 				{
-					Debug.Log( tubeSections_.Count + " tube sections, removing" );
+//					Debug.Log( tubeSections_.Count + " tube sections, removing" );
 					RemoveFirstSection( );
 				}
 			}
