@@ -73,6 +73,8 @@ namespace RJWard.Tube
 			return Color.Lerp( firstPointColour_, endPointColor_, f );
 		}
 
+		static readonly float centreWarningThreshold = 0.1f;
+
 		public void CheckCentreing()
 		{
 			Vector3 sum = Vector3.zero;
@@ -81,7 +83,8 @@ namespace RJWard.Tube
 				sum += hoopPoints_[i].transform.localPosition;
 			}
 			Vector3 centre = sum / hoopPoints_.Count;
-			if (centre.sqrMagnitude > 0.001f)
+
+			if (centre.sqrMagnitude > centreWarningThreshold)
 			{
 				Debug.Log( "centre " + centre + " (mag " + centre.magnitude + ")" );
 			}

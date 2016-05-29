@@ -162,4 +162,19 @@ namespace RJWard.Tube.Player
 		}
 
 	}
+
+
 }
+
+public partial class MessageBus : MonoBehaviour
+{
+	public System.Action onPlayerRestarted;
+	public void dispatchPlayerRestarted()
+	{
+		if (onPlayerRestarted != null)
+		{
+			onPlayerRestarted( );
+		}
+	}
+}
+

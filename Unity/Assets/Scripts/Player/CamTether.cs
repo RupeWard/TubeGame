@@ -19,7 +19,12 @@ namespace RJWard.Tube.Player
 		{
 			cachedTransform_ = transform;
 			camTransform_ = tetheredCamera.transform;
+			MessageBus.instance.onPlayerRestarted += HandlePlayerRestart;
+		}
 
+		private void OnDestroy()
+		{
+			MessageBus.instance.onPlayerRestarted -= HandlePlayerRestart;
 		}
 
 		private void Start()
@@ -36,6 +41,20 @@ namespace RJWard.Tube.Player
 
 				if (camTransform_ != null )
 				{
+					camTransform_.LookAt( player.cachedTransform.position );
+				}
+			}
+		}
+
+		public void HandlePlayerRestart()
+		{
+			if (player != null)
+			{
+				player.UpdateDirection( ref directionVector_ );
+				cachedTransform_.position = player.cachedTransform.position + directionVector_ * targetDistance;
+				if (camTransform_ != null)
+				{
+					camTransform_.position = cachedTransform_.position;
 					camTransform_.LookAt( player.cachedTransform.position );
 				}
 			}

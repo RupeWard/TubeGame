@@ -137,7 +137,7 @@ namespace RJWard.Tube
 				}
 				else
 				{
-					Debug.LogWarning( "Why setting previousSpinePoint to null?" );
+//					Debug.LogWarning( "Why setting previousSpinePoint to null?" );
 				}
 			}
 		}

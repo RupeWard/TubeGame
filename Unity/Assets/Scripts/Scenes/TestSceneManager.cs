@@ -131,6 +131,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		if (firstSpinePoint != null)
 		{
 			player.InitialiseAt( firstSpinePoint.transform );
+			MessageBus.instance.dispatchPlayerRestarted( );
 		}
 		else
 		{

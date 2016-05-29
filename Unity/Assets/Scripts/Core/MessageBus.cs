@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class MessageBus : MonoBehaviour
+public partial class MessageBus : MonoBehaviour
 {
 	private static MessageBus _instance;
 
