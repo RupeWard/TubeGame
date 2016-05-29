@@ -119,6 +119,8 @@ namespace RJWard.Tube
 		{
 			tube_ = t;
 			gameObject.name = id_.ToString()+"_" +n;
+			gameObject.layer = TubeFactory.Instance.tubeWallLayerMask;
+
 			tubeWallMaterial_ = mat;
 			if (debugsb != null)
 			{
@@ -172,6 +174,8 @@ namespace RJWard.Tube
 			Init(t, n, mat, debugSb );
 
 			GameObject spineGO = new GameObject( "SP"+n );
+			spineGO.layer = TubeFactory.Instance.buildLayerMask;
+
 			spine_ = spineGO.AddComponent<Spine_Linear>( );
 			spine_.Init( this );
 
@@ -239,6 +243,8 @@ namespace RJWard.Tube
 			}
 
 			GameObject spineGO = new GameObject( "Sp");
+			spineGO.layer = TubeFactory.Instance.buildLayerMask;
+
 			spine_ = spineGO.AddComponent<Spine_Linear>( );
 			spine_.Init( this );
 			yield return null;

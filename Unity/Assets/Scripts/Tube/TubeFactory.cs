@@ -26,10 +26,42 @@ namespace RJWard.Tube
 			}
         }
 
+		private int tubeWallLayerMask_ = 0;
+		public int tubeWallLayerMask
+		{
+			get { return tubeWallLayerMask_; }
+		}
+
+		public int tubeWallLayer
+		{
+			get { return 1 << tubeWallLayerMask_; }
+		}
+
+		public int buildLayerMask_ = 0;
+		public int buildLayerMask
+		{
+			get { return buildLayerMask_; }
+		}
+
+		public int buildLayer
+		{
+			get { return 1 << buildLayerMask_; }
+		}
+
 		protected override void PostAwake( )
 		{
 			tubeWallPhysics = Resources.Load( "PhysicsMaterials/TubeWallPhys" ) as PhysicMaterial;
+			tubeWallLayerMask_ = LayerMask.NameToLayer( "TubeWall" );
+			buildLayerMask_ = LayerMask.NameToLayer( "Build" );
+		}
 
+		public void SetLayerRecursively(GameObject g)
+		{
+			g.layer = tubeWallLayerMask_;
+			foreach (Transform t in g.transform)
+			{
+				SetLayerRecursively( t.gameObject );
+			}
 		}
 
 		public Material tubeWallMaterial;

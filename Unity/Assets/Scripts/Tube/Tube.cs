@@ -12,7 +12,7 @@ namespace RJWard.Tube
 		public List<TubeSection_Linear> tubeSections_ = new List<TubeSection_Linear>();
 
 		public int maxTubeSections_ = 6;
-
+		
 		public void DeleteAllSections()
 		{
 			for( int i = 0; i<tubeSections_.Count; i++)

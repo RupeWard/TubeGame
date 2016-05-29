@@ -413,6 +413,7 @@ namespace RJWard.Tube
 			if (hoop_ == null)
 			{
 				GameObject hoopGo = new GameObject( "Hoop" );
+				hoopGo.layer = TubeFactory.Instance.buildLayerMask;
 				hoop_ = hoopGo.AddComponent<Hoop>( );
 			}
 			hoop_.Init( this );

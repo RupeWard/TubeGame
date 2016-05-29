@@ -52,6 +52,8 @@ namespace RJWard.Tube
 		public SpinePoint_Linear AddHoopLess(Vector3 pos, bool fixedRotation)
 		{
 			GameObject spGo = new GameObject( "SP_" + spinePoints_.Count.ToString( ) );
+			spGo.layer = TubeFactory.Instance.buildLayerMask;
+
 			SpinePoint_Linear spinePoint = spGo.AddComponent<SpinePoint_Linear>( );
 			if (fixedRotation)
 			{

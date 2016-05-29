@@ -7,7 +7,9 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 {
 	static private readonly bool DEBUG_LOCAL = false;
 
-	public SpineCamera mainCamera;
+	public SpineCamera spineCamera;
+	public Camera playerCamera;
+
 	//	public TubeTester tubeTester;
 
 	public Transform pos1 = null;
@@ -43,7 +45,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		tubeGO.transform.localScale = Vector3.one;
 		tube_ = tubeGO.AddComponent<Tube>( );
 
-		RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( mainCamera.GetComponent<Camera>( ) );
+		RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( spineCamera.GetComponent<Camera>( ) );
 
 	}
 
@@ -102,15 +104,15 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	protected override void PostAwake( )
 	{
-		originalPosition_ = mainCamera.transform.position;
-		originalRotation_ = mainCamera.transform.rotation;
+		originalPosition_ = spineCamera.transform.position;
+		originalRotation_ = spineCamera.transform.rotation;
 		cameraOnHook_ = true;
 	}
 
 	public void EndPlayMode()
 	{
 		player.gameObject.SetActive( false );
-		mainCamera.gameObject.SetActive( true );
+		spineCamera.gameObject.SetActive( true );
 	}
 
 	public void StartPlayMode()
@@ -120,7 +122,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 			CreateRandomSection( );
 		}
 		player.gameObject.SetActive( true );
-		mainCamera.gameObject.SetActive( false );
+		spineCamera.gameObject.SetActive( false );
 	}
 
 	public void StartPlayer()
@@ -175,9 +177,9 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	public void SetCameraOnHook()
 	{
-		mainCamera.enabled = false;
-		mainCamera.transform.position = originalPosition_;
-		mainCamera.transform.rotation = originalRotation_;
+		spineCamera.enabled = false;
+		spineCamera.transform.position = originalPosition_;
+		spineCamera.transform.rotation = originalRotation_;
 		cameraOnHook_ = true;
 	}
 
@@ -186,8 +188,8 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		SpinePoint_Base firstSpinePoint = GetFirstSpinePoint( );
 		if (firstSpinePoint != null )
 		{
-			mainCamera.enabled = true;
-			mainCamera.InitStationary( firstSpinePoint, 0f );
+			spineCamera.enabled = true;
+			spineCamera.InitStationary( firstSpinePoint, 0f );
 			cameraOnHook_ = false;
 			if (DEBUG_LOCAL)
 			{
@@ -203,29 +205,37 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public void HandleCameraForwardDown()
 	{
 //		Debug.Log( "Forward" );
-		mainCamera.accelerate( );
+		spineCamera.accelerate( );
 	}
 
 	public void HandleCameraBackDown( )
 	{
 //		Debug.Log( "Back" );
-		mainCamera.decelerate( );
+		spineCamera.decelerate( );
 	}
 
 	public void HandleCameraMotionButtonUp( )
 	{
 //		Debug.Log( "Stop" );
-		mainCamera.killPower( );
+		spineCamera.killPower( );
 	}
 
 	public void HandleCameraStopPressed()
 	{
-		mainCamera.stop( );
+		spineCamera.stop( );
 	}
 
 	public void HandleDebugButtonPressed()
 	{
-		mainCamera.toggleDebugObjects( );
+		if (spineCamera != null)
+		{
+			DebugManager.Instance.ToggleDebugObjects( spineCamera.myCamera );
+		}
+
+		if (playerCamera != null)
+		{
+			DebugManager.Instance.ToggleDebugObjects( playerCamera );
+		}
     }
 
 	public void HandleRandomTubeSectionButtonPressed( )

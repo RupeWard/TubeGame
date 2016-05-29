@@ -54,7 +54,9 @@ namespace RJWard.Tube
 		public HoopPoint AddHoopPoint( Vector3 pos )
 		{
 			int n = hoopPoints_.Count;
-			GameObject hoopPointGO = new GameObject( this.gameObject.name + "_HP" + n.ToString( ) );
+			GameObject hoopPointGO = new GameObject( this.gameObject.name + "_HP" + n.ToString( )  );
+			hoopPointGO.layer = TubeFactory.Instance.buildLayerMask;
+
 			HoopPoint hoopPoint = hoopPointGO.AddComponent<HoopPoint>( );
 			hoopPointGO.transform.parent = this.transform;
 			hoopPointGO.transform.position = pos;
@@ -113,6 +115,8 @@ namespace RJWard.Tube
 				hoopPoints_.Clear( );
 			}
 			GameObject firstHoopPointGO = new GameObject( this.gameObject.name + "_HP0" );
+			firstHoopPointGO.layer = TubeFactory.Instance.buildLayerMask;
+
 			HoopPoint firstHoopPoint = firstHoopPointGO.AddComponent<HoopPoint>( );
 			firstHoopPointGO.transform.parent = this.transform;
 			firstHoopPointGO.transform.localPosition = hde.GetHoopPointPosition( 0 );
@@ -127,6 +131,8 @@ namespace RJWard.Tube
 			for (int i = 1; i < hde.numHoopPoints; i++)
 			{
 				GameObject nextHoopPointGO = new GameObject( this.gameObject.name + "_HP" + i.ToString( ) );
+				nextHoopPointGO.layer = TubeFactory.Instance.buildLayerMask;
+
 				HoopPoint nextHoopPoint = nextHoopPointGO.AddComponent<HoopPoint>( );
 				nextHoopPointGO.transform.parent = this.transform;
 				nextHoopPointGO.transform.localPosition = hde.GetHoopPointPosition( i );// new Vector3( radius_, 0f, 0f );
@@ -178,6 +184,8 @@ namespace RJWard.Tube
 				hoopPoints_.Clear( );
 			}
 			GameObject firstHoopPointGO = new GameObject( this.gameObject.name + "_HP0" );
+			firstHoopPointGO.layer = TubeFactory.Instance.buildLayerMask;
+
 			HoopPoint firstHoopPoint = firstHoopPointGO.AddComponent<HoopPoint>( );
 			firstHoopPointGO.transform.parent = this.transform;
 			firstHoopPointGO.transform.localPosition = new Vector3( radius, 0f, 0f );
@@ -192,6 +200,8 @@ namespace RJWard.Tube
 			for (int i = 1; i < num; i++)
 			{
 				GameObject nextHoopPointGO = new GameObject( this.gameObject.name + "_HP" + i.ToString( ) );
+				nextHoopPointGO.layer = TubeFactory.Instance.buildLayerMask;
+
 				HoopPoint nextHoopPoint = nextHoopPointGO.AddComponent<HoopPoint>( );
 				nextHoopPointGO.transform.parent = this.transform;
 				nextHoopPointGO.transform.localPosition = new Vector3( radius, 0f, 0f );

@@ -24,6 +24,10 @@ namespace RJWard.Tube.Camera
 		private float currentAcc = 0f;
 
 		private UnityEngine.Camera camera_;
+		public UnityEngine.Camera myCamera
+		{
+			get { return camera_; }
+		}
 
 		public void stop()
 		{
@@ -46,6 +50,7 @@ namespace RJWard.Tube.Camera
 			currentAcc = 0f;
 		}
 
+		/*
 		public void showDebugObjects(bool show)
 		{
 			int debugObjectsLayer = 1 << LayerMask.NameToLayer( "DebugObjects" );
@@ -65,6 +70,7 @@ namespace RJWard.Tube.Camera
 			bool isShowing = (camera_.cullingMask & debugObjectsLayer) != 0;
 			showDebugObjects( !isShowing );
 		}
+		*/
 
 		void Update()
 		{
