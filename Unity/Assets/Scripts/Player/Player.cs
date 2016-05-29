@@ -34,6 +34,9 @@ namespace RJWard.Tube.Player
 
 		bool isBallRolling_ = false;
 
+		private float tillRollingSoundStop = -1f;
+		public float rollingSoundStopDelay = 0.2f;
+
 		public void HandleBallRolling( bool on )
 		{
 			if (on != isBallRolling_)
@@ -43,12 +46,11 @@ namespace RJWard.Tube.Player
 					audioSource_.loop = true;
 					audioSource_.clip = AudioManager.Instance.rollingBallClip;
 					audioSource_.Play( );
-					isBallRolling_ = true;					
-//					sparks.Play( );
+					isBallRolling_ = true;				
 				}
 				else
 				{
-					audioSource_.Stop( );
+					tillRollingSoundStop = rollingSoundStopDelay;
 					isBallRolling_ = false;
 					tillSparksStop = sparksStopTime;
 				}
@@ -111,7 +113,7 @@ namespace RJWard.Tube.Player
 
 		public float camTargetDistance = 5f;
 
-		private static readonly bool DEBUG_SPARKS = true;
+		private static readonly bool DEBUG_SPARKS = false;
 
 		public void Update()
 		{
@@ -130,6 +132,14 @@ namespace RJWard.Tube.Player
 						Debug.Log( "Stopped sparks" );
 					}
 					sparks.Stop( );
+				}
+			}
+			if (tillRollingSoundStop > 0f)
+			{
+				tillRollingSoundStop -= Time.deltaTime;
+				if (tillRollingSoundStop <= 0f)
+				{
+					audioSource_.Stop( );
 				}
 			}
 		}
@@ -227,9 +237,9 @@ namespace RJWard.Tube.Player
 						{
 							Debug.Log( "Stay wall when sparks already playing" );
 						}
-						//float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
-						//sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
-						// sparks.Play( );
+						float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
+						sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						sparks.Play( );
 					}
 					else
 					{
@@ -253,7 +263,7 @@ namespace RJWard.Tube.Player
 			}
 			else
 			{
-				//	if (DEBUG_COLLISIONS)
+				if (DEBUG_COLLISIONS)
 				{
 					Debug.Log( "STAY : " + gameObject.name + " " + collision.gameObject.name );
 				}
@@ -275,6 +285,7 @@ namespace RJWard.Tube.Player
 					sparks.gameObject.transform.LookAt( cachedTransform_.position );
 					if (sparks.isPlaying)
 					{
+						sparkStartTime = Time.time;
 						float elapsed = Time.time - sparkStartTime;
 						tillSparksStop = -1f;
 
@@ -282,14 +293,15 @@ namespace RJWard.Tube.Player
 						{
 							Debug.Log( "Hit wall when sparks already playing" );
 						}
-						//float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
-						//sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
-						// sparks.Play( );
+
+						float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
+						sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						sparks.Play( );
 					}
 					else
 					{
-//						sparks.startColor = sparkColourLow;
-						sparks.Play( );
+						//						sparks.startColor = sparkColourLow;
+						sparks.Play( );                      
 						sparkStartTime = Time.time;
 						tillSparksStop = -1f;
 						sparks.startColor = sparkColourLow;
@@ -308,7 +320,7 @@ namespace RJWard.Tube.Player
 			}
 			else
 			{
-			//	if (DEBUG_COLLISIONS)
+				if (DEBUG_COLLISIONS)
 				{
 					Debug.Log( "HIT : " + gameObject.name + " " + collision.gameObject.name );
 				}
@@ -334,7 +346,7 @@ namespace RJWard.Tube.Player
 			}
 			else
 			{
-		//		if (DEBUG_COLLISIONS)
+				if (DEBUG_COLLISIONS)
 				{
 					Debug.Log( "LEFT : " + gameObject.name + " " + collision.gameObject.name );
 				}
