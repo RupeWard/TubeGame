@@ -9,6 +9,8 @@ namespace RJWard.Tube.Player
 		public float targetDistance = 5f;
 
 		private Transform camTransform_;
+		private Rigidbody camRB_;
+
 		public UnityEngine.Camera tetheredCamera;
 
         private Transform cachedTransform_;
@@ -19,6 +21,7 @@ namespace RJWard.Tube.Player
 		{
 			cachedTransform_ = transform;
 			camTransform_ = tetheredCamera.transform;
+			camRB_ = tetheredCamera.GetComponent<Rigidbody>( );
 			MessageBus.instance.onPlayerRestarted += HandlePlayerRestart;
 		}
 
@@ -37,6 +40,23 @@ namespace RJWard.Tube.Player
 				if (camTransform_ != null )
 				{
 					camTransform_.LookAt( player.cachedTransform.position );
+				}
+			}
+		}
+
+		public float repulseForce = 1f;
+		public float minDistanceForForce = 3f;
+
+		void FixedUpdate()
+		{
+			if (player != null && player.isActiveAndEnabled)
+			{
+				float dist = Vector3.Distance( player.cachedTransform.position, camTransform_.position );
+				if (dist < (targetDistance - minDistanceForForce))
+				{
+					float forceFraction = dist / (targetDistance - minDistanceForForce);
+					camRB_.AddForce( forceFraction * repulseForce * Time.fixedDeltaTime * (camTransform_.position - player.cachedTransform.position).normalized, ForceMode.Impulse);
+					Debug.Log( "Adding force" );
 				}
 			}
 		}
