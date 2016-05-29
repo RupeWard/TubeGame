@@ -52,6 +52,14 @@ namespace RJWard.Tube
 			return connection;
 		}
 
+		override public void DisconnnectFront( )
+		{
+			// FIXME implement
+			Debug.LogError( "Not implemented" );
+		}
+
+
+
 		/*
 		override public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result )
 		{

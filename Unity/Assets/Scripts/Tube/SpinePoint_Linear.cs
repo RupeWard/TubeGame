@@ -70,6 +70,15 @@ namespace RJWard.Tube
 			return connection;
 		}
 
+		override public void DisconnnectFront( )
+		{
+			if (nextSpinePoint_ != null)
+			{
+				nextSpinePoint_.previousSpinePoint = this;
+			}
+			previousSpinePoint = null;
+		}
+
 
 		private SpinePoint_Linear nextSpinePoint_ = null;
 		public SpinePoint_Linear nextSpinePoint

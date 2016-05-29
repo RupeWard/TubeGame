@@ -11,6 +11,8 @@ namespace RJWard.Tube
 
 		public List<TubeSection_Linear> tubeSections_ = new List<TubeSection_Linear>();
 
+		public int maxTubeSections_ = 6;
+
 		public void DeleteAllSections()
 		{
 			for( int i = 0; i<tubeSections_.Count; i++)
@@ -18,6 +20,32 @@ namespace RJWard.Tube
 				GameObject.Destroy( tubeSections_[i].gameObject );
 			}
 			tubeSections_.Clear( );
+		}
+		
+		public void PruneFront(int maxSections)
+		{
+			if (maxSections > 0)
+			{
+				while (tubeSections_.Count > maxSections)
+				{
+					Debug.Log( tubeSections_.Count + " tube sections, removing" );
+					RemoveFirstSection( );
+				}
+			}
+		}
+
+		public void RemoveFirstSection()
+		{
+			if (tubeSections_.Count > 1)
+			{
+				GameObject.Destroy( tubeSections_[0].gameObject );
+				tubeSections_.RemoveAt( 0 );
+				tubeSections_[0].FirstHoop( ).spinePoint.DisconnnectFront( );
+			}
+			else
+			{
+				Debug.LogWarning( "Can only remove first section when there are > 1" );
+			}
 		}
 
 		public SpinePoint_Base FirstSpinePoint()
@@ -263,16 +291,9 @@ namespace RJWard.Tube
 		}
 
 
-		// Use this for initialization
-		void Start( )
-		{
-
-		}
-
-		// Update is called once per frame
 		void Update( )
 		{
-
+			PruneFront( maxTubeSections_ );
 		}
 	}
 

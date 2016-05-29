@@ -47,6 +47,8 @@ namespace RJWard.Tube
 			cachedTransform_ = transform;
 		}
 
+		abstract public void DisconnnectFront( );
+
 		abstract public SpinePointConnection GetConnectionOut( SpinePointPathChooser chooser );
 		virtual public SpinePoint_Base GetSpinePointOut(SpinePointPathChooser chooser)
 		{
