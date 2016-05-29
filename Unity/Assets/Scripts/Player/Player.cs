@@ -12,6 +12,8 @@ namespace RJWard.Tube.Player
 		private Rigidbody body_;
 		private AudioSource audioSource_ = null;
 
+		public ParticleSystem sparks;
+
 		private FlowZone_Linear currentFlowZone_ = null;
 		public FlowZone_Linear currentFlowZone
 		{
@@ -35,12 +37,14 @@ namespace RJWard.Tube.Player
 					audioSource_.loop = true;
 					audioSource_.clip = AudioManager.Instance.rollingBallClip;
 					audioSource_.Play( );
-					isBallRolling_ = true;
+					isBallRolling_ = true;					
+//					sparks.Play( );
 				}
 				else
 				{
 					audioSource_.Stop( );
 					isBallRolling_ = false;
+					sparks.Stop( );
 				}
 			}
 		}
@@ -181,6 +185,13 @@ namespace RJWard.Tube.Player
 				if (DEBUG_COLLISIONS || DEBUG_WALLCOLLISIONS)
 				{
 					Debug.Log( "HIT WALL: " + gameObject.name + " " + collision.gameObject.name );
+				}
+				if (collision.contacts.Length > 0)
+				{
+					sparks.gameObject.transform.position = collision.contacts[0].point;
+					sparks.gameObject.transform.LookAt( cachedTransform_.position );
+					sparks.Play( );
+
 				}
 				HandleBallRolling( true );
 			}
