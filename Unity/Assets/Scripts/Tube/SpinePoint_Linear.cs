@@ -38,15 +38,21 @@ namespace RJWard.Tube
 			return nextSpinePoint_ == null;
 		}
 
-		public int MinSpinePointsToEnd()
+		public int MinSpinePointsToEnd(ref SpinePoint_Linear endSpinePoint)
 		{
 			int result = 0;
 			SpinePoint_Linear next = nextSpinePoint_;
+			endSpinePoint = next;
 			while (next != null)
 			{
 				next = next.nextSpinePoint_;
+				if (next != null)
+				{
+					endSpinePoint = next;
+				}
 				result++;
 			}
+
 			return result;
 		}
 

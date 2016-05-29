@@ -154,8 +154,6 @@ namespace RJWard.Tube.Player
 
 		public int maxSpinePointsToGap = 10;
 
-		private bool shouldExtend = false;
-
 		private void OnTriggerEnter( Collider other )
 		{
 			if (DEBUG_COLLISIONS)
@@ -171,24 +169,16 @@ namespace RJWard.Tube.Player
 					currentFlowZone_ = newFz;
 
 					SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
-					int minToGap = spinePoint.MinSpinePointsToEnd( );
+					SpinePoint_Linear endSpinePoint = null;
+					int minToGap = spinePoint.MinSpinePointsToEnd( ref endSpinePoint);
 					if (DEBUG_COLLISIONS)
 					{
 						Debug.Log( "TRIGGER ENTER " + gameObject.name + " in " + other.gameObject.name + " with " + minToGap + " to end " + " from spine point " + spinePoint.DebugDescribe( ) + "' from FZ " + currentFlowZone_ + " with dirn = " + newFz.directionVector );
 					}	
-                    if (minToGap > maxSpinePointsToGap)
+                    if (minToGap < maxSpinePointsToGap)
 					{
-						shouldExtend = true;
+						endSpinePoint.spine.tubeSection.HandlePlayerEnterSection( );
 					}
-					else
-					{
-						if (shouldExtend)
-						{
-							spinePoint.spine.tubeSection.HandlePlayerEnterSection( );
-							shouldExtend = false;
-						}
-					}
-
 				}
 				else
 				{
