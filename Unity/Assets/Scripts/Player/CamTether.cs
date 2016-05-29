@@ -22,11 +22,6 @@ namespace RJWard.Tube.Player
 			MessageBus.instance.onPlayerRestarted += HandlePlayerRestart;
 		}
 
-		private void OnDestroy()
-		{
-			MessageBus.instance.onPlayerRestarted -= HandlePlayerRestart;
-		}
-
 		private void Start()
 		{
 			RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( tetheredCamera );
