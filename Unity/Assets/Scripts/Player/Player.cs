@@ -9,7 +9,6 @@ namespace RJWard.Tube.Player
 
 		private Transform cachedTransform_;
 		private Rigidbody body_;
-		public PlayerCam playerCamera;
 
 		private FlowZone_Linear currentFlowZone_ = null;
 		public FlowZone_Linear currentFlowZone
@@ -66,7 +65,6 @@ namespace RJWard.Tube.Player
 		{
 			cachedTransform_ = transform;
 			body_ = GetComponent<Rigidbody>( );
-			playerCamera.Init( this );
 		}
 
 		public float camTargetDistance = 5f;
@@ -81,8 +79,6 @@ namespace RJWard.Tube.Player
 			cachedTransform_.rotation = t.rotation;
 
 			body_.velocity = Vector3.zero;
-
-			playerCamera.gameObject.SetActive( true );
 		}
 
 		public int maxSpinePointsToGap = 10;
