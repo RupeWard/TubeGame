@@ -14,6 +14,12 @@ namespace RJWard.Tube.Player
 
 		public ParticleSystem sparks;
 
+//		public Color sparkColourLow = Color.yellow;
+	//	public Color sparkColourHigh = Color.red;
+
+//		public float sparkColourShiftDuration = 2f;
+		private float sparkStartTime = -1f;
+
 		private FlowZone_Linear currentFlowZone_ = null;
 		public FlowZone_Linear currentFlowZone
 		{
@@ -44,10 +50,13 @@ namespace RJWard.Tube.Player
 				{
 					audioSource_.Stop( );
 					isBallRolling_ = false;
-					sparks.Stop( );
+					tillSparksStop = sparksStopTime;
 				}
 			}
 		}
+
+		private float tillSparksStop = -1f;
+		public float sparksStopTime = 0.5f;
 
 		private void FixedUpdate()
 		{
@@ -104,6 +113,14 @@ namespace RJWard.Tube.Player
 
 		public void Update()
 		{
+			if (tillSparksStop > 0f)
+			{
+				tillSparksStop -= Time.deltaTime;
+				if (tillSparksStop <= 0f)
+				{
+					sparks.Stop( );
+				}
+			}
 		}
 
 		public void InitialiseAt(Transform t)
@@ -190,7 +207,20 @@ namespace RJWard.Tube.Player
 				{
 					sparks.gameObject.transform.position = collision.contacts[0].point;
 					sparks.gameObject.transform.LookAt( cachedTransform_.position );
-					sparks.Play( );
+					if (sparks.isPlaying)
+					{
+						float elapsed = Time.time - sparkStartTime;
+
+						//float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
+						//sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						// sparks.Play( );
+					}
+					else
+					{
+//						sparks.startColor = sparkColourLow;
+						sparks.Play( );
+						sparkStartTime = Time.time;
+					}
 
 				}
 				HandleBallRolling( true );
