@@ -45,18 +45,24 @@ namespace RJWard.Tube.Player
 		}
 
 		public float repulseForce = 1f;
-		public float minDistanceForForce = 3f;
+		public float maxShortfallForForce = 3f;
 
 		void FixedUpdate()
 		{
 			if (player != null && player.isActiveAndEnabled)
 			{
 				float dist = Vector3.Distance( player.cachedTransform.position, camTransform_.position );
-				if (dist < (targetDistance - minDistanceForForce))
+				float maxDistance = targetDistance - maxShortfallForForce; // OPT
+                if (dist < maxDistance)
 				{
-					float forceFraction = dist / (targetDistance - minDistanceForForce);
-					camRB_.AddForce( forceFraction * repulseForce * Time.fixedDeltaTime * (camTransform_.position - player.cachedTransform.position).normalized, ForceMode.Impulse);
-					Debug.Log( "Adding force" );
+					Vector3 v = camRB_.velocity;
+					float newPosD = Vector3.Distance( player.cachedTransform.position, camTransform_.position + v * Time.fixedDeltaTime);
+					if (newPosD < dist)
+					{
+						float forceFraction = dist / maxDistance;
+						camRB_.AddForce( forceFraction * repulseForce * Time.fixedDeltaTime * (camTransform_.position - player.cachedTransform.position).normalized, ForceMode.Impulse );
+						//		Debug.Log( "Adding force" );
+					}
 				}
 			}
 		}
