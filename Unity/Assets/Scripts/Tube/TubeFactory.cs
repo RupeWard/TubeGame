@@ -119,6 +119,7 @@ namespace RJWard.Tube
 				Vector3 pos = previous.position + direction * settings.separation;
 				float radD = UnityEngine.Random.Range( -1f * settings.maxRadD, 1f * settings.maxRadD );
 				radius += radD;
+				radius = Mathf.Clamp( radius, settings.radRange.x, settings.radRange.y );
 
 				HoopDefinition_Circular hdcnew = new HoopDefinition_Circular( pos, null, settings.numHoopPoints, radius );
 				defn.AddHoopDefn( hdcnew );
