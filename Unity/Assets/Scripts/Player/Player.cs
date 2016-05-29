@@ -6,9 +6,11 @@ namespace RJWard.Tube.Player
 	public class Player : MonoBehaviour
 	{
 		static readonly bool DEBUG_COLLISIONS = false;
+		static readonly bool DEBUG_WALLCOLLISIONS = false;
 
 		private Transform cachedTransform_;
 		private Rigidbody body_;
+		private AudioSource audioSource_ = null;
 
 		private FlowZone_Linear currentFlowZone_ = null;
 		public FlowZone_Linear currentFlowZone
@@ -21,6 +23,27 @@ namespace RJWard.Tube.Player
 		private bool shouldLogNoSpeedExcess_ = true;
 
 		public static readonly bool DEBUG_FORCE = false;
+
+		bool isBallRolling_ = false;
+
+		public void HandleBallRolling( bool on )
+		{
+			if (on != isBallRolling_)
+			{
+				if (on)
+				{
+					audioSource_.loop = true;
+					audioSource_.clip = AudioManager.Instance.rollingBallClip;
+					audioSource_.Play( );
+					isBallRolling_ = true;
+				}
+				else
+				{
+					audioSource_.Stop( );
+					isBallRolling_ = false;
+				}
+			}
+		}
 
 		private void FixedUpdate()
 		{
@@ -70,6 +93,7 @@ namespace RJWard.Tube.Player
 		{
 			cachedTransform_ = transform;
 			body_ = GetComponent<Rigidbody>( );
+			audioSource_ = GetComponent<AudioSource>( );
 		}
 
 		public float camTargetDistance = 5f;
@@ -152,17 +176,39 @@ namespace RJWard.Tube.Player
 
 		private void OnCollisionEnter( Collision collision )
 		{
-			if (DEBUG_COLLISIONS)
+			if (collision.gameObject.layer == TubeFactory.Instance.tubeWallLayerMask)
 			{
-				Debug.Log( "COLLISION ENTER: " + gameObject.name + " " + collision.gameObject.name );
+				if (DEBUG_COLLISIONS || DEBUG_WALLCOLLISIONS)
+				{
+					Debug.Log( "HIT WALL: " + gameObject.name + " " + collision.gameObject.name );
+				}
+				HandleBallRolling( true );
+			}
+			else
+			{
+			//	if (DEBUG_COLLISIONS)
+				{
+					Debug.Log( "HIT : " + gameObject.name + " " + collision.gameObject.name );
+				}
 			}
 		}
 
 		private void OnCollisionExit( Collision collision )
 		{
-			if (DEBUG_COLLISIONS)
+			if (collision.gameObject.layer == TubeFactory.Instance.tubeWallLayerMask)
 			{
-				Debug.Log( "COLLISION EXIT: " + gameObject.name + " " + collision.gameObject.name );
+				if (DEBUG_COLLISIONS || DEBUG_WALLCOLLISIONS)
+				{
+					Debug.Log( "LEFT WALL: " + gameObject.name + " " + collision.gameObject.name );
+				}
+				HandleBallRolling( false );
+			}
+			else
+			{
+		//		if (DEBUG_COLLISIONS)
+				{
+					Debug.Log( "LEFT : " + gameObject.name + " " + collision.gameObject.name );
+				}
 			}
 		}
 
