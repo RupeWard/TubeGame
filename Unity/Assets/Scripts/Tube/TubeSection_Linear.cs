@@ -485,7 +485,7 @@ namespace RJWard.Tube
 				mesh.normals = normals.ToArray();
 
 				mesh.RecalculateBounds( );
-				mesh.Optimize( );
+//				mesh.Optimize( );
 
 				reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
 				reverseNormals.Init( Core.ReverseNormals.EState.Inside );

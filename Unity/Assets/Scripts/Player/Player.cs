@@ -220,7 +220,8 @@ namespace RJWard.Tube.Player
 //						sparks.startColor = sparkColourLow;
 						sparks.Play( );
 						sparkStartTime = Time.time;
-					}
+						tillSparksStop = -1f;
+                    }
 
 				}
 				HandleBallRolling( true );
