@@ -14,10 +14,10 @@ namespace RJWard.Tube.Player
 
 		public ParticleSystem sparks;
 
-//		public Color sparkColourLow = Color.yellow;
-	//	public Color sparkColourHigh = Color.red;
+		public Color sparkColourLow = Color.yellow;
+		public Color sparkColourHigh = Color.red;
 
-//		public float sparkColourShiftDuration = 2f;
+		public float sparkColourShiftDuration = 2f;
 		private float sparkStartTime = -1f;
 
 		private FlowZone_Linear currentFlowZone_ = null;
@@ -111,13 +111,24 @@ namespace RJWard.Tube.Player
 
 		public float camTargetDistance = 5f;
 
+		private static readonly bool DEBUG_SPARKS = true;
+
 		public void Update()
 		{
+			if (sparks.isPlaying)
+			{
+				float elapsed = Time.time - sparkStartTime;
+				sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, elapsed / sparkColourShiftDuration );
+			}
 			if (tillSparksStop > 0f)
 			{
 				tillSparksStop -= Time.deltaTime;
 				if (tillSparksStop <= 0f)
 				{
+					if (DEBUG_SPARKS)
+					{
+						Debug.Log( "Stopped sparks" );
+					}
 					sparks.Stop( );
 				}
 			}
@@ -195,6 +206,61 @@ namespace RJWard.Tube.Player
 			}
 		}
 
+		private void OnCollisionStay( Collision collision)
+		{
+			if (collision.gameObject.layer == TubeFactory.Instance.tubeWallLayerMask)
+			{
+				if (DEBUG_COLLISIONS || DEBUG_WALLCOLLISIONS)
+				{
+					Debug.Log( "STAY WALL: " + gameObject.name + " " + collision.gameObject.name );
+				}
+				if (collision.contacts.Length > 0)
+				{
+					sparks.gameObject.transform.position = collision.contacts[0].point;
+					sparks.gameObject.transform.LookAt( cachedTransform_.position );
+					if (sparks.isPlaying)
+					{
+						float elapsed = Time.time - sparkStartTime;
+						tillSparksStop = -1f;
+
+						if (DEBUG_SPARKS)
+						{
+							Debug.Log( "Stay wall when sparks already playing" );
+						}
+						//float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
+						//sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						// sparks.Play( );
+					}
+					else
+					{
+						Debug.LogWarning( "Why aren't sparks playing already?" );
+						//						sparks.startColor = sparkColourLow;
+						sparks.Play( );
+						sparkStartTime = Time.time;
+						tillSparksStop = -1f;
+						sparks.startColor = sparkColourLow;
+						if (DEBUG_SPARKS)
+						{
+							Debug.Log( "Stay wall, starting sparks" );
+						}
+					}
+				}
+				else
+				{
+					Debug.LogWarning( "No contacts!" );
+				}
+				HandleBallRolling( true );
+			}
+			else
+			{
+				//	if (DEBUG_COLLISIONS)
+				{
+					Debug.Log( "STAY : " + gameObject.name + " " + collision.gameObject.name );
+				}
+			}
+
+		}
+
 		private void OnCollisionEnter( Collision collision )
 		{
 			if (collision.gameObject.layer == TubeFactory.Instance.tubeWallLayerMask)
@@ -210,7 +276,12 @@ namespace RJWard.Tube.Player
 					if (sparks.isPlaying)
 					{
 						float elapsed = Time.time - sparkStartTime;
+						tillSparksStop = -1f;
 
+						if (DEBUG_SPARKS)
+						{
+							Debug.Log( "Hit wall when sparks already playing" );
+						}
 						//float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
 						//sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
 						// sparks.Play( );
@@ -221,8 +292,17 @@ namespace RJWard.Tube.Player
 						sparks.Play( );
 						sparkStartTime = Time.time;
 						tillSparksStop = -1f;
-                    }
+						sparks.startColor = sparkColourLow;
+						if (DEBUG_SPARKS)
+						{
+							Debug.Log( "Hit wall, starting sparks" );
+						}
+					}
 
+				}
+				else
+				{
+					Debug.LogWarning( "No contacts!" );
 				}
 				HandleBallRolling( true );
 			}
@@ -242,6 +322,13 @@ namespace RJWard.Tube.Player
 				if (DEBUG_COLLISIONS || DEBUG_WALLCOLLISIONS)
 				{
 					Debug.Log( "LEFT WALL: " + gameObject.name + " " + collision.gameObject.name );
+				}
+				if (sparks.isPlaying)
+				{
+					if (DEBUG_SPARKS)
+					{
+						Debug.Log( "Leave wall when sparks playing" );
+					}
 				}
 				HandleBallRolling( false );
 			}
