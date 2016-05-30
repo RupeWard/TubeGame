@@ -17,6 +17,9 @@ namespace RJWard.Tube.Player
 		public Color sparkColourLow = Color.yellow;
 		public Color sparkColourHigh = Color.red;
 
+		public float sparkStartSize = 0.2f;
+		public float sparkEndSize = 0.7f;
+
 		public float sparkColourShiftDuration = 2f;
 		private float sparkStartTime = -1f;
 
@@ -120,7 +123,9 @@ namespace RJWard.Tube.Player
 			if (sparks.isPlaying)
 			{
 				float elapsed = Time.time - sparkStartTime;
-				sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, elapsed / sparkColourShiftDuration );
+				float fraction = (elapsed > sparkColourShiftDuration)?(1f):( elapsed / sparkColourShiftDuration);
+                sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+				sparks.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
 			}
 			if (tillSparksStop > 0f)
 			{
@@ -229,6 +234,7 @@ namespace RJWard.Tube.Player
 						}
 						float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
 						sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						sparks.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
 						sparks.Play( );
 					}
 					else
@@ -239,6 +245,7 @@ namespace RJWard.Tube.Player
 						sparkStartTime = Time.time;
 						tillSparksStop = -1f;
 						sparks.startColor = sparkColourLow;
+						sparks.startSize = sparkStartSize;
 						if (DEBUG_SPARKS)
 						{
 							Debug.Log( "Stay wall, starting sparks" );
@@ -286,6 +293,7 @@ namespace RJWard.Tube.Player
 
 						float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
 						sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						sparks.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
 						sparks.Play( );
 					}
 					else
@@ -295,6 +303,7 @@ namespace RJWard.Tube.Player
 						sparkStartTime = Time.time;
 						tillSparksStop = -1f;
 						sparks.startColor = sparkColourLow;
+						sparks.startSize = sparkStartSize;
 						if (DEBUG_SPARKS)
 						{
 							Debug.Log( "Hit wall, starting sparks" );
