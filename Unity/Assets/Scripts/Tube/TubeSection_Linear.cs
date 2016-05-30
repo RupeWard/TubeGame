@@ -470,6 +470,7 @@ namespace RJWard.Tube
 				List<Vector2> uvs = new List<Vector2>( );
 				List<Vector3> normals = new List<Vector3>( );
 
+				spine_.GetSpinePoint( 0 ).AddPreHoopVertices( verts, normals, uvs, 1f );
 				spine_.AddAllVertexInfoToLists( verts, normals, uvs );
 				if (debugsb != null)
 				{
@@ -477,6 +478,8 @@ namespace RJWard.Tube
 				}
 
 				List<int> triVerts = new List<int>( );
+
+				spine_.GetSpinePoint( 0 ).AddPreSectionTriInfoToList( triVerts );
 				spine_.AddAllTriInfoToList( triVerts );
 
 				mesh.vertices = verts.ToArray( );

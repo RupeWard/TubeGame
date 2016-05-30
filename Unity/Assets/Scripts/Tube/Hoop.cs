@@ -154,13 +154,32 @@ namespace RJWard.Tube
 			{
 				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
 			}
-			spinePoint_.SetDirty( );
+			if (spinePoint_ != null)
+			{
+				spinePoint_.SetDirty( );
+			}
 
 			if (DEBUG_LOCAL && debugSb.Length > 0)
 			{
 				Debug.Log( debugSb.ToString( ) );
 			}
 
+		}
+
+		public void MoveAllHoopPoints( float dZ, float dR)
+		{
+			for (int i = 0; i< hoopPoints_.Count; i++)
+			{
+				HoopPoint hp = hoopPoints_[i];
+				Vector3 spoke = hp.cachedTransform.position - spinePoint.cachedTransform.position;
+				float spokeLength = spoke.magnitude;
+				float newSpokeLength = spokeLength + dR;
+				Vector3 newSpoke = spoke.normalized * newSpokeLength;
+
+				Vector3 newPosition = spinePoint.cachedTransform.position + newSpoke;
+				newPosition.z = newPosition.z - dZ;
+                hp.cachedTransform.position = newPosition;
+            }
 		}
 
 		public void CreateHoopPointsCircular( int num, float radius )

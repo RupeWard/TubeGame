@@ -7,6 +7,10 @@ namespace RJWard.Tube
 	public class HoopPoint : MonoBehaviour
 	{
 		private Transform cachedTransform_ = null;
+		public Transform cachedTransform
+		{
+			get { return cachedTransform_; }
+		}
 
 		private int hoopIndex_ = int.MaxValue;
 		public int hoopIndex

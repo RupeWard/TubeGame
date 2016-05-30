@@ -6,6 +6,8 @@ namespace RJWard.Tube
 {
 	public class SpinePoint_Linear : SpinePoint_Base
 	{
+		private Hoop preHoop_ = null;
+
 		private Hoop hoop_ = null;
 		public Hoop hoop
 		{
@@ -448,12 +450,36 @@ namespace RJWard.Tube
 			hoop.CreateHoopPointsCircular(numPoints, rad);
 		}
 
+		public void AddPreHoopVertices( List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, float v )
+		{
+			if (preHoop_ != null)
+			{
+				GameObject.Destroy( preHoop_.gameObject );
+			}
+			GameObject hoopGo = new GameObject( "PreHoop" );
+			hoopGo.layer = TubeFactory.Instance.buildLayerMask;
+			preHoop_ = hoopGo.AddComponent<Hoop>( );
+			HoopDefinition_Explicit defn = hoop_.ExplicitDefinition( );
+			
+			preHoop_.CreateHoopPointsExplicit( defn );
+			preHoop_.Init( this );
+			preHoop_.MoveAllHoopPoints( 2f, 1f );
+
+			preHoop_.ExtractAllVertexInfo( verts, normals, uvs, v );
+			// TODO Add vertices
+		}
+
 		public void AddAllVertices( List<Vector3> verts, List< Vector3 > normals, List<Vector2> uvs, float v )
 		{
 			if (hoop_ != null)
 			{
 				hoop_.ExtractAllVertexInfo( verts, normals, uvs, v );
 			}
+		}
+
+		public void AddPreSectionTriInfoToList( List<int> triVerts )
+		{
+			Hoop.ExtractConnectingTriVerts( preHoop_, hoop_, triVerts, false );
 		}
 
 		override protected void DebugDescribeDetails( System.Text.StringBuilder sb )
