@@ -242,7 +242,9 @@ namespace RJWard.Tube
 				verts.Add( hoopPoints_[i].transform.position );
 				if (uvs != null)
 				{
-					uvs.Add( new Vector2( (float)i / (hoopPoints_.Count), v ) );
+//					float u = (float)i / (hoopPoints_.Count);
+					float u = (i % 2 == 0) ? (0f) : (1f);
+					uvs.Add( new Vector2( u, v ) );
 				}
 
 				dirn = spinePoint.transform.position - hoopPoints_[i].transform.position;

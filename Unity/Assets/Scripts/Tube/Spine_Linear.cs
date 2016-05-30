@@ -113,10 +113,12 @@ namespace RJWard.Tube
 		{
 			for (int i = 0; i< spinePoints_.Count; i++)
 			{
-				float v = (float)i / (spinePoints_.Count - 1);
+//				float v = (float)i / (spinePoints_.Count - 1);
+				float v = (i % 2 == 0) ? (0f) : (1f);
 				spinePoints_[i].AddAllVertices( verts, normals, uvs, v );
 			}
 		}
+
 
 		public void AddAllTriInfoToList( List<int> triVerts)
 		{
