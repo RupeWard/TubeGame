@@ -154,7 +154,7 @@ namespace RJWard.Tube.UI
 					}
 				case EMode.MainGame:
 					{
-						TestSceneManager.Instance.EndPlayMode( );
+						SceneControllerTestScene.Instance.EndPlayMode( );
 						ChangeMode( EMode.Debug);
 						break;
 					}
