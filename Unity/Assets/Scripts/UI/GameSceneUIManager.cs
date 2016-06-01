@@ -14,6 +14,8 @@ namespace RJWard.Tube.UI
 		public Canvas mainCanvas;
 		private RectTransform mainCanvasRT_ = null;
 
+		public UnityEngine.UI.Text playButtonText;
+
 		protected override void PostAwake( )
 		{
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
@@ -27,6 +29,13 @@ namespace RJWard.Tube.UI
 			viewPort_.y = 1f - viewPort_.height;
 
 			bottomPanelRT.SetHeight( mainCanvasRT_.GetHeight( ) - viewPortRT.GetHeight( ) );
+
+			MessageBus.instance.gamePauseAction += HandleGamePaused;
+		}
+
+		private void HandleGamePaused(bool paused)
+		{
+			playButtonText.text = (paused) ? ("Play") : ("Pause");
 		}
 
 		private void Start()

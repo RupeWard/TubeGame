@@ -160,6 +160,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 				}
 				Time.timeScale = storedTimeScale_;
 				isPaused_ = false;
+				MessageBus.instance.dispatchGamePaused( false );
 			}
 			else
 			{
@@ -170,6 +171,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 				storedTimeScale_ = Time.timeScale;
 				Time.timeScale = 0f;
 				isPaused_ = true;
+				MessageBus.instance.dispatchGamePaused( true );
 			}
 		}
 		else
@@ -179,6 +181,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 				Debug.Log( "PlayOrPause when not playing" );
 			}
 			StartGame( );
+			MessageBus.instance.dispatchGamePaused( false );
 		}
 	}
 
@@ -198,6 +201,16 @@ public partial class MessageBus : MonoBehaviour
 			onGameTimeUpdate( secs );
 		}
 	}
+
+	public System.Action<bool> gamePauseAction;
+	public void dispatchGamePaused( bool b)
+	{
+		if (gamePauseAction != null)
+		{
+			gamePauseAction( b );
+		}
+	}
+
 }
 
 
