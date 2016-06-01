@@ -6,13 +6,13 @@ public class SceneControllerBootstrap : SceneController_Base
 #region inspector hooks
 
 	public UnityEngine.UI.Text versionText;
-	public float delay = 5f;
+	public float delay = 2f;
 
 #endregion inspector hooks
 
 	private void MoveOn()
 	{
-		SceneManager.Instance.SwitchScene( SceneManager.EScene.Game);
+		SceneManager.Instance.SwitchScene( SceneManager.EScene.DevSetup);
 	}
 
 #region event handlers
