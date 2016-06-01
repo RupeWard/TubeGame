@@ -79,7 +79,7 @@ namespace RJWard.Tube.Player
 		{
 			if (tetheredCamera_ != null)
 			{
-				DebugManager.Instance.ToggleDebugObjects( tetheredCamera_.cachedCamera);
+				DebugManager.ToggleDebugObjects( tetheredCamera_.cachedCamera);
 			}
 		}
 

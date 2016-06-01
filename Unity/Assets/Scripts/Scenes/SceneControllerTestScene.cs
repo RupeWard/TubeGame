@@ -254,12 +254,12 @@ public class SceneControllerTestScene : SceneController_Base
 	{
 		if (spineCamera != null)
 		{
-			DebugManager.Instance.ToggleDebugObjects( spineCamera.myCamera );
+			DebugManager.ToggleDebugObjects( spineCamera.myCamera );
 		}
 
 		if (playerCamera != null)
 		{
-			DebugManager.Instance.ToggleDebugObjects( playerCamera );
+			DebugManager.ToggleDebugObjects( playerCamera );
 		}
     }
 

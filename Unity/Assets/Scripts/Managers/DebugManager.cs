@@ -3,30 +3,36 @@ using System.Collections;
 
 namespace RJWard.Tube
 {
-	public class DebugManager : RJWard.Core.Singleton.SingletonApplicationLifetimeLazy< DebugManager >
+	static public class DebugManager
 	{
-		private int debugObjectsLayer_ = 0;
-
-		protected override void PostAwake( )
+		static private int debugObjectsLayer_ = 0;
+		static public int debugObjectsLayer
 		{
-			debugObjectsLayer_ = 1 << LayerMask.NameToLayer( "DebugObjects" );
+			get
+			{
+				if (debugObjectsLayer_ == 0)
+				{
+					debugObjectsLayer_ = 1 << LayerMask.NameToLayer( "DebugObjects" );
+				}
+				return debugObjectsLayer_;
+			}
 		}
 
-		public void ToggleDebugObjects( UnityEngine.Camera cam )
+		static public void ToggleDebugObjects( UnityEngine.Camera cam )
 		{
-			bool isShowing = (cam.cullingMask & debugObjectsLayer_) != 0;
+			bool isShowing = (cam.cullingMask & debugObjectsLayer) != 0;
 			SetShowDebugObjects(cam, !isShowing );
 		}
 
-		public void SetShowDebugObjects(UnityEngine.Camera cam, bool show)
+		static public void SetShowDebugObjects(UnityEngine.Camera cam, bool show)
 		{
 			if (show)
 			{
-				cam.cullingMask = cam.cullingMask | debugObjectsLayer_;
+				cam.cullingMask = cam.cullingMask | debugObjectsLayer;
 			}
 			else
 			{
-				cam.cullingMask = cam.cullingMask & ~debugObjectsLayer_;
+				cam.cullingMask = cam.cullingMask & ~debugObjectsLayer;
 			}
 
 		}

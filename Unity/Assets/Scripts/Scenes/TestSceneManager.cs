@@ -226,12 +226,12 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	{
 		if (spineCamera != null)
 		{
-			DebugManager.Instance.ToggleDebugObjects( spineCamera.myCamera );
+			DebugManager.ToggleDebugObjects( spineCamera.myCamera );
 		}
 
 		if (playerCamera != null)
 		{
-			DebugManager.Instance.ToggleDebugObjects( playerCamera );
+			DebugManager.ToggleDebugObjects( playerCamera );
 		}
     }
 
