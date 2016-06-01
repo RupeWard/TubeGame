@@ -188,6 +188,18 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 	public float FlowZone_defaultWeight = 1f;
 	public float FlowZone_defaultSpeed = 1f;
 
+	public float controlForceMultiplier = 1f;
+
+	private Vector2 currentControlForce_ = Vector2.zero;
+	public Vector2 currentControlForce
+	{
+		get { return controlForceMultiplier * currentControlForce_;  }
+	}
+
+	public void SetControlForce( Vector2 force )
+	{
+		currentControlForce_ = force;
+	}
 
 }
 
@@ -210,7 +222,6 @@ public partial class MessageBus : MonoBehaviour
 			gamePauseAction( b );
 		}
 	}
-
 }
 
 

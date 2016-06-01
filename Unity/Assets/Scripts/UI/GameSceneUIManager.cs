@@ -71,5 +71,46 @@ namespace RJWard.Tube.UI
 			MessageBus.instance.dispatchToggleDebugObjects( );
 		}
 
+		public void HandleLeftButtonPressed( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.left );
+		}
+
+		public void HandleLeftButtonReleased( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.zero );
+		}
+
+		public void HandleRightButtonPressed( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.right );
+		}
+
+		public void HandleRightButtonReleased( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.zero );
+		}
+
+		public void HandleUpButtonPressed( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.up);
+		}
+
+		public void HandleUpButtonReleased( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.zero );
+		}
+
+		public void HandleDownButtonPressed( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.down );
+		}
+
+		public void HandleDownButtonReleased( )
+		{
+			GameManager.Instance.SetControlForce( Vector2.zero );
+		}
+
+
 	}
 }

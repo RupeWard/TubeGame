@@ -85,13 +85,15 @@ namespace RJWard.Tube.Player
 
 		private void FixedUpdate()
 		{
+			Vector3 force = Vector3.zero;
+
 			if (currentFlowZone_ != null)
 			{
 				float speedExcess = currentFlowZone_.speed - body_.velocity.magnitude;
 				if (speedExcess > 0)
 				{
 					shouldLogNoSpeedExcess_ = true;
-                    body.AddForce( speed * speedExcess * currentFlowZone_.flowAtPosition( cachedTransform.position ) * Time.deltaTime, ForceMode.Impulse );
+                    force += speed * speedExcess * currentFlowZone_.flowAtPosition( cachedTransform.position );
 				}
 				else
 				{
@@ -104,6 +106,17 @@ namespace RJWard.Tube.Player
 					}
 					shouldLogNoSpeedExcess_ = false;
 				}
+			}
+			Vector2 controlVector = GameManager.Instance.currentControlForce;
+            if (controlVector.magnitude > 0f)
+			{
+				Vector3 controlVector3D = new Vector3( controlVector.x, controlVector.y, 0f );
+				Vector3 p = cachedTransform_.TransformDirection( controlVector3D );
+				force += controlVector3D * Time.deltaTime;
+			}
+			if (force.sqrMagnitude > 0f)
+			{
+				body.AddForce( force * Time.deltaTime, ForceMode.Impulse );
 			}
 		}
 
