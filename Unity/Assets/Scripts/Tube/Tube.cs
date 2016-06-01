@@ -28,7 +28,7 @@ namespace RJWard.Tube
 			{
 				while (tubeSections_.Count > maxSections)
 				{
-//					Debug.Log( tubeSections_.Count + " tube sections, removing" );
+					Debug.Log( tubeSections_.Count + " tube sections, removing" );
 					RemoveFirstSection( );
 				}
 			}
@@ -113,12 +113,17 @@ namespace RJWard.Tube
 			return result;
 		}
 
-		public void AddToEnd( TubeSection_Linear ts )
+		public void AddToEnd( TubeSection_Linear ts, System.Action finishedAction )
 		{
-			StartCoroutine( AddToEndCR( ts ) );
+			StartCoroutine( AddToEndCR( ts, finishedAction ) );
 		}
 
-		public IEnumerator AddToEndCR(TubeSection_Linear ts)
+		public void AddToEnd( TubeSection_Linear ts)
+		{
+			StartCoroutine( AddToEndCR( ts, null) );
+		}
+
+		public IEnumerator AddToEndCR(TubeSection_Linear ts, System.Action finishedAction )
 		{
 //			Debug.Log( "Appending to end" );
 			ts.transform.parent = transform;
@@ -214,6 +219,10 @@ namespace RJWard.Tube
 			tubeSections_.Add( ts );
 			yield return null;
 			RecalculateInterpolatorsLinear( );
+			if (finishedAction != null)
+			{
+				finishedAction( );
+			}
 		}
 
 		private static bool DEBUG_INTERPOLATORS = false;

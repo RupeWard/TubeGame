@@ -24,7 +24,7 @@
  * 
  */
 
-#define DEBUG_SINGLETONS
+//#define DEBUG_SINGLETONS
 
 using System;
 using UnityEngine;

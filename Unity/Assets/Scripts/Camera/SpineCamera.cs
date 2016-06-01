@@ -84,7 +84,7 @@ namespace RJWard.Tube.Camera
 					Debug.Log( "Spine point changed in editor" );
 				}
 				InitStationary( pointToMod, 0f );
-				TestSceneManager.Instance.SetCameraOffHook();
+				SceneControllerTestScene.Instance.SetCameraOffHook();
 			}
 #endif
 			if (Mathf.Abs(currentAcc) > Mathf.Epsilon)

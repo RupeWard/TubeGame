@@ -3,15 +3,32 @@ using System.Collections;
 
 public class SceneControllerDevSetup: SceneController_Base 
 {
-#region inspector hooks
+	#region inspector hooks
 
-#endregion inspector hooks
+	public UnityEngine.UI.Text versionText;
 
-#region event handlers
-	
-#endregion event handlers
+	#endregion inspector hooks
 
-#region SceneController_Base
+	#region event handlers
+
+	public void HandleGameButtonPressed()
+	{
+		SceneManager.Instance.SwitchScene( SceneManager.EScene.Game );
+	}
+
+	public void HandleTestButtonPressed( )
+	{
+		SceneManager.Instance.SwitchScene( SceneManager.EScene.TestScene);
+	}
+
+	public void HandleQuitButtonPressed( )
+	{
+		Application.Quit();
+	}
+
+	#endregion event handlers
+
+	#region SceneController_Base
 
 	override public SceneManager.EScene Scene ()
 	{
@@ -20,7 +37,7 @@ public class SceneControllerDevSetup: SceneController_Base
 
 	override protected void PostStart()
 	{
-
+		versionText.text = RJWard.Core.Version.versionNumber.DebugDescribe( );
 	}
 
 	override protected void PostAwake()

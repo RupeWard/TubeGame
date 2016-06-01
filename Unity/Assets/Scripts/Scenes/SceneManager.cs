@@ -116,7 +116,9 @@ public class SceneManager : RJWard.Core.Singleton.SingletonApplicationLifetimeLa
 
 	private IEnumerator SwitchSceneCR(string s)
 	{
-		yield return UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(s);
+//		yield return UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(s);
+		UnityEngine.SceneManagement.SceneManager.LoadScene( s );
+		yield return null;
 	}
 
 	public void SwitchToPreviousScene()

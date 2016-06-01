@@ -3,43 +3,47 @@ using System.Collections;
 
 namespace RJWard.Tube.Player
 {
+	[RequireComponent (typeof (Rigidbody))]
 	public class CamTether : MonoBehaviour
 	{
-		public Player player;
+		private Player player_;
 		public float targetDistance = 5f;
 
-		private Transform camTransform_;
-		private Rigidbody camRB_;
+		private TetheredCamera tetheredCamera_ = null;
 
-		public UnityEngine.Camera tetheredCamera;
-
-        private Transform cachedTransform_;
+		private Transform cachedTransform_;
 
 		private Vector3 directionVector_ = Vector3.zero;
 
 		private void Awake()
 		{
+//			Debug.Log( "CamTether Awake" );
 			cachedTransform_ = transform;
-			camTransform_ = tetheredCamera.transform;
-			camRB_ = tetheredCamera.GetComponent<Rigidbody>( );
 			MessageBus.instance.onPlayerRestarted += HandlePlayerRestart;
 		}
 
-		private void Start()
+		public void Init(Player p, TetheredCamera tc)
 		{
-			RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( tetheredCamera );
+			player_ = p;
+			tetheredCamera_ = tc;
+			cachedTransform_.position = player_.cachedTransform.position;
+			cachedTransform_.rotation = player_.cachedTransform.rotation;
+
+			tetheredCamera_.GetComponent<ConfigurableJoint>( ).connectedBody = GetComponent<Rigidbody>();
+
+			GameManager.Instance.SetCameraToViewport( tetheredCamera_.cachedCamera );
 		}
 
 		void Update( )
 		{
-			if (player != null && player.isActiveAndEnabled)
+			if (player_ != null && player_.isActiveAndEnabled)
 			{
-				player.UpdateDirection( ref directionVector_ );
-				cachedTransform_.position = player.cachedTransform.position + directionVector_ * targetDistance;
+				player_.UpdateDirection( ref directionVector_ );
+				cachedTransform_.position = player_.cachedTransform.position + directionVector_ * targetDistance;
 
-				if (camTransform_ != null )
+				if (tetheredCamera_.cachedTransform != null )
 				{
-					camTransform_.LookAt( player.cachedTransform.position );
+					tetheredCamera_.cachedTransform.LookAt( player_.cachedTransform.position );
 				}
 			}
 		}
@@ -49,18 +53,18 @@ namespace RJWard.Tube.Player
 
 		void FixedUpdate()
 		{
-			if (player != null && player.isActiveAndEnabled)
+			if (player_ != null && player_.isActiveAndEnabled)
 			{
-				float dist = Vector3.Distance( player.cachedTransform.position, camTransform_.position );
+				float dist = Vector3.Distance( player_.cachedTransform.position, tetheredCamera_.cachedTransform.position );
 				float maxDistance = targetDistance - maxShortfallForForce; // OPT
                 if (dist < maxDistance)
 				{
-					Vector3 v = camRB_.velocity;
-					float newPosD = Vector3.Distance( player.cachedTransform.position, camTransform_.position + v * Time.fixedDeltaTime);
+					Vector3 v = tetheredCamera_.cachedRigidbody.velocity;
+					float newPosD = Vector3.Distance( player_.cachedTransform.position, tetheredCamera_.cachedTransform.position + v * Time.fixedDeltaTime);
 					if (newPosD < dist)
 					{
 						float forceFraction = dist / maxDistance;
-						camRB_.AddForce( forceFraction * repulseForce * Time.fixedDeltaTime * (camTransform_.position - player.cachedTransform.position).normalized, ForceMode.Impulse );
+						tetheredCamera_.cachedRigidbody.AddForce( forceFraction * repulseForce * Time.fixedDeltaTime * (tetheredCamera_.cachedTransform.position - player_.cachedTransform.position).normalized, ForceMode.Impulse );
 						//		Debug.Log( "Adding force" );
 					}
 				}
@@ -69,14 +73,14 @@ namespace RJWard.Tube.Player
 
 		public void HandlePlayerRestart()
 		{
-			if (player != null)
+			if (player_ != null)
 			{
-				player.UpdateDirection( ref directionVector_ );
-				cachedTransform_.position = player.cachedTransform.position + directionVector_ * targetDistance;
-				if (camTransform_ != null)
+				player_.UpdateDirection( ref directionVector_ );
+				cachedTransform_.position = player_.cachedTransform.position + directionVector_ * targetDistance;
+				if (tetheredCamera_.cachedTransform != null)
 				{
-					camTransform_.position = cachedTransform_.position;
-					camTransform_.LookAt( player.cachedTransform.position );
+					tetheredCamera_.cachedTransform.position = cachedTransform_.position;
+					tetheredCamera_.cachedTransform.LookAt( player_.cachedTransform.position );
 				}
 			}
 		}

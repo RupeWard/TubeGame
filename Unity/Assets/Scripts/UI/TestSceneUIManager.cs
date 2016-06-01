@@ -5,7 +5,7 @@ using RJWard.Core.UI;
 
 namespace RJWard.Tube.UI
 {
-	public class UIManager : RJWard.Core.Singleton.SingletonApplicationLifetime<UIManager>
+	public class TestSceneUIManager : RJWard.Core.Singleton.SingletonApplicationLifetime<TestSceneUIManager>
 	{
 		public RectTransform permanentPanel;
 		public UnityEngine.UI.Text cameraButtonText;
@@ -102,38 +102,38 @@ namespace RJWard.Tube.UI
 
 		public void HandleExtCamHookButton()
 		{
-			TestSceneManager.Instance.ToggleExtCamOnHook( );
+			SceneControllerTestScene.Instance.ToggleExtCamOnHook( );
 			
 		}
 
 		public void HandleDebugButton()
 		{
-			TestSceneManager.Instance.HandleDebugButtonPressed( );
+			SceneControllerTestScene.Instance.HandleDebugButtonPressed( );
 		}
 
 		public void HandleExtCamForwardButtonDown()
 		{
-			TestSceneManager.Instance.HandleCameraForwardDown( );
+			SceneControllerTestScene.Instance.HandleCameraForwardDown( );
 		}
 
 		public void HandleExtCamForwardButtonUp( )
 		{
-			TestSceneManager.Instance.HandleCameraMotionButtonUp( );
+			SceneControllerTestScene.Instance.HandleCameraMotionButtonUp( );
 		}
 
 		public void HandleExtCamBackButtonDown( )
 		{
-			TestSceneManager.Instance.HandleCameraBackDown( );
+			SceneControllerTestScene.Instance.HandleCameraBackDown( );
 		}
 
 		public void HandleExtCamBackButtonUp( )
 		{
-			TestSceneManager.Instance.HandleCameraMotionButtonUp( );
+			SceneControllerTestScene.Instance.HandleCameraMotionButtonUp( );
 		}
 
 		public void HandleStopExtCameraButton()
 		{
-			TestSceneManager.Instance.HandleCameraStopPressed( );
+			SceneControllerTestScene.Instance.HandleCameraStopPressed( );
 		}
 
 		public void HandleModeButton()
@@ -148,7 +148,8 @@ namespace RJWard.Tube.UI
 				case EMode.ExternalCam:
 					{
 						ChangeMode( EMode.MainGame);
-						TestSceneManager.Instance.StartPlayMode( );
+						GameManager.Instance.PlayOrPause( );
+//						TestSceneManager.Instance.StartPlayMode( );
 						break;
 					}
 				case EMode.MainGame:
@@ -162,17 +163,17 @@ namespace RJWard.Tube.UI
 
 		public void HandleStartPlayerButton()
 		{
-			TestSceneManager.Instance.StartPlayer( );
+			SceneControllerTestScene.Instance.StartPlayer( );
 		}
 
 		public void HandlePlayerForwardButtonDown()
 		{
-			TestSceneManager.Instance.PlayerForwardDown( );
+			SceneControllerTestScene.Instance.PlayerForwardDown( );
 		}
 
 		public void HandlePlayerForwardButtonUp( )
 		{
-			TestSceneManager.Instance.PlayerForwardUp( );
+			SceneControllerTestScene.Instance.PlayerForwardUp( );
 		}
 	}
 

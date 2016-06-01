@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace RJWard.Tube
 {
-	public class TubeFactory :  RJWard.Core.Singleton.SingletonApplicationLifetimeLazy< TubeFactory>
+	public class TubeFactory :  RJWard.Core.Singleton.SingletonSceneLifetime< TubeFactory>
 	{
 		[System.Serializable]
 		public class RandLinearSectionDefn : RJWard.Core.IDebugDescribable
@@ -26,6 +26,8 @@ namespace RJWard.Tube
 			}
         }
 
+		public float flowZoneConvexAdjust = 0.2f;
+
 		private int tubeWallLayerMask_ = 0;
 		public int tubeWallLayerMask
 		{
@@ -37,7 +39,7 @@ namespace RJWard.Tube
 			get { return 1 << tubeWallLayerMask_; }
 		}
 
-		public int buildLayerMask_ = 0;
+		private int buildLayerMask_ = 0;
 		public int buildLayerMask
 		{
 			get { return buildLayerMask_; }

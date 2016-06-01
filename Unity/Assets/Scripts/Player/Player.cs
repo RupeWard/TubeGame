@@ -40,8 +40,14 @@ namespace RJWard.Tube.Player
 		private float tillRollingSoundStop = -1f;
 		public float rollingSoundStopDelay = 0.2f;
 
+		private CamTether camTether_ = null;
+		private TetheredCamera tetheredCamera_ = null;
+
+		public GameObject camTetherPrefab;
+		public GameObject tetheredCameraPrefab;
+
 		public void HandleBallRolling( bool on )
-		{
+		{ 
 			if (on != isBallRolling_)
 			{
 				if (on)
@@ -62,6 +68,20 @@ namespace RJWard.Tube.Player
 
 		private float tillSparksStop = -1f;
 		public float sparksStopTime = 0.5f;
+
+		public void StartGame(Tube t)
+		{
+			InitialiseAt( t.FirstSpinePoint( ).transform );
+			camTether_.Init(this, tetheredCamera_ );
+		}
+
+		public void ToggleDebugObjects()
+		{
+			if (tetheredCamera_ != null)
+			{
+				DebugManager.Instance.ToggleDebugObjects( tetheredCamera_.cachedCamera);
+			}
+		}
 
 		private void FixedUpdate()
 		{
@@ -112,6 +132,18 @@ namespace RJWard.Tube.Player
 			cachedTransform_ = transform;
 			body_ = GetComponent<Rigidbody>( );
 			audioSource_ = GetComponent<AudioSource>( );
+
+			if (camTether_ == null)
+			{
+				camTether_ = GameObject.Instantiate<GameObject>( camTetherPrefab ).GetComponent<CamTether>( );
+				camTether_.gameObject.SetActive( true );
+			}
+			if (tetheredCamera_ == null)
+			{
+				tetheredCamera_ = GameObject.Instantiate<GameObject>( tetheredCameraPrefab ).GetComponent<TetheredCamera>( );
+				tetheredCamera_.gameObject.SetActive( true );
+			}
+
 		}
 
 		public float camTargetDistance = 5f;

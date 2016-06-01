@@ -41,6 +41,17 @@ public class SceneControllerTestScene : SceneController_Base
 
 	public RJWard.Tube.Player.Player player;
 
+	static private SceneControllerTestScene instance_ = null;
+	static public SceneControllerTestScene Instance
+	{
+		get { return instance_;  }
+	}
+
+	public void OnDestroy()
+	{
+		instance_ = null;
+	}
+
 	// Use this for initialization
 	void Start( )
 	{
@@ -50,7 +61,7 @@ public class SceneControllerTestScene : SceneController_Base
 		tubeGO.transform.localScale = Vector3.one;
 		tube_ = tubeGO.AddComponent<Tube>( );
 
-		RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( spineCamera.GetComponent<Camera>( ) );
+		RJWard.Tube.UI.TestSceneUIManager.Instance.SetCameraToViewport( spineCamera.GetComponent<Camera>( ) );
 
 	}
 
@@ -66,7 +77,7 @@ public class SceneControllerTestScene : SceneController_Base
 
 	private void HandleTubeSectionMade( TubeSection_Linear ts )
 	{
-		tube_.AddToEnd( ts );
+		tube_.AddToEnd( ts, null );
 	}
 
 	public SpinePoint_Base GetFirstSpinePoint( )
@@ -109,6 +120,14 @@ public class SceneControllerTestScene : SceneController_Base
 
 	protected override void PostAwake( )
 	{
+		if (instance_ != null)
+		{
+			Debug.LogError( "Second TestSCeneController" );
+		}
+		else
+		{
+			instance_ = this;
+		}
 		originalPosition_ = spineCamera.transform.position;
 		originalRotation_ = spineCamera.transform.rotation;
 		cameraOnHook_ = true;

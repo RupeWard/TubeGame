@@ -131,7 +131,7 @@ namespace RJWard.Tube
 		private bool isExtending_ = false;
 		public void HandlePlayerEnterSection()
 		{
-			ExtendSection( TestSceneManager.Instance.randLinearSectionDefn, tube_.AddToEnd);
+			ExtendSection( GameManager.Instance.randLinearSectionDefn, tube_.AddToEnd);
 		}
 
 		private void ExtendSection(TubeFactory.RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )
@@ -553,7 +553,7 @@ namespace RJWard.Tube
 			List<Vector3> normals = new List<Vector3>( );
 
 			// Add spine0 to list
-			verts.Add( sp0.cachedTransform.position - sp0.cachedTransform.forward * TestSceneManager.Instance.flowZoneConvexAdjust );
+			verts.Add( sp0.cachedTransform.position - sp0.cachedTransform.forward * TubeFactory.Instance.flowZoneConvexAdjust );
 			uvs.Add( Vector2.zero );
 			Vector3 sp0norm = -1f * sp0.cachedTransform.forward;
 			normals.Add( sp0norm );
@@ -565,7 +565,7 @@ namespace RJWard.Tube
 			}
 
 			// Add spine1 to list
-			verts.Add( sp1.cachedTransform.position + sp0.cachedTransform.forward * TestSceneManager.Instance.flowZoneConvexAdjust );
+			verts.Add( sp1.cachedTransform.position + sp0.cachedTransform.forward * TubeFactory.Instance.flowZoneConvexAdjust );
 			uvs.Add( Vector2.one );
 
 			Vector3 sp1norm = sp1.cachedTransform.forward;

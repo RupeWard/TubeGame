@@ -18,10 +18,6 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 	public float startRadius = 5f;
 	public float endRadius = 8f;
 
-	public float FlowZone_defaultWeight = 1f;
-	public float FlowZone_defaultSpeed = 1f;
-
-	public float flowZoneConvexAdjust = 0.2f;
 	public int delaySecs = 10;
 
 	public int numHoopPoints = 10;
@@ -45,7 +41,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 		tubeGO.transform.localScale = Vector3.one;
 		tube_ = tubeGO.AddComponent<Tube>( );
 
-		RJWard.Tube.UI.UIManager.Instance.SetCameraToViewport( spineCamera.GetComponent<Camera>( ) );
+		RJWard.Tube.UI.TestSceneUIManager.Instance.SetCameraToViewport( spineCamera.GetComponent<Camera>( ) );
 
 	}
 
@@ -61,7 +57,7 @@ public class TestSceneManager : RJWard.Core.Singleton.SingletonApplicationLifeti
 
 	private void HandleTubeSectionMade( TubeSection_Linear ts )
 	{
-		tube_.AddToEnd( ts );
+		tube_.AddToEnd( ts, null );
 	}
 
 	public SpinePoint_Base GetFirstSpinePoint( )

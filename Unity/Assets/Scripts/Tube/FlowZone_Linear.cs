@@ -97,8 +97,8 @@ namespace RJWard.Tube
 		public void Init( SpinePoint_Linear sp)
 		{
 			sp.flowZone = this;
-			weight = TestSceneManager.Instance.FlowZone_defaultWeight;
-			speed = TestSceneManager.Instance.FlowZone_defaultSpeed;
+			weight = GameManager.Instance.FlowZone_defaultWeight;
+			speed = GameManager.Instance.FlowZone_defaultSpeed;
 
 			firstSpinePoint_ = sp;
 			//directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
