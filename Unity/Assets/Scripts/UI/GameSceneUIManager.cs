@@ -16,6 +16,8 @@ namespace RJWard.Tube.UI
 
 		public UnityEngine.UI.Text playButtonText;
 
+		public GameObject settingsPanel;
+
 		protected override void PostAwake( )
 		{
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
@@ -31,6 +33,7 @@ namespace RJWard.Tube.UI
 			bottomPanelRT.SetHeight( mainCanvasRT_.GetHeight( ) - viewPortRT.GetHeight( ) );
 
 			MessageBus.instance.gamePauseAction += HandleGamePaused;
+			settingsPanel.SetActive( false );
 		}
 
 		private void HandleGamePaused(bool paused)
@@ -55,7 +58,12 @@ namespace RJWard.Tube.UI
 
 		public void HandleSettingsButtonClicked()
 		{
-			
+			settingsPanel.SetActive( true );
+		}
+
+		public void HandleSettingsBackButtonClicked( )
+		{
+			settingsPanel.SetActive( false );
 		}
 
 		public void HandleDebugButton( )
