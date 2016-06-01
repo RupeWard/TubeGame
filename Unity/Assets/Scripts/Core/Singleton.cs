@@ -24,7 +24,7 @@
  * 
  */
 
-//#define DEBUG_SINGLETONS
+#define DEBUG_SINGLETONS
 
 using System;
 using UnityEngine;
@@ -170,7 +170,6 @@ namespace RJWard.Core.Singleton
 						{
 							instance = got;
 							got.gameObject.name = instanceName;
-							DontDestroyOnLoad( got.gameObject );
 #if DEBUG_SINGLETONS
 							Debug.Log( "Found, assigned, and renamed lifetime instance of type " + typeof( GameObjectType ).ToString( ) );
 #endif //DEBUG_SINGLETONS
