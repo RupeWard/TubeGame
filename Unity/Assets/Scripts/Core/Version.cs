@@ -27,7 +27,7 @@ namespace RJWard.Core
 		public static string androidLabel = "and";
 		public static string iosLabel = "ios";
 
-		private static readonly bool DEBUG_VERSION = true;
+		public static readonly bool DEBUG_VERSION = true;
 
 		// TODO: may need to make the build version of this more clever later on
 		public static bool IsProductionVersion
