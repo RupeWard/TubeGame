@@ -9,6 +9,7 @@ public static class SettingsIds
 
 	public static readonly Dictionary<string, string> defaults = new Dictionary<string, string>( )
 	{
+		{  SettingsIds.showDebugObjectsSettingId, "0" }
 	};
 
 	public static readonly List<string> encrypted = new List<string>( )

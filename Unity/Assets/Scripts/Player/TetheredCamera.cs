@@ -33,8 +33,7 @@ namespace RJWard.Tube.Player
 			cachedRigidbody_ = GetComponent<Rigidbody>( );
 			cachedCamera_ = GetComponent<UnityEngine.Camera>( );
 
-			int debugObjectsSetting = PlayerPrefs.GetInt( SettingsIds.showDebugObjectsSettingId );
-			RJWard.Tube.DebugManager.SetShowDebugObjects( cachedCamera_, debugObjectsSetting == 1 );
+			RJWard.Tube.DebugManager.SetShowDebugObjects( cachedCamera_, SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId ) );
 
 			MessageBus.instance.toggleDebugObjectsAction += ToggleDebugObjects;
 		}
@@ -43,8 +42,7 @@ namespace RJWard.Tube.Player
 		{
 			RJWard.Tube.DebugManager.ToggleDebugObjects( cachedCamera_);
 			bool isShowing = (cachedCamera_.cullingMask & DebugManager.debugObjectsLayer) != 0;
-			PlayerPrefs.SetInt( SettingsIds.showDebugObjectsSettingId, (isShowing)?(1):(0) );
-			PlayerPrefs.Save( );
+			SettingsStore.storeSetting(SettingsIds.showDebugObjectsSettingId, isShowing );
 		}
 	}
 

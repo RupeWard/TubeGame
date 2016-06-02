@@ -307,7 +307,7 @@ public class SqliteUtils : RJWard.Core.Singleton.SingletonApplicationLifetimeLaz
 			idSql.Value = entry.Key;
 			if (SettingsIds.encrypted.Contains( entry.Key ))
 			{
-				Debug.LogError( "Encryption not implemented - see SS code" );
+				Debug.LogError( "Encryption not implemented" ); // See SS Code below
 //				valueSql.Value = EncryptionHelper.EncryptString( entry.Key + entry.Value );
 			}
 			else

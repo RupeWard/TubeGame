@@ -168,11 +168,9 @@ namespace RJWard.Tube.Player
 				tetheredCamera_ = GameObject.Instantiate<GameObject>( tetheredCameraPrefab ).GetComponent<TetheredCamera>( );
 				tetheredCamera_.gameObject.SetActive( true );
 			}
-			int debugObjectsSetting = PlayerPrefs.GetInt( SettingsIds.showDebugObjectsSettingId );
-			showDebugObjects_ = (debugObjectsSetting == 1 );
+			showDebugObjects_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId );
 
 			controlPointer.SetActive( false );
-
 		}
 
 		public float camTargetDistance = 5f;
