@@ -46,6 +46,10 @@ namespace RJWard.Tube.Player
 		public GameObject camTetherPrefab;
 		public GameObject tetheredCameraPrefab;
 
+		public GameObject controlPointer;
+
+		private bool showDebugObjects_ = true;
+
 		public void HandleBallRolling( bool on )
 		{ 
 			if (on != isBallRolling_)
@@ -77,6 +81,7 @@ namespace RJWard.Tube.Player
 
 		public void ToggleDebugObjects()
 		{
+			showDebugObjects_ = !showDebugObjects_;
 			if (tetheredCamera_ != null)
 			{
 				DebugManager.ToggleDebugObjects( tetheredCamera_.cachedCamera);
@@ -85,7 +90,9 @@ namespace RJWard.Tube.Player
 
 		private void FixedUpdate()
 		{
-			Vector3 force = Vector3.zero;
+			currentForce_ = Vector3.zero;
+			currentFlowForce_ = Vector3.zero;
+			currentControlForce_ = Vector3.zero;
 
 			if (currentFlowZone_ != null)
 			{
@@ -93,7 +100,8 @@ namespace RJWard.Tube.Player
 				if (speedExcess > 0)
 				{
 					shouldLogNoSpeedExcess_ = true;
-                    force += speed * speedExcess * currentFlowZone_.flowAtPosition( cachedTransform.position );
+					currentFlowForce_ = speed * speedExcess * currentFlowZone_.flowAtPosition( cachedTransform.position );
+					currentForce_ += currentFlowForce_;
 				}
 				else
 				{
@@ -111,14 +119,18 @@ namespace RJWard.Tube.Player
             if (controlVector.magnitude > 0f)
 			{
 				Vector3 controlVector3D = new Vector3( controlVector.x, controlVector.y, 0f );
-				Vector3 p = cachedTransform_.TransformDirection( controlVector3D );
-				force += p * Time.deltaTime;
+				currentControlForce_ = tetheredCamera_.cachedTransform.TransformDirection( controlVector3D );
+				currentForce_ += currentControlForce_;
 			}
-			if (force.sqrMagnitude > 0f)
+			if (currentForce_.sqrMagnitude > 0f)
 			{
-				body.AddForce( force * Time.deltaTime, ForceMode.Impulse );
+				body.AddForce( currentForce_ * Time.deltaTime, ForceMode.Impulse );
 			}
 		}
+
+		private Vector3 currentForce_ = Vector3.zero;
+		private Vector3 currentControlForce_ = Vector3.zero;
+		private Vector3 currentFlowForce_ = Vector3.zero;
 
 		public bool UpdateDirection(ref Vector3 dir)
 		{
@@ -156,6 +168,10 @@ namespace RJWard.Tube.Player
 				tetheredCamera_ = GameObject.Instantiate<GameObject>( tetheredCameraPrefab ).GetComponent<TetheredCamera>( );
 				tetheredCamera_.gameObject.SetActive( true );
 			}
+			int debugObjectsSetting = PlayerPrefs.GetInt( SettingsIds.showDebugObjectsSettingId );
+			showDebugObjects_ = (debugObjectsSetting == 1 );
+
+			controlPointer.SetActive( false );
 
 		}
 
@@ -191,6 +207,23 @@ namespace RJWard.Tube.Player
 				{
 					audioSource_.Stop( );
 				}
+			}
+			if (showDebugObjects_)
+			{
+				if (currentControlForce_.sqrMagnitude > 0f)
+				{
+					Vector3 pos = cachedTransform_.position + currentControlForce_.normalized;
+					controlPointer.transform.position = pos;
+					controlPointer.SetActive( true );
+                }
+				else
+				{
+					controlPointer.SetActive( false );
+				}
+			}
+			else
+			{
+				controlPointer.SetActive( false );
 			}
 		}
 
