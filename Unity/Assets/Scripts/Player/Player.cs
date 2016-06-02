@@ -112,7 +112,7 @@ namespace RJWard.Tube.Player
 			{
 				Vector3 controlVector3D = new Vector3( controlVector.x, controlVector.y, 0f );
 				Vector3 p = cachedTransform_.TransformDirection( controlVector3D );
-				force += controlVector3D * Time.deltaTime;
+				force += p * Time.deltaTime;
 			}
 			if (force.sqrMagnitude > 0f)
 			{

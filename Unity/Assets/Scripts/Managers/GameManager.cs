@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameManager>
 {
-	private static readonly bool DEBUG_LOCAL = true;
+	private static readonly bool DEBUG_LOCAL = false;
 
 	public RJWard.Tube.Player.Player player;
 	private RJWard.Tube.Tube tube_ = null;
@@ -96,17 +96,6 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		else
 		{
 			Debug.LogWarning( "Can't start player with no tube" );
-		}
-	}
-
-	public float forwardPowerMult = 1f;
-	private float forwardPower_ = 0f;
-
-	private void FixedUpdate( )
-	{
-		if (forwardPower_ != 0f)
-		{
-			player.body.AddForce( player.cachedTransform.forward * forwardPower_ * Time.deltaTime, ForceMode.Impulse );
 		}
 	}
 
