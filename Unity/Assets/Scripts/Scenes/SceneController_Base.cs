@@ -14,7 +14,21 @@ abstract public class SceneController_Base : MonoBehaviour
 	void Awake()
 	{
 		current_ = this;
-		PostAwake ();
+		PostAwake( );
+
+		if (!SqliteUtils.IsInitialised( ))
+		{
+			if (SqliteUtils.DEBUG_SQL)
+			{
+				Debug.Log( "No SqliteUtils in " + this.GetType( ).ToString( ) );
+			}
+			SqliteUtils.Instance.databaseLoadComplete += OnDatabasesLoaded;
+			SqliteUtils.Instance.initialiseDatabases( "English" );
+		}
+		else
+		{
+			OnDatabasesLoaded( );
+		}
 	}
 
 	void Start () 
@@ -39,5 +53,11 @@ abstract public class SceneController_Base : MonoBehaviour
 	protected virtual void PostAwake()
 	{
 	}
+
+	// Override in subclasses for set-up
+	protected virtual void OnDatabasesLoaded( )
+	{
+	}
+
 
 }

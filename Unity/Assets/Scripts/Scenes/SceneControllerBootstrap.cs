@@ -32,10 +32,13 @@ public class SceneControllerBootstrap : SceneController_Base
 		Application.targetFrameRate = 60;
 
 		versionText.text = RJWard.Core.Version.versionNumber.DebugDescribe ();
+	}
 
+	protected override void OnDatabasesLoaded( )
+	{
 		Invoke( "MoveOn", delay );
 	}
 
-#endregion SceneController_Base
+	#endregion SceneController_Base
 
 }
