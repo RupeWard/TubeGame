@@ -8,16 +8,26 @@ namespace RJWard.Tube.UI
 	public class GameSceneUIManager : RJWard.Core.Singleton.SingletonSceneLifetime<GameSceneUIManager>
 	{
 		private Rect viewPort_ = new Rect( );
+
+		#region inspector hooks
+
 		public RectTransform bottomPanelRT;
 		public RectTransform viewPortRT;
 
 		public Canvas mainCanvas;
-		private RectTransform mainCanvasRT_ = null;
 
 		public UnityEngine.UI.Text playButtonText;
 
 		public GameObject settingsPanel;
 
+		public RectTransform bottomBackground;
+
+		#endregion inspector hooks
+
+
+		private RectTransform mainCanvasRT_ = null;
+
+		
 		protected override void PostAwake( )
 		{
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
@@ -30,6 +40,7 @@ namespace RJWard.Tube.UI
 			viewPort_.height = viewPortRT.GetHeight( ) / mainCanvasRT_.GetHeight( );
 			viewPort_.y = 1f - viewPort_.height;
 
+			bottomBackground.SetHeight( mainCanvasRT_.GetHeight( ) - viewPortRT.GetHeight( ) );
 			bottomPanelRT.SetHeight( mainCanvasRT_.GetHeight( ) - viewPortRT.GetHeight( ) );
 
 			MessageBus.instance.gamePauseAction += HandleGamePaused;
