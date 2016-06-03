@@ -12,7 +12,7 @@ namespace RJWard.Tube.Player
 		private Rigidbody body_;
 		private AudioSource audioSource_ = null;
 
-		public ParticleSystem sparks;
+		private ParticleSystem sparks_ = null;
 
 		public Color sparkColourLow = Color.yellow;
 		public Color sparkColourHigh = Color.red;
@@ -45,6 +45,7 @@ namespace RJWard.Tube.Player
 
 		public GameObject camTetherPrefab;
 		public GameObject tetheredCameraPrefab;
+		public GameObject sparksPrefab;
 
 		public GameObject controlPointer;
 
@@ -168,6 +169,11 @@ namespace RJWard.Tube.Player
 				tetheredCamera_ = GameObject.Instantiate<GameObject>( tetheredCameraPrefab ).GetComponent<TetheredCamera>( );
 				tetheredCamera_.gameObject.SetActive( true );
 			}
+			if (sparks_ == null)
+			{
+				sparks_ = GameObject.Instantiate<GameObject>( sparksPrefab ).GetComponent<ParticleSystem>( );
+				sparks_.gameObject.SetActive( true );
+			}
 			showDebugObjects_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId );
 
 			controlPointer.SetActive( false );
@@ -179,12 +185,12 @@ namespace RJWard.Tube.Player
 
 		public void Update()
 		{
-			if (sparks.isPlaying)
+			if (sparks_.isPlaying)
 			{
 				float elapsed = Time.time - sparkStartTime;
 				float fraction = (elapsed > sparkColourShiftDuration)?(1f):( elapsed / sparkColourShiftDuration);
-                sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
-				sparks.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
+                sparks_.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+				sparks_.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
 			}
 			if (tillSparksStop > 0f)
 			{
@@ -195,7 +201,7 @@ namespace RJWard.Tube.Player
 					{
 						Debug.Log( "Stopped sparks" );
 					}
-					sparks.Stop( );
+					sparks_.Stop( );
 				}
 			}
 			if (tillRollingSoundStop > 0f)
@@ -297,9 +303,9 @@ namespace RJWard.Tube.Player
 				}
 				if (collision.contacts.Length > 0)
 				{
-					sparks.gameObject.transform.position = collision.contacts[0].point;
-					sparks.gameObject.transform.LookAt( cachedTransform_.position );
-					if (sparks.isPlaying)
+					sparks_.gameObject.transform.position = collision.contacts[0].point;
+					sparks_.gameObject.transform.LookAt( cachedTransform_.position );
+					if (sparks_.isPlaying)
 					{
 						float elapsed = Time.time - sparkStartTime;
 						tillSparksStop = -1f;
@@ -309,19 +315,19 @@ namespace RJWard.Tube.Player
 							Debug.Log( "Stay wall when sparks already playing" );
 						}
 						float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
-						sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
-						sparks.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
-						sparks.Play( );
+						sparks_.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						sparks_.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
+						sparks_.Play( );
 					}
 					else
 					{
 						Debug.LogWarning( "Why aren't sparks playing already?" );
 						//						sparks.startColor = sparkColourLow;
-						sparks.Play( );
+						sparks_.Play( );
 						sparkStartTime = Time.time;
 						tillSparksStop = -1f;
-						sparks.startColor = sparkColourLow;
-						sparks.startSize = sparkStartSize;
+						sparks_.startColor = sparkColourLow;
+						sparks_.startSize = sparkStartSize;
 						if (DEBUG_SPARKS)
 						{
 							Debug.Log( "Stay wall, starting sparks" );
@@ -354,9 +360,9 @@ namespace RJWard.Tube.Player
 				}
 				if (collision.contacts.Length > 0)
 				{
-					sparks.gameObject.transform.position = collision.contacts[0].point;
-					sparks.gameObject.transform.LookAt( cachedTransform_.position );
-					if (sparks.isPlaying)
+					sparks_.gameObject.transform.position = collision.contacts[0].point;
+					sparks_.gameObject.transform.LookAt( cachedTransform_.position );
+					if (sparks_.isPlaying)
 					{
 						sparkStartTime = Time.time;
 						float elapsed = Time.time - sparkStartTime;
@@ -368,18 +374,18 @@ namespace RJWard.Tube.Player
 						}
 
 						float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
-						sparks.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
-						sparks.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
-						sparks.Play( );
+						sparks_.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+						sparks_.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
+						sparks_.Play( );
 					}
 					else
 					{
 						//						sparks.startColor = sparkColourLow;
-						sparks.Play( );                      
+						sparks_.Play( );                      
 						sparkStartTime = Time.time;
 						tillSparksStop = -1f;
-						sparks.startColor = sparkColourLow;
-						sparks.startSize = sparkStartSize;
+						sparks_.startColor = sparkColourLow;
+						sparks_.startSize = sparkStartSize;
 						if (DEBUG_SPARKS)
 						{
 							Debug.Log( "Hit wall, starting sparks" );
@@ -410,7 +416,7 @@ namespace RJWard.Tube.Player
 				{
 					Debug.Log( "LEFT WALL: " + gameObject.name + " " + collision.gameObject.name );
 				}
-				if (sparks.isPlaying)
+				if (sparks_.isPlaying)
 				{
 					if (DEBUG_SPARKS)
 					{
