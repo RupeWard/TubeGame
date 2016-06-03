@@ -80,6 +80,11 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		}
 	}
 
+	public void ExtendTubeSection(RJWard.Tube.TubeSection_Linear ts)
+	{
+		ts.ExtendSection( randLinearSectionDefn, tube_.AddToEnd );
+	}
+
 	private void StartPlayer( )
 	{
 		if (DEBUG_LOCAL)

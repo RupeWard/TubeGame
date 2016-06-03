@@ -10,7 +10,8 @@ namespace RJWard.Tube
 		{
 			public int numHoops = 10;
 			public float separation = 3f;
-			public float maxAngleD = 10f;
+			public Vector2 xAngleChangeRange = new Vector2( -10f, 10f );
+			public Vector2 yAngleChangeRange = new Vector2( -10f, 10f );
 			public float initialRad = 1f;
 			public Vector2 radRange = new Vector2( 0.5f, 3f);
 			public float maxRadD = 0.5f;
@@ -130,8 +131,8 @@ namespace RJWard.Tube
 				{
 					sb.Append( "\n created circular hoop defn " ).Append( i ).Append( ":" ).DebugDescribe( hdcnew );
 				}
-				float xAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD);
-				float yAngle = UnityEngine.Random.Range( -1f * settings.maxAngleD, settings.maxAngleD );
+				float xAngle = UnityEngine.Random.Range( settings.xAngleChangeRange.x, settings.xAngleChangeRange.y);
+				float yAngle = UnityEngine.Random.Range( settings.yAngleChangeRange.x, settings.yAngleChangeRange.y);
 
 				Quaternion rot = Quaternion.Euler( new Vector3( xAngle, yAngle, 0f ) );
 				direction = rot * direction;

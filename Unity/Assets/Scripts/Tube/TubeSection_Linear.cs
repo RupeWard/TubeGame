@@ -131,10 +131,10 @@ namespace RJWard.Tube
 		private bool isExtending_ = false;
 		public void HandlePlayerEnterSection()
 		{
-			ExtendSection( GameManager.Instance.randLinearSectionDefn, tube_.AddToEnd);
+			GameManager.Instance.ExtendTubeSection( this);
 		}
 
-		private void ExtendSection(TubeFactory.RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )
+		public void ExtendSection(TubeFactory.RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )
 		{ 
 			if (!isExtending_)
 			{
