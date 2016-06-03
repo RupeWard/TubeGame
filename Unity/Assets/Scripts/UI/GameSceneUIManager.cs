@@ -71,6 +71,14 @@ namespace RJWard.Tube.UI
 			MessageBus.instance.dispatchToggleDebugObjects( );
 		}
 
+		public void HandleFPSButton( )
+		{
+			bool currentSetting = SettingsStore.retrieveSetting<bool>( SettingsIds.showFPSId );
+			bool newSetting = !currentSetting;
+			SettingsStore.storeSetting( SettingsIds.showFPSId, newSetting );
+			MessageBus.instance.dispatchOnShowFPSChanged( newSetting);
+		}
+
 		public void HandleLeftButtonPressed( )
 		{
 			GameManager.Instance.SetControlForce( Vector2.left );
