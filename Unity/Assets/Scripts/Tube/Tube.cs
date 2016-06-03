@@ -12,7 +12,9 @@ namespace RJWard.Tube
 		public List<TubeSection_Linear> tubeSections_ = new List<TubeSection_Linear>();
 
 		public int maxTubeSections_ = 6;
-		
+
+		private GameObject tubeEnd_ = null;
+
 		public void DeleteAllSections()
 		{
 			for( int i = 0; i<tubeSections_.Count; i++)
@@ -202,7 +204,15 @@ namespace RJWard.Tube
 							throw new System.Exception( "Not implemented spinepoint type " + FirstHoop( ).spinePoint.GetType( ).ToString( ) );
 						}
 
-//						Debug.Log( "Rotated by " + lastHoopOfPrevious.transform.rotation +" to give "+ ts.transform.rotation );
+						if (tubeEnd_ == null)
+						{
+							tubeEnd_ = TubeFactory.Instance.CreateTubeEnd( );
+						}
+						tubeEnd_.transform.parent = LastHoop( ).spinePoint.cachedTransform;
+						tubeEnd_.transform.localPosition = Vector3.zero;
+						tubeEnd_.transform.localRotation = Quaternion.identity;
+
+						//						Debug.Log( "Rotated by " + lastHoopOfPrevious.transform.rotation +" to give "+ ts.transform.rotation );
 						//						ts.transform.rotation = Quaternion.Euler(-1f*firstHoopRot) * ts.transform.rotation;
 						//						ts.transform.Translate( lastHoopOfPrevious.transform.position - firstHoop.transform.position );
 

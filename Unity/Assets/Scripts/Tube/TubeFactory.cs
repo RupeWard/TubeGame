@@ -29,6 +29,12 @@ namespace RJWard.Tube
 
 		public float flowZoneConvexAdjust = 0.2f;
 
+		public GameObject tubeEndPrefab;
+		public GameObject CreateTubeEnd()
+		{
+			return GameObject.Instantiate<GameObject>( tubeEndPrefab );
+		}
+
 		private int tubeWallLayerMask_ = 0;
 		public int tubeWallLayerMask
 		{
