@@ -80,10 +80,19 @@ namespace RJWard.Tube
 		{
 			System.Text.StringBuilder sb = null;
 
+			TubeSectionDefinition_Linear defn = CreateLinearSectionDefn( settings );
+			
+			yield return StartCoroutine( CreateSectionFromDefinitionCR(t, defn, settings.numPerSection, onCreatedAction, sb ) );
+		}
+
+		public TubeSectionDefinition_Linear CreateLinearSectionDefn( RandLinearSectionDefn settings)
+		{
+			System.Text.StringBuilder sb = null;
+
 			if (TubeSection_Linear.DEBUG_MESH)
 			{
 				sb = new System.Text.StringBuilder( );
-				sb.Append( "Creating Random Linear Section \n from " ).DebugDescribe( settings );
+				sb.Append( "Creating Random Linear Section Defn\n from " ).DebugDescribe( settings );
 			}
 			if (settings.numHoops < 1)
 			{
@@ -98,7 +107,7 @@ namespace RJWard.Tube
 			{
 				defn.AddHoopDefn( settings.firstHoop );
 				previous = settings.firstHoop;
-				if (sb!= null)
+				if (sb != null)
 				{
 					sb.Append( "\n COPIED first hoop defn :" ).DebugDescribe( settings.firstHoop );
 				}
@@ -113,7 +122,6 @@ namespace RJWard.Tube
 					sb.Append( "\n CREATED first hoop defn :" ).DebugDescribe( hdc );
 				}
 			}
-			yield return null;
 
 			Vector3 direction = Vector3.forward;
 
@@ -131,20 +139,19 @@ namespace RJWard.Tube
 				{
 					sb.Append( "\n created circular hoop defn " ).Append( i ).Append( ":" ).DebugDescribe( hdcnew );
 				}
-				float xAngle = UnityEngine.Random.Range( settings.xAngleChangeRange.x, settings.xAngleChangeRange.y);
-				float yAngle = UnityEngine.Random.Range( settings.yAngleChangeRange.x, settings.yAngleChangeRange.y);
+				float xAngle = UnityEngine.Random.Range( settings.xAngleChangeRange.x, settings.xAngleChangeRange.y );
+				float yAngle = UnityEngine.Random.Range( settings.yAngleChangeRange.x, settings.yAngleChangeRange.y );
 
 				Quaternion rot = Quaternion.Euler( new Vector3( xAngle, yAngle, 0f ) );
 				direction = rot * direction;
 
 			}
-			yield return StartCoroutine( CreateSectionFromDefinitionCR(t, defn, settings.numPerSection, onCreatedAction, sb ) );
 			if (sb != null)
 			{
 				Debug.Log( sb.ToString( ) );
 			}
+			return defn;
 		}
-
 
 		public IEnumerator CreateCircularCR(Tube t, string n, TubeSectionDefinition_Linear tsd, Material mat, System.Action< TubeSection_Linear > onCreatedAction )
 		{

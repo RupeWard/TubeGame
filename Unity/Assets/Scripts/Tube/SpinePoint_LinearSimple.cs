@@ -59,6 +59,40 @@ namespace RJWard.Tube
 		}
 
 
+		override public int MinSpinePointsToEnd( ref SpinePoint_Base endSpinePoint )
+		{
+			Debug.LogError( "Not implemented" );
+			int result = 0;
+			/*
+			SpinePoint_Linear next = nextSpinePoint_;
+			endSpinePoint = next;
+			while (next != null)
+			{
+				next = next.nextSpinePoint_;
+				if (next != null)
+				{
+					endSpinePoint = next;
+				}
+				result++;
+			}
+			*/
+			return result;
+		}
+
+		override public int MinSpinePointsToEnd( )
+		{
+			Debug.LogError( "Not implemented" );
+			int result = 0;
+			/*
+			SpinePoint_Linear next = nextSpinePoint_;
+			while (next != null)
+			{
+				next = next.nextSpinePoint_;
+				result++;
+			}
+			*/
+			return result;
+		}
 
 		/*
 		override public bool InterpolateForwardWorld( SpinePointPathChooser chooser, float t, ref Vector3 result )

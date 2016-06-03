@@ -49,6 +49,9 @@ namespace RJWard.Tube
 
 		abstract public void DisconnnectFront( );
 
+		abstract public int MinSpinePointsToEnd( ref SpinePoint_Base endSpinePoint );
+		abstract public int MinSpinePointsToEnd( );
+
 		abstract public SpinePointConnection GetConnectionOut( SpinePointPathChooser chooser );
 		virtual public SpinePoint_Base GetSpinePointOut(SpinePointPathChooser chooser)
 		{

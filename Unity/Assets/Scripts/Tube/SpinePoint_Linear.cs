@@ -40,7 +40,7 @@ namespace RJWard.Tube
 			return nextSpinePoint_ == null;
 		}
 
-		public int MinSpinePointsToEnd(ref SpinePoint_Linear endSpinePoint)
+		override public int MinSpinePointsToEnd(ref SpinePoint_Base endSpinePoint)
 		{
 			int result = 0;
 			SpinePoint_Linear next = nextSpinePoint_;
@@ -55,6 +55,18 @@ namespace RJWard.Tube
 				result++;
 			}
 
+			return result;
+		}
+
+		override public int MinSpinePointsToEnd( )
+		{
+			int result = 0;
+			SpinePoint_Linear next = nextSpinePoint_;
+			while (next != null)
+			{
+				next = next.nextSpinePoint_;
+				result++;
+			}
 			return result;
 		}
 

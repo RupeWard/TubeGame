@@ -80,6 +80,12 @@ namespace RJWard.Tube.Player
 			camTether_.Init(this, tetheredCamera_ );
 		}
 
+		public void GetReadyToStart()
+		{
+			InitialiseAtStart( );
+			camTether_.Init( this, tetheredCamera_ );
+		}
+
 		public void ToggleDebugObjects()
 		{
 			showDebugObjects_ = !showDebugObjects_;
@@ -231,6 +237,14 @@ namespace RJWard.Tube.Player
 			}
 		}
 
+		public void InitialiseAtStart( )
+		{
+			cachedTransform_.position = Vector3.zero;
+			cachedTransform_.rotation = Quaternion.identity;
+
+			body_.velocity = Vector3.zero;
+		}
+
 		public void InitialiseAt(Transform t)
 		{
 			cachedTransform_.position = t.position;
@@ -256,7 +270,7 @@ namespace RJWard.Tube.Player
 					currentFlowZone_ = newFz;
 
 					SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
-					SpinePoint_Linear endSpinePoint = null;
+					SpinePoint_Base endSpinePoint = null;
 					int minToGap = spinePoint.MinSpinePointsToEnd( ref endSpinePoint);
 					if (DEBUG_COLLISIONS)
 					{

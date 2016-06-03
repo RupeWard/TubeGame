@@ -4,26 +4,109 @@ using System.Collections;
 public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameManager>
 {
 	private static readonly bool DEBUG_LOCAL = false;
+	static private readonly bool DEBUG_GAMEFLOW = true;
+
+	#region inspector hooks
 
 	public RJWard.Tube.Player.Player player;
-	private RJWard.Tube.Tube tube_ = null;
 
+	#endregion inspector hooks
+
+	#region inspector data
+
+	public RJWard.Tube.TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
+	public float FlowZone_defaultWeight = 1f;
+	public float FlowZone_defaultSpeed = 1f;
+
+	public float controlForceMultiplier = 1f;
+
+
+	#endregion inspector data
+
+	#region private data
+
+	private RJWard.Tube.Tube tube_ = null;
 	private Rect viewPort_;
-	public void SetViewPort(Rect r)
+
+	private RJWard.Tube.Game_Base game_ = null;
+	private float startTime_ = 0f;
+	private bool isPlaying_ = false;
+	private float storedTimeScale_ = 0f;
+
+	private bool isPaused_ = false;
+
+	private int numFirstGameSections_ = 0;
+	private Vector2 currentControlForce_ = Vector2.zero;
+
+	#endregion private data
+
+	#region control
+
+	public Vector2 currentControlForce
+	{
+		get { return controlForceMultiplier * currentControlForce_; }
+	}
+
+	public void SetControlForce( Vector2 force )
+	{
+		currentControlForce_ = force;
+	}
+
+	#endregion control
+
+	#region viewport
+
+	public void SetViewPort( Rect r )
 	{
 		viewPort_ = r;
 	}
-
-	public RJWard.Tube.TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
 
 	public void SetCameraToViewport( UnityEngine.Camera camera )
 	{
 		camera.rect = viewPort_;
 	}
 
-	private float startTime_ = 0f;
+	#endregion viewport
 
-	private bool isPlaying_ = false;
+	#region tube accessors
+
+	public RJWard.Tube.SpinePoint_Base GetFirstSpinePoint( )
+	{
+		RJWard.Tube.SpinePoint_Base result = null;
+		if (tube_ != null)
+		{
+			result = tube_.FirstSpinePoint( );
+		}
+		return result;
+	}
+
+	#endregion tube accessors
+
+	#region tube generation
+
+	public void ExtendTubeSection( RJWard.Tube.TubeSection_Linear ts )
+	{
+		RJWard.Tube.TubeFactory.RandLinearSectionDefn sectionDefn = null;
+		if (game_ != null)
+		{
+			sectionDefn = game_.GetNextTubeSectionDefn( );
+		}
+		else
+		{
+			Debug.LogWarning( "No game object, using default from editor" );
+			sectionDefn = randLinearSectionDefn;
+		}
+		ts.ExtendSection( sectionDefn, tube_.AddToEnd );
+	}
+
+	private void HandleFirstGameSectionCreated( RJWard.Tube.TubeSection_Linear ts )
+	{
+		if (DEBUG_GAMEFLOW)
+		{
+			Debug.Log( "Adding first section #" + numFirstGameSections_ + " (" + ts.gameObject.name + ")" );
+		}
+		tube_.AddToEnd( ts, CreateFirstGameSections );
+	}
 
 	private void HandleTubeSectionMade( RJWard.Tube.TubeSection_Linear ts )
 	{
@@ -43,51 +126,47 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		tube_.AddToEnd( ts, StartPlayer );
 	}
 
-	public RJWard.Tube.SpinePoint_Base GetFirstSpinePoint( )
+	#endregion tube generation
+
+	#region game flow
+
+	private void CreateFirstGameSections()
 	{
-		RJWard.Tube.SpinePoint_Base result = null;
-		if (tube_ != null)
+		if (game_ == null)
 		{
-			result = tube_.FirstSpinePoint( );
+			Debug.LogError( "No game object" );
 		}
-		return result;
-	}
-
-
-	public void CreateRandomSection( )
-	{
-		randLinearSectionDefn.firstHoop = null;
-		if (tube_ != null)
+		else
 		{
-			RJWard.Tube.Hoop lastHoop = tube_.LastHoop( );
-			if (lastHoop != null)
+			int numSpinePoints = 0;
+			if (tube_.FirstSpinePoint( ) != null)
 			{
-				if (DEBUG_LOCAL)
+				numSpinePoints = tube_.FirstSpinePoint( ).MinSpinePointsToEnd( );
+			}
+			if (numSpinePoints < player.maxSpinePointsToGap)
+			{
+				if (DEBUG_GAMEFLOW)
 				{
-					Debug.Log( "Creating random section to append" );
+					Debug.Log( "Created " + numFirstGameSections_ + " with maxD = " + numSpinePoints + " spine points" );
 				}
-				randLinearSectionDefn.firstHoop = lastHoop.ExplicitDefinition( );
-				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, randLinearSectionDefn, HandleTubeSectionMade );
+				numFirstGameSections_++;
+				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, randLinearSectionDefn, HandleFirstGameSectionCreated );
 			}
 			else
 			{
-				if (DEBUG_LOCAL)
+				if (DEBUG_GAMEFLOW)
 				{
-					Debug.Log( "Creating random section to start" );
+					Debug.Log( "Created enough first sections (" + numFirstGameSections_ + ") with maxD = " + numSpinePoints + " spine points" );
 				}
-				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, randLinearSectionDefn, HandleFirstTubeSectionMade);
+				StartPlayer( );
 			}
-		}
-	}
 
-	public void ExtendTubeSection(RJWard.Tube.TubeSection_Linear ts)
-	{
-		ts.ExtendSection( randLinearSectionDefn, tube_.AddToEnd );
+		}
 	}
 
 	private void StartPlayer( )
 	{
-		if (DEBUG_LOCAL)
+		if (DEBUG_LOCAL || DEBUG_GAMEFLOW)
 		{
 			Debug.Log( "Start Player" );
 		}
@@ -129,18 +208,16 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		}
 		else
 		{
+			game_ = new RJWard.Tube.Game_Constant( randLinearSectionDefn );
 			startTime_ = Time.time;
 			isPlaying_ = true;
 			if (tube_.FirstSection( ) == null)
 			{
-				CreateRandomSection( );
+				numFirstGameSections_ = 0;
+				CreateFirstGameSections( );
 			}
 		}
-	}
-
-	private float storedTimeScale_ = 0f;
-
-	private bool isPaused_ = false;
+	}	
 
 	public void PlayOrPause()
 	{
@@ -178,22 +255,8 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 			MessageBus.instance.dispatchGamePaused( false );
 		}
 	}
+	#endregion game flow
 
-	public float FlowZone_defaultWeight = 1f;
-	public float FlowZone_defaultSpeed = 1f;
-
-	public float controlForceMultiplier = 1f;
-
-	private Vector2 currentControlForce_ = Vector2.zero;
-	public Vector2 currentControlForce
-	{
-		get { return controlForceMultiplier * currentControlForce_;  }
-	}
-
-	public void SetControlForce( Vector2 force )
-	{
-		currentControlForce_ = force;
-	}
 
 }
 

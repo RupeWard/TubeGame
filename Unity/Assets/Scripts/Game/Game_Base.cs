@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-abstract public class Game_Base
+namespace RJWard.Tube
 {
-	abstract public RJWard.Tube.TubeSectionDefinition_Linear GetNextTubeSectionDefn( );
-	abstract public void Reset( );
-
+	abstract public class Game_Base
+	{
+		abstract public TubeFactory.RandLinearSectionDefn GetNextTubeSectionDefn(  );
+		abstract public void Reset( );
+	}
 }
