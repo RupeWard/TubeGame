@@ -152,7 +152,7 @@ namespace RJWard.Tube
 			}
 			foreach (HoopPoint hp in hoopPoints_)
 			{
-				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
+				DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
 			}
 			if (spinePoint_ != null)
 			{
@@ -242,7 +242,7 @@ namespace RJWard.Tube
 			}
 			foreach (HoopPoint hp in hoopPoints_)
 			{
-				RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
+				DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
 			}
 			spinePoint_.SetDirty( );
 			if (DEBUG_LOCAL)

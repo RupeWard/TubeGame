@@ -378,7 +378,7 @@ namespace RJWard.Tube
 							for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
 							{
 								HoopPoint hp = spinePoint.hoop.GetHoopPoint( hoopPtNum );
-								RJWard.Core.Test.DebugBlob.AddToObject( hp.gameObject, 0.1f, spinePoint.hoop.GetColourForPoint( hp) );
+								DebugBlob.AddToObject( hp.gameObject, 0.1f, spinePoint.hoop.GetColourForPoint( hp) );
 								//yield return null;
 							}
 

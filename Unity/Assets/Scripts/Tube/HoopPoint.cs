@@ -83,7 +83,7 @@ namespace RJWard.Tube
 			{
 				cachedTransform_.LookAt( t );
 			}
-			RJWard.Core.Test.DebugBlob debugBlob = cachedTransform_.GetComponentInChildren<RJWard.Core.Test.DebugBlob>( );
+			DebugBlob debugBlob = cachedTransform_.GetComponentInChildren<DebugBlob>( );
 			if (debugBlob != null)
 			{
 				debugBlob.ActivateDirectionPointer( t != null );

@@ -2,10 +2,38 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace RJWard.Core.Test
+namespace RJWard.Tube
 {
 	public class DebugBlob : MonoBehaviour
 	{
+		static private List<GameObject> s_debugBlob_ = new List<GameObject>( );
+		static private bool s_areDebugObjectsShowing_ = false;
+
+		static public void RegisterDebugBlob( GameObject go )
+		{
+			if (s_debugBlob_.Contains( go ) == false)
+			{
+				s_debugBlob_.Add( go );
+			}
+		}
+
+		static public void DeregisterDebugBlob( GameObject go )
+		{
+			if (s_debugBlob_.Contains( go ) == true)
+			{
+				s_debugBlob_.Remove( go );
+			}
+		}
+
+		static public void ActivateAllDebugBlobs( bool b )
+		{
+			s_areDebugObjectsShowing_ = b;
+			foreach (GameObject go in s_debugBlob_)
+			{
+				go.SetActive( s_areDebugObjectsShowing_ );
+			}
+		}
+
 		static private GameObject s_cachedPrefab_ = null;
 		static private GameObject s_prefab
 		{
@@ -40,6 +68,18 @@ namespace RJWard.Core.Test
 			cachedTransform_ = transform;
 			mat_ = GetComponent<MeshRenderer>( ).sharedMaterial;
 			pointerMesh.gameObject.SetActive( false );
+
+			RegisterDebugBlob( gameObject );
+
+			if (s_areDebugObjectsShowing_ == false)
+			{
+				gameObject.SetActive( false );
+			}
+		}
+
+		private void OnDestroy()
+		{
+			DeregisterDebugBlob( gameObject );
 		}
 
 		private void Init( float s, Color c )

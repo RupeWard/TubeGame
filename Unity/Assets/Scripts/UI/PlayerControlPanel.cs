@@ -4,7 +4,7 @@ using RJWard.Core.UI.Extensions;
 
 public class PlayerControlPanel : MonoBehaviour
 {
-	static private readonly bool DEBUG_CONTROLS = true;
+	static private readonly bool DEBUG_CONTROLS = false;
 	static private readonly bool DEBUG_TOUCH = false;
 
 	#region inspector hooks

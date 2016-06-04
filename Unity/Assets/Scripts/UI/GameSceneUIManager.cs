@@ -119,7 +119,9 @@ namespace RJWard.Tube.UI
 		public void HandleDebugButton( )
 		{
 			MessageBus.instance.dispatchToggleDebugObjects( );
-			SetButtonColourById( debugObjectsButtonImage, SettingsIds.showDebugObjectsSettingId );
+			bool showThem = SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId );
+			SetButtonColour( debugObjectsButtonImage,  showThem);
+			DebugBlob.ActivateAllDebugBlobs( showThem);
 		}
 
 		public void HandleControlMarkersButton()
