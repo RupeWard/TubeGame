@@ -7,9 +7,11 @@ public class TouchManager : RJWard.Core.Singleton.SingletonSceneLifetime<TouchMa
 
 	private int numTouches_ = 0;
 
+	public System.Action< Touch[] > onTouches;
+
 	private void Update()
 	{
-		int newNumTouches = Input.touches.Length;
+		int newNumTouches = Input.touchCount;
         if (newNumTouches != numTouches_)
 		{
 			if (DEBUG_TOUCHES)
@@ -21,6 +23,11 @@ public class TouchManager : RJWard.Core.Singleton.SingletonSceneLifetime<TouchMa
 		else
 		{
 //			Debug.Log( "Still "+numTouches_+" touches");
+		}
+
+		if (onTouches != null)
+		{
+			onTouches( Input.touches );
 		}
 	}
 }

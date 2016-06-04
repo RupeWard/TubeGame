@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using RJWard.Core.UI;
+using RJWard.Core.UI.Extensions;
 
 namespace RJWard.Tube.UI
 {

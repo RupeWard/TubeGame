@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace RJWard.Core.UI
+namespace RJWard.Core.UI.Extensions
 {
 	public static class RectTransformExtensions
 	{
