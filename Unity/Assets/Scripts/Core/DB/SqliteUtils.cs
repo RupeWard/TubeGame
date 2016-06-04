@@ -215,6 +215,7 @@ public class SqliteUtils : RJWard.Core.Singleton.SingletonApplicationLifetimeLaz
 		else
 		{
 			Debug.LogWarning( "No settings table in getOriginalSettings" );
+			prepareProgressTable( );
 		}
 		if (previousVersionNumber_ == null)
 		{
