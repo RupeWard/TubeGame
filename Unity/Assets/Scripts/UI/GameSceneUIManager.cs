@@ -22,12 +22,44 @@ namespace RJWard.Tube.UI
 
 		public RectTransform bottomBackground;
 
+		public UnityEngine.UI.Image debugObjectsButtonImage;
+		public UnityEngine.UI.Image fpsButtonImage;
+		public UnityEngine.UI.Image controlForceMarkerButtonImage;
+
 		#endregion inspector hooks
 
+		#region inspector data
+
+		public Color toggleButtonOnColour = new Color( 9f / 255f, 92f / 255f, 40f / 244f );
+		public Color toggleButtonOffColour = new Color( 80f / 255f, 80f / 255f, 80f / 244f );
+
+		#endregion inspector data
+
+		#region private hooks
 
 		private RectTransform mainCanvasRT_ = null;
 
-		
+		#endregion private hooks
+
+		private void SetButtonColourById( UnityEngine.UI.Image image, string id)
+		{
+			bool active = SettingsStore.retrieveSetting<bool>( id );
+			SetButtonColour( image, active );
+		}
+
+		private void SetButtonColour( UnityEngine.UI.Image image, bool active)
+		{
+			if (active)
+			{
+				image.color = toggleButtonOnColour;
+			}
+			else
+			{
+				image.color = toggleButtonOffColour;
+			}
+		}
+
+
 		protected override void PostAwake( )
 		{
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
@@ -44,6 +76,11 @@ namespace RJWard.Tube.UI
 			bottomPanelRT.SetHeight( mainCanvasRT_.GetHeight( ) - viewPortRT.GetHeight( ) );
 
 			MessageBus.instance.gamePauseAction += HandleGamePaused;
+
+			SetButtonColourById( debugObjectsButtonImage, SettingsIds.showDebugObjectsSettingId );
+			SetButtonColourById( controlForceMarkerButtonImage, SettingsIds.showControlForceMarkerSettingId );
+			SetButtonColourById( fpsButtonImage, SettingsIds.showFPSId );
+
 			settingsPanel.SetActive( false );
 		}
 
@@ -56,6 +93,8 @@ namespace RJWard.Tube.UI
 		{
 			GameManager.Instance.SetViewPort( viewPort_ );
 		}
+
+		#region button handlers
 
 		public void HandleBackButtonClicked( )
 		{
@@ -80,11 +119,13 @@ namespace RJWard.Tube.UI
 		public void HandleDebugButton( )
 		{
 			MessageBus.instance.dispatchToggleDebugObjects( );
+			SetButtonColourById( debugObjectsButtonImage, SettingsIds.showDebugObjectsSettingId );
 		}
 
 		public void HandleControlMarkersButton()
 		{
 			MessageBus.instance.dispatchToggleControlMarkers( );
+			SetButtonColourById( controlForceMarkerButtonImage, SettingsIds.showControlForceMarkerSettingId);
 		}
 
 		public void HandleFPSButton( )
@@ -93,6 +134,7 @@ namespace RJWard.Tube.UI
 			bool newSetting = !currentSetting;
 			SettingsStore.storeSetting( SettingsIds.showFPSId, newSetting );
 			MessageBus.instance.dispatchOnShowFPSChanged( newSetting);
+			SetButtonColour( fpsButtonImage, newSetting );
 		}
 
 		public void HandleLeftButtonPressed( )
@@ -135,6 +177,7 @@ namespace RJWard.Tube.UI
 			GameManager.Instance.SetControlForce( Vector2.zero );
 		}
 
+		#endregion button handlers
 
 	}
 }

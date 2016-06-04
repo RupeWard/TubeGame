@@ -13,7 +13,7 @@ public static class SettingsIds
 	{
 		{  showDebugObjectsSettingId, "0" },
         {  showFPSId, "0" },
-        { showControlForceMarkerSettingId, "1"  }
+        {  showControlForceMarkerSettingId, "1"  }
 	};
 
 	public static readonly List<string> encrypted = new List<string>( )
