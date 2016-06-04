@@ -7,21 +7,74 @@ namespace RJWard.Tube.Player
 	{
 		static readonly bool DEBUG_COLLISIONS = false;
 		static readonly bool DEBUG_WALLCOLLISIONS = false;
+		public static readonly bool DEBUG_FORCE = false;
+		private static readonly bool DEBUG_SPARKS = false;
 
-		private Transform cachedTransform_;
-		private Rigidbody body_;
-		private AudioSource audioSource_ = null;
+		#region inspector hooks
 
-		private ParticleSystem sparks_ = null;
+		public ControlPointer controlPointer;
+
+		#endregion inspector hooks
+
+		#region prefabs
+
+		public GameObject camTetherPrefab;
+		public GameObject tetheredCameraPrefab;
+		public GameObject sparksPrefab;
+
+		#endregion prefabs
+
+		#region inspector data
+
+		public float speed;
+
+		public float sparkColourShiftDuration = 2f;
+
+		public float rollingSoundStopDelay = 0.2f;
+
+		// Sparks - TODO move sparks stuff to own class?
 
 		public Color sparkColourLow = Color.yellow;
 		public Color sparkColourHigh = Color.red;
 
+		public float camTargetDistance = 5f;
+
 		public float sparkStartSize = 0.2f;
 		public float sparkEndSize = 0.7f;
+		public float sparksStopTime = 0.5f;
 
-		public float sparkColourShiftDuration = 2f;
+		public Vector2 controlMarkerRange = new Vector2( 0.25f, 1f );
+
+		public int maxSpinePointsToGap = 10;
+
+		#endregion inspector data
+
+		#region private hooks
+
 		private float sparkStartTime = -1f;
+		private float tillSparksStop = -1f;
+
+		private Transform cachedTransform_;
+		public Transform cachedTransform
+		{
+			get { return cachedTransform_; }
+		}
+
+		private Rigidbody body_;
+		public Rigidbody body
+		{
+			get { return body_; }
+		}
+
+		private AudioSource audioSource_ = null;
+
+		private ParticleSystem sparks_ = null;
+		private CamTether camTether_ = null;
+		private TetheredCamera tetheredCamera_ = null;
+
+		#endregion private hooks
+
+		#region private data 
 
 		private FlowZone_Linear currentFlowZone_ = null;
 		public FlowZone_Linear currentFlowZone
@@ -29,28 +82,20 @@ namespace RJWard.Tube.Player
 			get { return currentFlowZone_; }
 		}
 
-		public float speed;
-
 		private bool shouldLogNoSpeedExcess_ = true;
 
-		public static readonly bool DEBUG_FORCE = false;
-
-		bool isBallRolling_ = false;
+		private bool isBallRolling_ = false;
 
 		private float tillRollingSoundStop = -1f;
-		public float rollingSoundStopDelay = 0.2f;
 
-		private CamTether camTether_ = null;
-		private TetheredCamera tetheredCamera_ = null;
-
-		public GameObject camTetherPrefab;
-		public GameObject tetheredCameraPrefab;
-		public GameObject sparksPrefab;
-
-		public GameObject controlPointer;
-
-//		private bool showDebugObjects_ = true;
 		private bool showControlMovementMarker_ = true;
+
+		private Vector3 currentForce_ = Vector3.zero;
+		private Vector3 currentControlForce_ = Vector3.zero;
+		private Vector3 currentFlowForce_ = Vector3.zero;
+
+
+		#endregion private data 
 
 		public void HandleBallRolling( bool on )
 		{ 
@@ -72,9 +117,6 @@ namespace RJWard.Tube.Player
 			}
 		}
 
-		private float tillSparksStop = -1f;
-		public float sparksStopTime = 0.5f;
-
 		public void StartGame(Tube t)
 		{
 			InitialiseAt( t.FirstSpinePoint( ).transform );
@@ -86,16 +128,6 @@ namespace RJWard.Tube.Player
 			InitialiseAtStart( );
 			camTether_.Init( this, tetheredCamera_ );
 		}
-
-		/*
-		public void ToggleDebugObjects()
-		{
-			showDebugObjects_ = !showDebugObjects_;
-			if (tetheredCamera_ != null)
-			{
-				DebugManager.ToggleDebugObjects( tetheredCamera_.cachedCamera);
-			}
-		}*/
 
 		public void ToggleShowControlMarker()
 		{
@@ -143,10 +175,6 @@ namespace RJWard.Tube.Player
 			}
 		}
 
-		private Vector3 currentForce_ = Vector3.zero;
-		private Vector3 currentControlForce_ = Vector3.zero;
-		private Vector3 currentFlowForce_ = Vector3.zero;
-
 		public bool UpdateDirection(ref Vector3 dir)
 		{
 			bool success = false;
@@ -155,16 +183,6 @@ namespace RJWard.Tube.Player
 				dir = -1f * currentFlowZone_.directionAtPosition( cachedTransform.position );
 			}
 			return success;
-		}
-
-		public Rigidbody body
-		{
-			get { return body_; }
-		}
-
-		public Transform cachedTransform
-		{
-			get { return cachedTransform_; }
 		}
 
 		private void Awake()
@@ -191,14 +209,10 @@ namespace RJWard.Tube.Player
 //			showDebugObjects_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId );
 			showControlMovementMarker_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showControlForceMarkerSettingId);
 
-			controlPointer.SetActive( false );
-
+			controlPointer.Init( this );
+			
 			MessageBus.instance.toggleControlMarkersAction += ToggleShowControlMarker;
 		}
-
-		public float camTargetDistance = 5f;
-
-		private static readonly bool DEBUG_SPARKS = false;
 
 		public void Update()
 		{
@@ -237,21 +251,20 @@ namespace RJWard.Tube.Player
 					float distance = controlMarkerRange.x + Mathf.Lerp( 0, controlMarkerRange.y- controlMarkerRange.x, currentControlForce_.magnitude );
 					
 					Vector3 pos = cachedTransform_.position - direction * distance;
-					controlPointer.transform.position = pos;
-					controlPointer.SetActive( true );
+
+					controlPointer.UpdatePosition( pos );
+					controlPointer.gameObject.SetActive( true );
                 }
 				else
 				{
-					controlPointer.SetActive( false );
+					controlPointer.gameObject.SetActive( false );
 				}
 			}
 			else
 			{
-				controlPointer.SetActive( false );
+				controlPointer.gameObject.SetActive( false );
 			}
 		}
-
-		public Vector2 controlMarkerRange = new Vector2( 0.25f, 1f );
 
 		public void InitialiseAtStart( )
 		{
@@ -268,8 +281,6 @@ namespace RJWard.Tube.Player
 
 			body_.velocity = Vector3.zero;
 		}
-
-		public int maxSpinePointsToGap = 10;
 
 		private void OnTriggerEnter( Collider other )
 		{
