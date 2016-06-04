@@ -5,6 +5,7 @@ using RJWard.Core.UI.Extensions;
 public class PlayerControlPanel : MonoBehaviour
 {
 	static private readonly bool DEBUG_CONTROLS = true;
+	static private readonly bool DEBUG_TOUCH = false;
 
 	#region inspector hooks
 
@@ -61,7 +62,7 @@ public class PlayerControlPanel : MonoBehaviour
 			if (RectTransformUtility.ScreenPointToLocalPointInRectangle(cachedRT_, touch.position, null, out v2))
 			{
 				v2.y += halfDims_.y;
-				if (DEBUG_CONTROLS)
+				if (DEBUG_TOUCH)
 				{
 					Debug.Log( "Touch " + i + " at " + touch.position + " ==>" + v2 + ", phase = " + touch.phase );
 				}
@@ -83,23 +84,21 @@ public class PlayerControlPanel : MonoBehaviour
 					case TouchPhase.Moved:
 						{
 							if (isCentreButtonActive( ))
-							{								
-//								if (IsTouchInCentreButton( v2 ))
-								{
-									if (bTouchOutsideArea)
-									{
-										SetCentreButtonActive( false );
-									}
-									else
-									{
-										centreButtonRT_.anchoredPosition = v2;
-									}
-								}
-								/*
-								else
+							{
+								if (bTouchOutsideArea)
 								{
 									SetCentreButtonActive( false );
-								}*/
+								}
+								else
+								{
+									centreButtonRT_.anchoredPosition = v2;
+									Vector2 force = centreButtonRT_.anchoredPosition / halfDims_.x;
+									GameManager.Instance.SetControlForce( force );
+									if (DEBUG_CONTROLS)
+									{
+										Debug.Log( "Force set to " + force );
+									}
+								}
 							}
 							break;
 						}
@@ -135,6 +134,11 @@ public class PlayerControlPanel : MonoBehaviour
 			}
 			else
 			{
+				GameManager.Instance.SetControlForce( Vector2.zero );
+				if (DEBUG_CONTROLS)
+				{
+					Debug.Log( "Force set to zero");
+				}
 				StartCoroutine( ReturnCentreButtonToOriginAndDeactivate( ) );
 			}
 		}

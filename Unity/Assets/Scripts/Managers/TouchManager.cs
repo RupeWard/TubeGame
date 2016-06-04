@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TouchManager : RJWard.Core.Singleton.SingletonSceneLifetime<TouchManager>
 {
-	public static readonly bool DEBUG_TOUCHES = true;
+	public static readonly bool DEBUG_TOUCHES = false;
 
 	private int numTouches_ = 0;
 
@@ -12,7 +12,7 @@ public class TouchManager : RJWard.Core.Singleton.SingletonSceneLifetime<TouchMa
 	private void Update()
 	{
 		int newNumTouches = Input.touchCount;
-        if (newNumTouches != numTouches_)
+		if (newNumTouches != numTouches_)
 		{
 			if (DEBUG_TOUCHES)
 			{
@@ -22,7 +22,10 @@ public class TouchManager : RJWard.Core.Singleton.SingletonSceneLifetime<TouchMa
 		}
 		else
 		{
-//			Debug.Log( "Still "+numTouches_+" touches");
+			if (DEBUG_TOUCHES)
+			{
+				//			Debug.Log( "Still "+numTouches_+" touches");
+			}
 		}
 
 		if (onTouches != null)
