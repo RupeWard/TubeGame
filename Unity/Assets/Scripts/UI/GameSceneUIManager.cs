@@ -82,6 +82,11 @@ namespace RJWard.Tube.UI
 			MessageBus.instance.dispatchToggleDebugObjects( );
 		}
 
+		public void HandleControlMarkersButton()
+		{
+			MessageBus.instance.dispatchToggleControlMarkers( );
+		}
+
 		public void HandleFPSButton( )
 		{
 			bool currentSetting = SettingsStore.retrieveSetting<bool>( SettingsIds.showFPSId );

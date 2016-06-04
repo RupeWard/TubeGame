@@ -48,5 +48,15 @@ public partial class MessageBus : MonoBehaviour
 			toggleDebugObjectsAction( );
 		}
 	}
+
+	public System.Action toggleControlMarkersAction;
+	public void dispatchToggleControlMarkers( )
+	{
+		if (toggleControlMarkersAction != null)
+		{
+			toggleControlMarkersAction( );
+		}
+	}
+
 }
 

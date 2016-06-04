@@ -49,7 +49,8 @@ namespace RJWard.Tube.Player
 
 		public GameObject controlPointer;
 
-		private bool showDebugObjects_ = true;
+//		private bool showDebugObjects_ = true;
+		private bool showControlMovementMarker_ = true;
 
 		public void HandleBallRolling( bool on )
 		{ 
@@ -86,6 +87,7 @@ namespace RJWard.Tube.Player
 			camTether_.Init( this, tetheredCamera_ );
 		}
 
+		/*
 		public void ToggleDebugObjects()
 		{
 			showDebugObjects_ = !showDebugObjects_;
@@ -93,6 +95,12 @@ namespace RJWard.Tube.Player
 			{
 				DebugManager.ToggleDebugObjects( tetheredCamera_.cachedCamera);
 			}
+		}*/
+
+		public void ToggleShowControlMarker()
+		{
+			showControlMovementMarker_ = !showControlMovementMarker_;
+			SettingsStore.storeSetting( SettingsIds.showControlForceMarkerSettingId, showControlMovementMarker_ );
 		}
 
 		private void FixedUpdate()
@@ -180,9 +188,12 @@ namespace RJWard.Tube.Player
 				sparks_ = GameObject.Instantiate<GameObject>( sparksPrefab ).GetComponent<ParticleSystem>( );
 				sparks_.gameObject.SetActive( true );
 			}
-			showDebugObjects_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId );
+//			showDebugObjects_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId );
+			showControlMovementMarker_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showControlForceMarkerSettingId);
 
 			controlPointer.SetActive( false );
+
+			MessageBus.instance.toggleControlMarkersAction += ToggleShowControlMarker;
 		}
 
 		public float camTargetDistance = 5f;
@@ -218,7 +229,7 @@ namespace RJWard.Tube.Player
 					audioSource_.Stop( );
 				}
 			}
-			if (showDebugObjects_)
+			if (showControlMovementMarker_)
 			{
 				if (currentControlForce_.sqrMagnitude > 0f)
 				{
