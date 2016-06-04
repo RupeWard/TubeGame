@@ -233,7 +233,10 @@ namespace RJWard.Tube.Player
 			{
 				if (currentControlForce_.sqrMagnitude > 0f)
 				{
-					Vector3 pos = cachedTransform_.position + currentControlForce_.normalized;
+					Vector3 direction = currentControlForce_.normalized;
+					float distance = controlMarkerRange.x + Mathf.Lerp( 0, controlMarkerRange.y- controlMarkerRange.x, currentControlForce_.magnitude );
+					
+					Vector3 pos = cachedTransform_.position - direction * distance;
 					controlPointer.transform.position = pos;
 					controlPointer.SetActive( true );
                 }
@@ -247,6 +250,8 @@ namespace RJWard.Tube.Player
 				controlPointer.SetActive( false );
 			}
 		}
+
+		public Vector2 controlMarkerRange = new Vector2( 0.25f, 1f );
 
 		public void InitialiseAtStart( )
 		{
