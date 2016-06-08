@@ -134,9 +134,21 @@ namespace RJWard.Tube
 			for (int i = 1; i < settings.numHoops; i++)
 			{
 				Vector3 pos = previous.position + direction * settings.separation;
-				float radD = UnityEngine.Random.Range( -1f * settings.maxRadD, 1f * settings.maxRadD );
+				float radD = 0f;
+
+				if (radius < settings.radRange.x)
+				{
+					radD = settings.maxRadD;
+				}
+				else if (radius > settings.radRange.y)
+				{
+					radD = -1f * settings.maxRadD;
+				}
+				else
+				{
+					radD = UnityEngine.Random.Range( -1f * settings.maxRadD, 1f * settings.maxRadD );
+				}
 				radius += radD;
-				radius = Mathf.Clamp( radius, settings.radRange.x, settings.radRange.y );
 
 				HoopDefinition_Circular hdcnew = new HoopDefinition_Circular( pos, null, settings.numHoopPoints, radius );
 				defn.AddHoopDefn( hdcnew );
