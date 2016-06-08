@@ -26,6 +26,10 @@ namespace RJWard.Tube.UI
 		public UnityEngine.UI.Image fpsButtonImage;
 		public UnityEngine.UI.Image controlForceMarkerButtonImage;
 
+		public UnityEngine.UI.Text speedMultButtonText;
+
+		public FloatSettingPanel floatSettingPanel;
+
 		#endregion inspector hooks
 
 		#region inspector data
@@ -59,7 +63,6 @@ namespace RJWard.Tube.UI
 			}
 		}
 
-
 		protected override void PostAwake( )
 		{
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
@@ -87,6 +90,24 @@ namespace RJWard.Tube.UI
 		private void HandleGamePaused(bool paused)
 		{
 			playButtonText.text = (paused) ? ("Play") : ("Pause");
+			if (!paused )
+			{
+				SetSpeedMultText( );
+			}
+		}
+
+		private void SetSpeedMultText()
+		{
+			string text = "Speed Mult: ";
+			if (GameManager.Instance.player != null)
+			{
+				text += GameManager.Instance.player.speed.ToString( );
+			}
+			else
+			{
+				text += "???";
+			}
+			speedMultButtonText.text = text;
 		}
 
 		private void Start()
@@ -179,7 +200,21 @@ namespace RJWard.Tube.UI
 			GameManager.Instance.SetControlForce( Vector2.zero );
 		}
 
+		public void HandleSpeedMultButtonClicked()
+		{
+			floatSettingPanel.Init( "Speed multiplier", GameManager.Instance.player.speed, new Vector2( 0f, 100f ), OnSpeedMultChanged );
+		}
+
 		#endregion button handlers
 
+		#region event handlers
+
+		public void OnSpeedMultChanged(float f)
+		{
+			GameManager.Instance.player.speed = f;
+			SetSpeedMultText( );
+		}
+
+		#endregion event handlers
 	}
 }

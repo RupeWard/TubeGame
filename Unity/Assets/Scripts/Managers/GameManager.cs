@@ -253,6 +253,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 			}
 			StartGame( );
 			MessageBus.instance.dispatchGamePaused( false );
+			MessageBus.instance.dispatchGameStarted( );
 		}
 	}
 	#endregion game flow
@@ -277,6 +278,15 @@ public partial class MessageBus : MonoBehaviour
 		if (gamePauseAction != null)
 		{
 			gamePauseAction( b );
+		}
+	}
+
+	public System.Action gameStartAction;
+	public void dispatchGameStarted( )
+	{
+		if (gameStartAction != null)
+		{
+			gameStartAction(  );
 		}
 	}
 }
