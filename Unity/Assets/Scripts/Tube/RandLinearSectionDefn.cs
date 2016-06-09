@@ -18,9 +18,28 @@ namespace RJWard.Tube
 		public int numHoopPoints = 10;
 		public HoopDefinition_Explicit firstHoop = null;
 
-		public static RandLinearSectionDefn Clone(RandLinearSectionDefn other)
+		public RandLinearSectionDefn( )
 		{
-			return ObjectCopier.Clone<RandLinearSectionDefn>( other );
+
+		}
+
+        public RandLinearSectionDefn ( RandLinearSectionDefn other )
+		{
+			this.CopyValuesFrom( other );
+		}
+
+		public void CopyValuesFrom(RandLinearSectionDefn other)
+		{
+			numSections = other.numSections;
+			sectionSeparation = other.sectionSeparation;
+			numHoopsPerSection = other.numHoopsPerSection;
+			xAngleChangeRange = other.xAngleChangeRange;
+			yAngleChangeRange = other.yAngleChangeRange;
+			initialRad = other.initialRad;
+			radRange = other.radRange;
+			maxRadD = other.maxRadD;
+			numHoopPoints = other.numHoopPoints;
+
 		}
 
 		public void DebugDescribe( System.Text.StringBuilder sb )

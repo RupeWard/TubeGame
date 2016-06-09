@@ -29,6 +29,7 @@ namespace RJWard.Tube.UI
 		public UnityEngine.UI.Text speedMultButtonText;
 
 		public FloatSettingPanel floatSettingPanel;
+		public RandLinearSectionDefnSettingPanel randLinearTubeDefnSettingPanel;
 
 		#endregion inspector hooks
 
@@ -79,12 +80,21 @@ namespace RJWard.Tube.UI
 			bottomPanelRT.SetHeight( mainCanvasRT_.GetHeight( ) - viewPortRT.GetHeight( ) );
 
 			MessageBus.instance.gamePauseAction += HandleGamePaused;
+			MessageBus.instance.gameStartAction += HandleGameStarted;
 
 			SetButtonColourById( debugObjectsButtonImage, SettingsIds.showDebugObjectsSettingId );
 			SetButtonColourById( controlForceMarkerButtonImage, SettingsIds.showControlForceMarkerSettingId );
 			SetButtonColourById( fpsButtonImage, SettingsIds.showFPSId );
 
+			playButtonText.text = "Start";
+
 			settingsPanel.SetActive( false );
+		}
+
+		private void HandleGameStarted(  )
+		{
+			playButtonText.text = "Pause";
+			SetSpeedMultText( );
 		}
 
 		private void HandleGamePaused(bool paused)
@@ -158,6 +168,51 @@ namespace RJWard.Tube.UI
 			SettingsStore.storeSetting( SettingsIds.showFPSId, newSetting );
 			MessageBus.instance.dispatchOnShowFPSChanged( newSetting);
 			SetButtonColour( fpsButtonImage, newSetting );
+		}
+
+		public void HandleTubeDefnButton()
+		{
+			Game_Constant game = GameManager.Instance.GetGame<Game_Constant>( );
+			if (game != null)
+			{
+				randLinearTubeDefnSettingPanel.Init( "Linear Tube Defn",
+					game.sectionDefn,
+					HandleTubeDefnChanged );
+			}
+			else
+			{
+				Game_Base gameb = GameManager.Instance.GetGame<Game_Base>( );
+				if (gameb != null)
+				{
+					Debug.LogWarning( "Game is of unhandled type '" + gameb.GetType( ).ToString( ) + "'" );
+                }
+				else
+				{
+					Debug.LogWarning( "Game is null!" );
+                }
+			}
+		}
+
+		public void HandleTubeDefnChanged(RandLinearSectionDefn newdefn)
+		{
+			Game_Constant game = GameManager.Instance.GetGame<Game_Constant>( );
+			if (game != null)
+			{
+				game.sectionDefn.CopyValuesFrom( newdefn );
+			}
+			else
+			{
+				Game_Base gameb = GameManager.Instance.GetGame<Game_Base>( );
+				if (gameb != null)
+				{
+					Debug.LogWarning( "Game is of unhandled type '" + gameb.GetType( ).ToString( ) + "'" );
+				}
+				else
+				{
+					Debug.LogWarning( "Game is null!" );
+				}
+			}
+
 		}
 
 		public void HandleLeftButtonPressed( )

@@ -5,11 +5,11 @@ namespace RJWard.Tube
 {
 	public class Game_Constant : Game_Base
 	{
-		private RandLinearSectionDefn sectionDefn_ = new RandLinearSectionDefn( );
-
+		public RandLinearSectionDefn sectionDefn = new RandLinearSectionDefn( );
+		
 		public override RandLinearSectionDefn GetNextTubeSectionDefn(  )
 		{
-			return sectionDefn_;
+			return sectionDefn;
 		}
 
 		public override void Reset( )
@@ -18,7 +18,7 @@ namespace RJWard.Tube
 
 		public Game_Constant(RandLinearSectionDefn sd )
 		{
-			sectionDefn_ = sd;
+			sectionDefn = sd;
 		}
 	}
 }

@@ -41,15 +41,15 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 	public void Init( string title, RJWard.Tube.RandLinearSectionDefn current, System.Action<RJWard.Tube.RandLinearSectionDefn> changeAction)
 	{
 		titleText.text = title;
-		oldSetting_ = current;
-		currentSetting_ = current;
+		oldSetting_ = new RJWard.Tube.RandLinearSectionDefn( current);
+		currentSetting_ = new RJWard.Tube.RandLinearSectionDefn( current );
 
 		onValueChangedAction = changeAction;
 	
 		messageText.text = string.Empty;
 		messageText.gameObject.SetActive( false );
 
-		SetValue( oldSetting_ );
+		SetValue( currentSetting_ );
 
 		gameObject.SetActive( true );
 	}
@@ -69,6 +69,7 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 	public void OnNumSectionsChanged(int i)
 	{
 		currentSetting_.numSections = i;
+		SetValue( currentSetting_ );
 		onValueChangedAction( currentSetting_);
 	}
 

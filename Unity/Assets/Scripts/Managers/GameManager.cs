@@ -29,6 +29,11 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 	private Rect viewPort_;
 
 	private RJWard.Tube.Game_Base game_ = null;
+	public T GetGame<T>( ) where T : RJWard.Tube.Game_Base
+	{
+		return game_ as T;
+	}
+
 	private float startTime_ = 0f;
 	private bool isPlaying_ = false;
 	private float storedTimeScale_ = 0f;
@@ -252,7 +257,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 				Debug.Log( "PlayOrPause when not playing" );
 			}
 			StartGame( );
-			MessageBus.instance.dispatchGamePaused( false );
+//			MessageBus.instance.dispatchGamePaused( false );
 			MessageBus.instance.dispatchGameStarted( );
 		}
 	}
