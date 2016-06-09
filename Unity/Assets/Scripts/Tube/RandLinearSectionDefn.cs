@@ -16,6 +16,17 @@ namespace RJWard.Tube
 		public Vector2 radRange = new Vector2( 0.5f, 3f );
 		public float maxRadD = 0.5f;
 		public int numHoopPoints = 10;
+
+		public bool allowNumHoopPointsChange = false;
+		public void SetNumHoopPoints(int i)
+		{
+			if (allowNumHoopPointsChange == false)
+			{
+				throw new System.InvalidOperationException( "Can't set numHoopPoints!" );
+			}
+			numHoopPoints = i;
+		}
+
 		public HoopDefinition_Explicit firstHoop = null;
 
 		public RandLinearSectionDefn( )

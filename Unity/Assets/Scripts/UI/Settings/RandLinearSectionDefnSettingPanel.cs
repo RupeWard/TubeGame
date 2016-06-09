@@ -13,6 +13,16 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 	public IntSettingPanel intSettingPanel;
 
 	public UnityEngine.UI.Text numSectionsButtonText;
+	public UnityEngine.UI.Text sectionSeparationButtonText;
+	public UnityEngine.UI.Text numHoopsPerSectionButtonText;
+	public UnityEngine.UI.Text xAngleChangeRangeButtonText;
+	public UnityEngine.UI.Text yAngleChangeRangeButtonText;
+	public UnityEngine.UI.Text initialRadButtonText;
+	public UnityEngine.UI.Text radRangeButtonText;
+	public UnityEngine.UI.Text maxRadDButtonText;
+	public UnityEngine.UI.Text numHoopPointsButtonText;
+
+	public UnityEngine.UI.Button numHoopPointsButton;
 
 	#endregion inspector hooks
 
@@ -51,19 +61,28 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 
 		SetValue( currentSetting_ );
 
+		numHoopPointsButton.enabled = current.allowNumHoopPointsChange;
 		gameObject.SetActive( true );
 	}
 
 	private void SetValue( RJWard.Tube.RandLinearSectionDefn defn)
 	{
 		numSectionsButtonText.text = "Num Sections: " + defn.numSections;
+		sectionSeparationButtonText.text = "Separation: " + defn.sectionSeparation;
+		numHoopsPerSectionButtonText.text = "Hoopes per: " + defn.numHoopsPerSection;
+		xAngleChangeRangeButtonText.text = "XD: " + defn.xAngleChangeRange.ToString( );
+		yAngleChangeRangeButtonText.text = "YD: " + defn.yAngleChangeRange.ToString( );
+		initialRadButtonText.text = "Rad0: " + defn.initialRad.ToString( );
+		radRangeButtonText.text = "Rad Range: " + defn.radRange.ToString( );
+		maxRadDButtonText.text = "Max Rad D: " + defn.maxRadD.ToString( );
+		numHoopPointsButtonText.text = "Hoop Points: " + defn.numHoopPoints;
 	}
 
 	#region handlers
 
 	public void OnNumSectionsButtonClicked()
 	{
-		intSettingPanel.Init( "Num Sections", currentSetting_.numSections, new int[] { 0, int.MaxValue }, OnNumSectionsChanged );
+		intSettingPanel.Init( "Num Sections", currentSetting_.numSections, new int[] { 1, int.MaxValue }, OnNumSectionsChanged );
 	}
 
 	public void OnNumSectionsChanged(int i)
@@ -72,6 +91,107 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 		SetValue( currentSetting_ );
 		onValueChangedAction( currentSetting_);
 	}
+
+	public void OnSectionSeparationButtonClicked( )
+	{
+		floatSettingPanel.Init( "Section Separation", currentSetting_.sectionSeparation, 
+			new Vector2(0.1f, float.MaxValue), OnSectionSeparationChanged );
+	}
+
+	public void OnSectionSeparationChanged( float f )
+	{
+		currentSetting_.sectionSeparation = f;
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+	public void OnNumHoopsPerSectionButtonClicked( )
+	{
+		intSettingPanel.Init( "Num Hoops Per Section", currentSetting_.numHoopsPerSection, new int[] { 1, int.MaxValue }, OnNumHoopsPerSectionChanged);
+	}
+
+	public void OnNumHoopsPerSectionChanged( int i )
+	{
+		currentSetting_.numHoopsPerSection = i;
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+	public void OnXAngleChangeRangeButtonClicked( )
+	{
+		vector2SettingPanel.Init( "X Angle change range", currentSetting_.xAngleChangeRange, new Vector2(-90f, 90f), OnXAngleChangeRangeChanged );
+	}
+
+	public void OnXAngleChangeRangeChanged( Vector2 v )
+	{
+		currentSetting_.xAngleChangeRange = v;
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+	public void OnYAngleChangeRangeButtonClicked( )
+	{
+		vector2SettingPanel.Init( "Y Angle change range", currentSetting_.yAngleChangeRange, new Vector2( -90f, 90f ), OnYAngleChangeRangeChanged );
+	}
+
+	public void OnYAngleChangeRangeChanged( Vector2 v )
+	{
+		currentSetting_.yAngleChangeRange = v;
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+	public void OnInitialRadButtonClicked( )
+	{
+		floatSettingPanel.Init( "Initial Radius", currentSetting_.initialRad,
+			currentSetting_.radRange, OnInitialRadChanged);
+	}
+
+	public void OnInitialRadChanged( float f )
+	{
+		currentSetting_.initialRad = f;
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+	public void OnRadRangeButtonClicked( )
+	{
+		vector2SettingPanel.Init( "Rad range", currentSetting_.radRange, new Vector2( 0.1f, float.MaxValue ), OnRadRangeChanged );
+	}
+
+	public void OnRadRangeChanged( Vector2 v )
+	{
+		currentSetting_.radRange = v;
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+	public void OnMaxRadDButtonClicked( )
+	{
+		floatSettingPanel.Init( "Max Radius change", currentSetting_.maxRadD,
+			currentSetting_.radRange, OnMaxRadDChanged );
+	}
+
+	public void OnMaxRadDChanged( float f )
+	{
+		currentSetting_.maxRadD = f;
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+	public void OnNumHoopsPointsButtonClicked( )
+	{
+		intSettingPanel.Init( "Num Points Per Hoop", currentSetting_.numHoopPoints, new int[] { 3, 40 }, OnNumHoopsPerSectionChanged );
+	}
+
+	public void OnNumHoopPointsChanged( int i )
+	{
+		currentSetting_.SetNumHoopPoints( i);
+		SetValue( currentSetting_ );
+		onValueChangedAction( currentSetting_ );
+	}
+
+
 
 	private void DoChangeAction()
 	{
