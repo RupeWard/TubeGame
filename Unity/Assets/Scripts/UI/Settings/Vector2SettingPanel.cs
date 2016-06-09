@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FloatSettingPanel : MonoBehaviour
+public class Vector2SettingPanel : MonoBehaviour
 {
 	#region inspector hooks
 
-	public UnityEngine.UI.InputField inputField;
+	public UnityEngine.UI.InputField xInputField;
+	public UnityEngine.UI.InputField yInputField;
 	public UnityEngine.UI.Text titleText;
 	public UnityEngine.UI.Text messageText;
 	public UnityEngine.UI.Text minText;
@@ -21,14 +22,14 @@ public class FloatSettingPanel : MonoBehaviour
 
 	#region actions
 
-	public System.Action<float> onValueChangedAction;
+	public System.Action<Vector2> onValueChangedAction;
 	
 	#endregion actions
 
 	#region private data
 
-	private float oldSetting_;
-	private float currentSetting_;
+	private Vector2 oldSetting_;
+	private Vector2 currentSetting_;
 	private Vector2 range_ = new Vector2( float.MinValue, float.MaxValue );
 
 	#endregion private data
@@ -38,7 +39,7 @@ public class FloatSettingPanel : MonoBehaviour
 		gameObject.SetActive( false );
 	}
 
-	public void Init( string title, float current, Vector2 range, System.Action<float> changeAction)
+	public void Init( string title, Vector2 current, Vector2 range, System.Action<Vector2> changeAction)
 	{
 		titleText.text = title;
 		oldSetting_ = current;
@@ -75,9 +76,10 @@ public class FloatSettingPanel : MonoBehaviour
 		gameObject.SetActive( true );
 	}
 
-	private void SetValue(float f)
+	private void SetValue(Vector2 v)
 	{
-		inputField.text = f.ToString( );
+		xInputField.text = v.x.ToString( );
+		yInputField.text = v.y.ToString( );
 	}
 
 	private void SetMessage(string m)
@@ -108,24 +110,24 @@ public class FloatSettingPanel : MonoBehaviour
 
 	#region handlers
 
-	public void OnInputFieldEndEdit(string s)
+	public void OnXInputFieldEndEdit(string s)
 	{
 		float f;
-		if (float.TryParse(inputField.text, out f))
+		if (float.TryParse(xInputField.text, out f))
 		{
 			if (range_.x != float.MinValue && f < range_.x)
 			{
 				SetMessage( "Too low!" );
 				SetValue( currentSetting_);
 			}
-			else if (range_.y != float.MaxValue && f > range_.y)
+			else if (f > currentSetting_.y)
 			{
 				SetMessage( "Too high!" );
 				SetValue( currentSetting_);
 			}
 			else
 			{
-				currentSetting_ = f;
+				currentSetting_.x = f;
 				if (onValueChangedAction != null)
 				{
 					onValueChangedAction( currentSetting_ );
@@ -140,6 +142,39 @@ public class FloatSettingPanel : MonoBehaviour
 		}
 	}
 
+	public void OnYInputFieldEndEdit( string s )
+	{
+		float f;
+		if (float.TryParse( yInputField.text, out f ))
+		{
+			if (range_.y != float.MaxValue && f > range_.y)
+			{
+				SetMessage( "Too High!" );
+				SetValue( currentSetting_);
+			}
+			else if (f < currentSetting_.x)
+			{
+				SetMessage( "Too low!" );
+				SetValue( currentSetting_ );
+			}
+			else
+			{
+				currentSetting_.y = f;
+				if (onValueChangedAction != null)
+				{
+					onValueChangedAction( currentSetting_ );
+				}
+				SetValue( currentSetting_ );
+			}
+		}
+		else
+		{
+			SetMessage( "Not a number!" );
+			SetValue( currentSetting_ );
+		}
+	}
+
+
 	public void onDoneButtonClicked()
 	{
 		gameObject.SetActive( false );
@@ -147,7 +182,6 @@ public class FloatSettingPanel : MonoBehaviour
 
 	public void onResetButtonClicked( )
 	{
-		currentSetting_ = oldSetting_;
 		SetValue( oldSetting_ );
 		if (onValueChangedAction != null)
 		{
@@ -159,9 +193,9 @@ public class FloatSettingPanel : MonoBehaviour
 
 	#region factory
 
-	static public FloatSettingPanel CreateFromRefab()
+	static public Vector2SettingPanel CreateFromRefab()
 	{
-		return Resources.Load<GameObject>( "Prefabs/UI/FloatSettingPanel" ).GetComponent<FloatSettingPanel>( );
+		return Resources.Load<GameObject>( "Prefabs/UI/Vector2SettingPanel" ).GetComponent<Vector2SettingPanel>( );
 	}
 	#endregion factory
 
