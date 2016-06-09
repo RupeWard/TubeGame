@@ -66,7 +66,7 @@ namespace RJWard.Tube
 
 			TubeSectionDefinition_Linear defn = CreateLinearSectionDefn( settings );
 			
-			yield return StartCoroutine( CreateSectionFromDefinitionCR(t, defn, settings.numPerSection, onCreatedAction, sb ) );
+			yield return StartCoroutine( CreateSectionFromDefinitionCR(t, defn, settings.numHoopsPerSection, onCreatedAction, sb ) );
 		}
 
 		public TubeSectionDefinition_Linear CreateLinearSectionDefn( RandLinearSectionDefn settings)
@@ -78,7 +78,7 @@ namespace RJWard.Tube
 				sb = new System.Text.StringBuilder( );
 				sb.Append( "Creating Random Linear Section Defn\n from " ).DebugDescribe( settings );
 			}
-			if (settings.numHoops < 1)
+			if (settings.numSections < 1)
 			{
 				throw new System.InvalidOperationException( "No hoops" );
 			}
@@ -109,9 +109,9 @@ namespace RJWard.Tube
 
 			Vector3 direction = Vector3.forward;
 
-			for (int i = 1; i < settings.numHoops; i++)
+			for (int i = 1; i < (settings.numSections+1); i++) // 1 more hoop than sections
 			{
-				Vector3 pos = previous.position + direction * settings.separation;
+				Vector3 pos = previous.position + direction * settings.sectionSeparation;
 				float radD = 0f;
 
 				if (radius < settings.radRange.x)

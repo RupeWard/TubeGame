@@ -6,8 +6,10 @@ namespace RJWard.Tube
 	[System.Serializable]
 	public class RandLinearSectionDefn : RJWard.Core.IDebugDescribable
 	{
-		public int numHoops = 10;
-		public float separation = 3f;
+		public int numSections = 10;
+		public float sectionSeparation = 3f;
+		public int numHoopsPerSection = 4;
+
 		public Vector2 xAngleChangeRange = new Vector2( -10f, 10f );
 		public Vector2 yAngleChangeRange = new Vector2( -10f, 10f );
 		public float initialRad = 1f;
@@ -15,12 +17,11 @@ namespace RJWard.Tube
 		public float maxRadD = 0.5f;
 		public int numHoopPoints = 10;
 		public HoopDefinition_Explicit firstHoop = null;
-		public int numPerSection = 4;
 
 		public void DebugDescribe( System.Text.StringBuilder sb )
 		{
-			sb.Append( "[RLSD: n=" ).Append( numHoops ).Append( "x" ).Append( numHoopPoints );
-			sb.Append( " s=" ).Append( separation );
+			sb.Append( "[RLSD: n=" ).Append( numSections ).Append( "x" ).Append( numHoopPoints );
+			sb.Append( " s=" ).Append( sectionSeparation );
 			sb.Append( "]" );
 		}
 	}
