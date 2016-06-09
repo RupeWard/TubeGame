@@ -18,6 +18,11 @@ namespace RJWard.Tube
 		public int numHoopPoints = 10;
 		public HoopDefinition_Explicit firstHoop = null;
 
+		public static RandLinearSectionDefn Clone(RandLinearSectionDefn other)
+		{
+			return ObjectCopier.Clone<RandLinearSectionDefn>( other );
+		}
+
 		public void DebugDescribe( System.Text.StringBuilder sb )
 		{
 			sb.Append( "[RLSD: n=" ).Append( numSections ).Append( "x" ).Append( numHoopPoints );
