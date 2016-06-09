@@ -134,7 +134,7 @@ namespace RJWard.Tube
 			GameManager.Instance.ExtendTubeSection( this);
 		}
 
-		public void ExtendSection(TubeFactory.RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )
+		public void ExtendSection(RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )
 		{ 
 			if (!isExtending_)
 			{

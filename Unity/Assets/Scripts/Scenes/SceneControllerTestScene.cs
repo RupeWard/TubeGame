@@ -35,7 +35,7 @@ public class SceneControllerTestScene : SceneController_Base
 
 	public Transform testTubeContainer;
 
-	public TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
+	public RandLinearSectionDefn randLinearSectionDefn;
 
 	private Tube tube_ = null;
 

@@ -14,7 +14,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	#region inspector data
 
-	public RJWard.Tube.TubeFactory.RandLinearSectionDefn randLinearSectionDefn;
+	public RJWard.Tube.RandLinearSectionDefn randLinearSectionDefn;
 	public float FlowZone_defaultWeight = 1f;
 	public float FlowZone_defaultSpeed = 1f;
 
@@ -86,7 +86,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	public void ExtendTubeSection( RJWard.Tube.TubeSection_Linear ts )
 	{
-		RJWard.Tube.TubeFactory.RandLinearSectionDefn sectionDefn = null;
+		RJWard.Tube.RandLinearSectionDefn sectionDefn = null;
 		if (game_ != null)
 		{
 			sectionDefn = game_.GetNextTubeSectionDefn( );

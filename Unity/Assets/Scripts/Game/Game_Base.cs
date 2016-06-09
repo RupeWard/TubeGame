@@ -5,7 +5,7 @@ namespace RJWard.Tube
 {
 	abstract public class Game_Base
 	{
-		abstract public TubeFactory.RandLinearSectionDefn GetNextTubeSectionDefn(  );
+		abstract public RandLinearSectionDefn GetNextTubeSectionDefn(  );
 		abstract public void Reset( );
 	}
 }

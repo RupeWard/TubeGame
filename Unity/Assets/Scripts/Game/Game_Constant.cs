@@ -5,9 +5,9 @@ namespace RJWard.Tube
 {
 	public class Game_Constant : Game_Base
 	{
-		private TubeFactory.RandLinearSectionDefn sectionDefn_ = new TubeFactory.RandLinearSectionDefn( );
+		private RandLinearSectionDefn sectionDefn_ = new RandLinearSectionDefn( );
 
-		public override TubeFactory.RandLinearSectionDefn GetNextTubeSectionDefn(  )
+		public override RandLinearSectionDefn GetNextTubeSectionDefn(  )
 		{
 			return sectionDefn_;
 		}
@@ -16,7 +16,7 @@ namespace RJWard.Tube
 		{
 		}
 
-		public Game_Constant(TubeFactory.RandLinearSectionDefn sd )
+		public Game_Constant(RandLinearSectionDefn sd )
 		{
 			sectionDefn_ = sd;
 		}
