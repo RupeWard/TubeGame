@@ -153,4 +153,12 @@ public class FloatSettingPanel : MonoBehaviour
 
 	#endregion handlers
 
+	#region factory
+
+	static public FloatSettingPanel CreateFromRefab()
+	{
+		return Resources.Load<GameObject>( "Prefabs/UI/FloatSettingPanel" ).GetComponent<FloatSettingPanel>( );
+	}
+	#endregion factory
+
 }
