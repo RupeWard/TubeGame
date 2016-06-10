@@ -36,6 +36,11 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	private float startTime_ = 0f;
 	private bool isPlaying_ = false;
+	public bool isPlaying
+	{
+		get { return isPlaying_; }
+	}
+
 	private float storedTimeScale_ = 0f;
 
 	private bool isPaused_ = false;

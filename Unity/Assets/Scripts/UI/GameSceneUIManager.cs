@@ -140,7 +140,7 @@ namespace RJWard.Tube.UI
 		public void HandleSettingsButtonClicked()
 		{
 			settingsPanel.SetActive( true );
-			if (false == GameManager.Instance.isPaused)
+			if (GameManager.Instance.isPlaying &&  !GameManager.Instance.isPaused)
 			{
 				GameManager.Instance.PlayOrPause( );
 			}
