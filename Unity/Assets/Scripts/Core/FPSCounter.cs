@@ -6,6 +6,7 @@ namespace RJWard.Core.Unity
 	public class FPSCounter : MonoBehaviour
 	{
 		public UnityEngine.UI.Text fpsText;
+		public UnityEngine.UI.Text minMaxText;
 
 		private Queue<float> intervals_ = new Queue<float>( );
 		public int maxIntervals = 100;
@@ -14,10 +15,25 @@ namespace RJWard.Core.Unity
 		public int displayInterval = 40;
 		private int sinceDisplay = 0;
 
+		private Vector2 minMax = new Vector2( float.MaxValue, float.MinValue );
 		private bool active_ = true;
 		public void ToggleActive( )
 		{
 			SetActive( !active_ );
+		}
+
+		public void Reset()
+		{
+			intervals_.Clear();
+			minMax = new Vector2( float.MaxValue, float.MinValue );
+			if (fpsText != null)
+			{
+				fpsText.text = "FPS";
+			}
+			if (minMaxText != null)
+			{
+				minMaxText.text = "(range)";
+			}
 		}
 
 		public void SetActive( bool b)
@@ -42,19 +58,29 @@ namespace RJWard.Core.Unity
 		{
 			SetActive( SettingsStore.retrieveSetting<bool>( SettingsIds.showFPSId ) );
 			MessageBus.instance.onShowFPSChanged += SetActive;
+			MessageBus.instance.onResetFPS += Reset;
 		}
 
 		private void Update( )
 		{
-			if (active_)
+			if (active_ && Time.timeScale > 0f)
 			{
 				intervals_.Enqueue( Time.deltaTime );
 				accum += Time.deltaTime;
 
+				bool doMinMax = (minMax.x == float.MaxValue || minMax.y == float.MinValue);
 				while (intervals_.Count > maxIntervals)
 				{
 					float f = intervals_.Dequeue( );
 					accum -= f;
+					if (!doMinMax && f == minMax.x || f == minMax.y)
+					{
+						doMinMax = true;
+					}
+				}
+				if (doMinMax)
+				{
+					recomputeMinMax( );
 				}
 				if (intervals_.Count >= minIntervals)
 				{
@@ -74,10 +100,34 @@ namespace RJWard.Core.Unity
 						}
 					}
 				}
+				if (doMinMax)
+				{
+					if (minMaxText != null)
+					{
+						int low = Mathf.RoundToInt(1f / minMax.y);
+						int high = Mathf.RoundToInt(1f / minMax.x);
+						
+                        minMaxText.text = "("+  low.ToString() + ", "+ high.ToString( )+")";
+                    }
+				}
 			}
 
 		}
 
+		private void recomputeMinMax()
+		{
+			foreach (float i in intervals_)
+			{
+				if (i < minMax.x)
+				{
+					minMax.x = i;
+				}
+				if (i > minMax.y)
+				{
+					minMax.y = i;
+				}
+			}
+		}
 	}
 
 
@@ -92,6 +142,14 @@ public partial class MessageBus : MonoBehaviour
 		if (onShowFPSChanged != null)
 		{
 			onShowFPSChanged( b );
+		}
+	}
+	public System.Action onResetFPS;
+	public void dispatchResetFPS( )
+	{
+		if (onResetFPS != null)
+		{
+			onResetFPS( );
 		}
 	}
 }

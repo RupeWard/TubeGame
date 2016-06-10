@@ -233,6 +233,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 				numFirstGameSections_ = 0;
 				CreateFirstGameSections( );
 			}
+			MessageBus.instance.dispatchResetFPS( );
 		}
 	}	
 
