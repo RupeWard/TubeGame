@@ -27,6 +27,7 @@ namespace RJWard.Tube.UI
 		public UnityEngine.UI.Image controlForceMarkerButtonImage;
 
 		public UnityEngine.UI.Text speedMultButtonText;
+		public UnityEngine.UI.Text controlMultButtonText;
 
 		public FloatSettingPanel floatSettingPanel;
 		public RandLinearSectionDefnSettingPanel randLinearTubeDefnSettingPanel;
@@ -95,6 +96,7 @@ namespace RJWard.Tube.UI
 		{
 			playButtonText.text = "Pause";
 			SetSpeedMultText( );
+			SetControlMultText( );
 		}
 
 		private void HandleGamePaused(bool paused)
@@ -119,6 +121,14 @@ namespace RJWard.Tube.UI
 			}
 			speedMultButtonText.text = text;
 		}
+
+		private void SetControlMultText( )
+		{
+			string text = "Control Mult: ";
+			text += GameManager.Instance.controlForceMultiplier.ToString( );
+			controlMultButtonText.text = text;
+		}
+
 
 		private void Start()
 		{
@@ -273,15 +283,29 @@ namespace RJWard.Tube.UI
 			floatSettingPanel.Init( "Speed multiplier", GameManager.Instance.player.speed, new Vector2( 0f, 100f ), OnSpeedMultChanged );
 		}
 
+		public void HandleControlMultButtonClicked( )
+		{
+			floatSettingPanel.Init( "Control Force multiplier", GameManager.Instance.controlForceMultiplier, new Vector2( 0f, float.MaxValue ), OnControlMultChanged );
+		}
+
 		#endregion button handlers
 
 		#region event handlers
 
 		public void OnSpeedMultChanged(float f)
 		{
+			SettingsStore.storeSetting( SettingsIds.playerSpeedMultiplierSettingId, f );
 			GameManager.Instance.player.speed = f;
 			SetSpeedMultText( );
 		}
+
+		public void OnControlMultChanged( float f )
+		{
+			SettingsStore.storeSetting( SettingsIds.controlForceMultiplierSettingId, f );
+			GameManager.Instance.controlForceMultiplier = f;
+			SetControlMultText( );
+		}
+
 
 		#endregion event handlers
 	}

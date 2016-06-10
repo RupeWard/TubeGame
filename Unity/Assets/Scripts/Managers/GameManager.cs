@@ -212,6 +212,9 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		tubeGO.transform.position = Vector3.zero;
 		tubeGO.transform.localScale = Vector3.one;
 		tube_ = tubeGO.AddComponent<RJWard.Tube.Tube>( );
+
+		controlForceMultiplier = SettingsStore.retrieveSetting<float>( SettingsIds.controlForceMultiplierSettingId );
+		player.speed = SettingsStore.retrieveSetting<float>( SettingsIds.playerSpeedMultiplierSettingId );
 	}
 
 	public void StartGame()
