@@ -39,6 +39,10 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 	private float storedTimeScale_ = 0f;
 
 	private bool isPaused_ = false;
+	public bool isPaused
+	{
+		get { return isPaused_;  }
+	}
 
 	private int numFirstGameSections_ = 0;
 	private Vector2 currentControlForce_ = Vector2.zero;

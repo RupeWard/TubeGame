@@ -99,7 +99,7 @@ namespace RJWard.Tube.UI
 
 		private void HandleGamePaused(bool paused)
 		{
-			playButtonText.text = (paused) ? ("Play") : ("Pause");
+			playButtonText.text = (paused) ? ("Continue") : ("Pause");
 			if (!paused )
 			{
 				SetSpeedMultText( );
@@ -140,6 +140,10 @@ namespace RJWard.Tube.UI
 		public void HandleSettingsButtonClicked()
 		{
 			settingsPanel.SetActive( true );
+			if (false == GameManager.Instance.isPaused)
+			{
+				GameManager.Instance.PlayOrPause( );
+			}
 		}
 
 		public void HandleSettingsBackButtonClicked( )
