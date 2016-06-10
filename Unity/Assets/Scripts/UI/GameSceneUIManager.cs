@@ -175,12 +175,17 @@ namespace RJWard.Tube.UI
 			Game_Constant game = GameManager.Instance.GetGame<Game_Constant>( );
 			if (game != null)
 			{
-				randLinearTubeDefnSettingPanel.Init( "Linear Tube Defn",
+				randLinearTubeDefnSettingPanel.Init( "Current Linear Tube Defn",
 					game.sectionDefn,
 					HandleTubeDefnChanged );
 			}
 			else
 			{
+				randLinearTubeDefnSettingPanel.Init( "Default Linear Tube Defn",
+					GameManager.Instance.defaultRandLinearSectionDefn,
+					HandleTubeDefnChanged );
+
+				/*
 				Game_Base gameb = GameManager.Instance.GetGame<Game_Base>( );
 				if (gameb != null)
 				{
@@ -190,6 +195,7 @@ namespace RJWard.Tube.UI
 				{
 					Debug.LogWarning( "Game is null!" );
                 }
+				*/
 			}
 		}
 
@@ -202,6 +208,8 @@ namespace RJWard.Tube.UI
 			}
 			else
 			{
+				GameManager.Instance.defaultRandLinearSectionDefn.CopyValuesFrom( newdefn );
+				/*
 				Game_Base gameb = GameManager.Instance.GetGame<Game_Base>( );
 				if (gameb != null)
 				{
@@ -211,6 +219,7 @@ namespace RJWard.Tube.UI
 				{
 					Debug.LogWarning( "Game is null!" );
 				}
+				*/
 			}
 
 		}

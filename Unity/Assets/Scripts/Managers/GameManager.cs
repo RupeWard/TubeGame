@@ -14,7 +14,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	#region inspector data
 
-	public RJWard.Tube.RandLinearSectionDefn randLinearSectionDefn;
+	public RJWard.Tube.RandLinearSectionDefn defaultRandLinearSectionDefn;
 	public float FlowZone_defaultWeight = 1f;
 	public float FlowZone_defaultSpeed = 1f;
 
@@ -99,7 +99,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		else
 		{
 			Debug.LogWarning( "No game object, using default from editor" );
-			sectionDefn = randLinearSectionDefn;
+			sectionDefn = defaultRandLinearSectionDefn;
 		}
 		ts.ExtendSection( sectionDefn, tube_.AddToEnd );
 	}
@@ -155,7 +155,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 					Debug.Log( "Created " + numFirstGameSections_ + " with maxD = " + numSpinePoints + " spine points" );
 				}
 				numFirstGameSections_++;
-				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, randLinearSectionDefn, HandleFirstGameSectionCreated );
+				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, defaultRandLinearSectionDefn, HandleFirstGameSectionCreated );
 			}
 			else
 			{
@@ -213,7 +213,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		}
 		else
 		{
-			game_ = new RJWard.Tube.Game_Constant( randLinearSectionDefn );
+			game_ = new RJWard.Tube.Game_Constant( defaultRandLinearSectionDefn );
 			startTime_ = Time.time;
 			isPlaying_ = true;
 			if (tube_.FirstSection( ) == null)

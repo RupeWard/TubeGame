@@ -69,7 +69,7 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 	{
 		numSectionsButtonText.text = "Num Sections: " + defn.numSections;
 		sectionSeparationButtonText.text = "Separation: " + defn.sectionSeparation;
-		numHoopsPerSectionButtonText.text = "Hoopes per: " + defn.numHoopsPerSection;
+		numHoopsPerSectionButtonText.text = "Hoops per: " + defn.numHoopsPerSection;
 		xAngleChangeRangeButtonText.text = "XD: " + defn.xAngleChangeRange.ToString( );
 		yAngleChangeRangeButtonText.text = "YD: " + defn.yAngleChangeRange.ToString( );
 		initialRadButtonText.text = "Rad0: " + defn.initialRad.ToString( );
@@ -156,7 +156,7 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 
 	public void OnRadRangeButtonClicked( )
 	{
-		vector2SettingPanel.Init( "Rad range", currentSetting_.radRange, new Vector2( 0.1f, float.MaxValue ), OnRadRangeChanged );
+		vector2SettingPanel.Init( "Rad range", currentSetting_.radRange, new Vector2( 0.5f, float.MaxValue ), OnRadRangeChanged );
 	}
 
 	public void OnRadRangeChanged( Vector2 v )
