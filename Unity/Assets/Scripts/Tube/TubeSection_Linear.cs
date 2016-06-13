@@ -697,10 +697,7 @@ namespace RJWard.Tube
 
 		public void DeactivateBuildObjects()
 		{
-			for (int i=0; i<spine_.NumSpinePoints; i++)
-			{
-				spine_.GetSpinePoint( i ).gameObject.SetActive( false );
-			}
+			spine_.buildObjectsContainer.gameObject.SetActive( false );
 		}
 	}
 

@@ -20,6 +20,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	public float controlForceMultiplier = 1f;
 
+	public bool deactivateBuildObjects = true;
 
 	#endregion inspector data
 

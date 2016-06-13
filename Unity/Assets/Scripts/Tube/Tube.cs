@@ -231,8 +231,11 @@ namespace RJWard.Tube
 			RecalculateInterpolatorsLinear( );
 
 			yield return null;
-//			ts.DeactivateBuildObjects( );
-			yield return null;
+			if (GameManager.Instance.deactivateBuildObjects)
+			{
+				ts.DeactivateBuildObjects( );
+				yield return null;
+			}
 
 			if (finishedAction != null)
 			{
