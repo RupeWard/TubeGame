@@ -5,10 +5,31 @@ namespace RJWard.Tube
 {
 	public class Spine_Linear : MonoBehaviour
 	{
+		public Transform buildObjectsContainer = null;
+		public Transform flowZonesContainer = null;
+
 		private TubeSection_Linear tubeSection_ = null;
 		public TubeSection_Linear tubeSection
 		{
 			get { return tubeSection_; }
+		}
+
+		private void Awake()
+		{
+			GameObject go = new GameObject( "BuildObjects" );
+			buildObjectsContainer = go.transform;
+			buildObjectsContainer.parent = this.transform;
+			buildObjectsContainer.position = Vector3.zero;
+			buildObjectsContainer.rotation = Quaternion.identity;
+			buildObjectsContainer.localScale = Vector3.one;
+
+			go = new GameObject( "Flowzones" );
+			flowZonesContainer = go.transform;
+			flowZonesContainer.parent = this.transform;
+			flowZonesContainer.position = Vector3.zero;
+			flowZonesContainer.rotation = Quaternion.identity;
+			flowZonesContainer.localScale = Vector3.one;
+
 		}
 
 		private List< SpinePoint_Linear > spinePoints_ = new List< SpinePoint_Linear >( );
@@ -60,7 +81,7 @@ namespace RJWard.Tube
 				spinePoint.fixRotation(true );
 			}
 			spinePoint.Init( this, pos, null );
-			spGo.transform.parent = this.transform;
+			spGo.transform.parent = buildObjectsContainer;
 			spinePoints_.Add( spinePoint );
 			if (spinePoints_.Count > 1)
 			{

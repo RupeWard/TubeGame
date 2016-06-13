@@ -32,7 +32,7 @@ namespace RJWard.Tube
 			float height = Vector3.Distance( firstSpinePoint_.cachedTransform.position, firstSpinePoint_.nextSpinePoint.cachedTransform.position );
 			float radius = firstSpinePoint_.hoop.GetMaxDistFromCentre( );
 
-			cachedTransform.parent = firstSpinePoint_.cachedTransform.parent;
+			cachedTransform.parent = firstSpinePoint_.spine.flowZonesContainer;
 			cachedTransform.position = firstSpinePoint_.cachedTransform.position;
 			cachedTransform.rotation = firstSpinePoint_.cachedTransform.rotation;
 			cachedTransform.localScale = new Vector3( 2 * radius, 2 * radius, height );
