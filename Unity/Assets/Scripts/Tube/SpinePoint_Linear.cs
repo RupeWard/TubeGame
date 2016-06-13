@@ -14,8 +14,8 @@ namespace RJWard.Tube
 			get { return hoop_; }
 		}
 
-		private FlowZone_Linear flowZone_ = null;
-		public FlowZone_Linear flowZone
+		private FlowZone_LinearBase flowZone_ = null;
+		public FlowZone_LinearBase flowZone
 		{
 			get
 			{
@@ -437,7 +437,7 @@ namespace RJWard.Tube
 				hoop_ = hoopGo.AddComponent<Hoop>( );
 			}
 			hoop_.Init( this );
-			rotationIsDirty_ = true;
+			SetRotationDirty( ) ;
 		}
 
 		public void InitCircular( Spine_Linear sp, Vector3 pos, Vector3? rot, int num, float rad )

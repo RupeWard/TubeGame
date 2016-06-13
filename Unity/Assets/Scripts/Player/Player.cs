@@ -76,8 +76,8 @@ namespace RJWard.Tube.Player
 
 		#region private data 
 
-		private FlowZone_Linear currentFlowZone_ = null;
-		public FlowZone_Linear currentFlowZone
+		private FlowZone_LinearBase currentFlowZone_ = null;
+		public FlowZone_LinearBase currentFlowZone
 		{
 			get { return currentFlowZone_; }
 		}
@@ -288,8 +288,8 @@ namespace RJWard.Tube.Player
 			{
 //				Debug.Log( "TRIGGER ENTER: " + gameObject.name + " " + other.gameObject.name );
 			}
-			
-			FlowZone_Linear newFz = other.gameObject.GetComponent<FlowZone_Linear>( );
+
+			FlowZone_LinearBase newFz = other.gameObject.GetComponent<FlowZone_LinearBase>( );
 			if (newFz != null)
 			{
 				if (newFz != currentFlowZone_)
@@ -319,7 +319,7 @@ namespace RJWard.Tube.Player
 		{
 			if (DEBUG_COLLISIONS)
 			{
-				FlowZone_Linear fz = other.gameObject.GetComponent<FlowZone_Linear>( );
+				FlowZone_LinearBase fz = other.gameObject.GetComponent<FlowZone_LinearBase>( );
 				if (fz != null)
 				{
 					if (fz == currentFlowZone_)

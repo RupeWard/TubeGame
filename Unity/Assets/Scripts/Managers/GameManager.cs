@@ -208,6 +208,10 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	protected override void PostAwake( )
 	{
+		//		Application.targetFrameRate = 60;
+
+		Debug.Log( "GameManager waking." );// TFR = "+Application.targetFrameRate );
+		
 		GameObject tubeGO = new GameObject( "Tube" );
 		tubeGO.transform.position = Vector3.zero;
 		tubeGO.transform.localScale = Vector3.one;

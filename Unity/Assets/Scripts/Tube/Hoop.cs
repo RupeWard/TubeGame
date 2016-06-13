@@ -51,6 +51,20 @@ namespace RJWard.Tube
 			spinePoint_ = sp;
 		}
 
+		public float GetMaxDistFromCentre()
+		{
+			float result = float.MinValue;
+			foreach (HoopPoint hp in hoopPoints_)
+			{
+				float d = Vector3.Distance( hp.cachedTransform.position, spinePoint_.cachedTransform.position );
+				if (d > result)
+				{
+					result = d;
+				}
+			}
+			return result;
+		}
+
 		public HoopPoint AddHoopPoint( Vector3 pos )
 		{
 			int n = hoopPoints_.Count;

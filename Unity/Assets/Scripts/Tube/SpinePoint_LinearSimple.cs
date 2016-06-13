@@ -290,7 +290,7 @@ namespace RJWard.Tube
 				hoop_ = hoopGo.AddComponent<Hoop>( );
 			}
 			hoop_.Init( this );
-			rotationIsDirty_ = true;
+			SetRotationDirty();
 		}
 
 		public void InitCircular( Spine_Linear sp, Vector3 pos, Vector3? rot, int num, float rad )

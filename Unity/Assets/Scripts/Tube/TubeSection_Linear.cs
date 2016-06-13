@@ -506,7 +506,8 @@ namespace RJWard.Tube
 					{
 						debugsb.Append( "\nFlowZone #" ).Append( i );
 					}
-					makeLinearFlowZone( spine_.GetSpinePoint( i ), debugsb );
+					makeLinearFlowZone( spine_.GetSpinePoint( i ), true, debugsb );
+//					makeLinearFlowZone( spine_.GetSpinePoint( i ), false, debugsb );
 				}
 			}
 			isMeshDirty_ = false;
@@ -517,9 +518,12 @@ namespace RJWard.Tube
 			}
 		}
 
-        FlowZone_Linear makeLinearFlowZone( SpinePoint_Linear sp0, System.Text.StringBuilder debugsb)
+
+        FlowZone_LinearBase makeLinearFlowZone( SpinePoint_Linear sp0, bool useBox, System.Text.StringBuilder debugsb)
 		{
-			if (sp0.flowZone != null)
+			FlowZone_LinearBase result = null;
+
+            if (sp0.flowZone != null)
 			{
 				debugsb.Append( " (destroying)" );
 				Debug.LogWarning( "Destroying flowzone" );
@@ -529,157 +533,174 @@ namespace RJWard.Tube
 
 			SpinePoint_Linear sp1 = sp0.nextSpinePoint;
 
-            FlowZone_Linear result = null;
-			GameObject go = new GameObject( "FlowZone" + sp0.gameObject.name );
-			go.layer = FlowZone_Linear.FLOWZONELAYER;
-
-			MeshFilter meshFilter = go.AddComponent<MeshFilter>( );
-			MeshCollider meshCollider = go.AddComponent<MeshCollider>( );
-
-			Mesh mesh = meshFilter.sharedMesh;
-			if (mesh == null)
+			if (useBox)
 			{
-				meshFilter.sharedMesh = new Mesh( );
-				mesh = meshFilter.sharedMesh;
+				result = FlowZone_LinearBox.CreateFromPrefab( );
+				result.Init( sp0 );
 			}
-			mesh.Clear( );
-
-			if (debugsb!=null)
+			else
 			{
-				debugsb.Append( " MM." );
-			}
-			List<Vector3> verts = new List<Vector3>( );
-			List<Vector2> uvs = new List<Vector2>( );
-			List<Vector3> normals = new List<Vector3>( );
+				GameObject go = new GameObject( "FlowZone" + sp0.gameObject.name );
+				go.layer = FlowZone_LinearBase.FLOWZONELAYER;
 
-			// Add spine0 to list
-			verts.Add( sp0.cachedTransform.position - sp0.cachedTransform.forward * TubeFactory.Instance.flowZoneConvexAdjust );
-			uvs.Add( Vector2.zero );
-			Vector3 sp0norm = -1f * sp0.cachedTransform.forward;
-			normals.Add( sp0norm );
+				MeshFilter meshFilter = go.AddComponent<MeshFilter>( );
+				MeshCollider meshCollider = go.AddComponent<MeshCollider>( );
 
-
-			if (debugsb != null)
-			{
-				debugsb.Append( " sp0" );
-			}
-
-			// Add spine1 to list
-			verts.Add( sp1.cachedTransform.position + sp0.cachedTransform.forward * TubeFactory.Instance.flowZoneConvexAdjust );
-			uvs.Add( Vector2.one );
-
-			Vector3 sp1norm = sp1.cachedTransform.forward;
-			normals.Add( sp1norm );
-
-			if (debugsb != null)
-			{
-				debugsb.Append( " sp1" );
-			}
-			
-			// Add hoop1 to list
-			sp0.hoop.ExtractAllVertexInfo( verts, null, null, 0f );
-			for (int i = 0; i <= sp0.hoop.numPoints(); i++)
-			{
-				if (i % 2 == 0)
+				Mesh mesh = meshFilter.sharedMesh;
+				if (mesh == null)
 				{
-					uvs.Add( new Vector2( 1f, 0f ) );
+					meshFilter.sharedMesh = new Mesh( );
+					mesh = meshFilter.sharedMesh;
 				}
-				else
+				mesh.Clear( );
+
+				if (debugsb != null)
 				{
-					uvs.Add( new Vector2( 1f, 1f ) );
+					debugsb.Append( " MM." );
 				}
+				List<Vector3> verts = new List<Vector3>( );
+				List<Vector2> uvs = new List<Vector2>( );
+				List<Vector3> normals = new List<Vector3>( );
+
+				// Add spine0 to list
+				verts.Add( sp0.cachedTransform.position - sp0.cachedTransform.forward * TubeFactory.Instance.flowZoneConvexAdjust );
+				uvs.Add( Vector2.zero );
+				Vector3 sp0norm = -1f * sp0.cachedTransform.forward;
 				normals.Add( sp0norm );
-			}
 
-			if (debugsb != null)
-			{
-				debugsb.Append( " h0" );
-			}
 
-			// Add hoop2 to list
-			sp1.hoop.ExtractAllVertexInfo( verts, null, null, 0f );
-			for (int i = 0; i <= sp1.hoop.numPoints( ); i++)
-			{
-				if (i % 2 == 0)
+				if (debugsb != null)
 				{
-					uvs.Add( new Vector2( 1f, 0f ) );
+					debugsb.Append( " sp0" );
 				}
-				else
-				{
-					uvs.Add( new Vector2( 1f, 1f ) );
-				}
+
+				// Add spine1 to list
+				verts.Add( sp1.cachedTransform.position + sp0.cachedTransform.forward * TubeFactory.Instance.flowZoneConvexAdjust );
+				uvs.Add( Vector2.one );
+
+				Vector3 sp1norm = sp1.cachedTransform.forward;
 				normals.Add( sp1norm );
+
+				if (debugsb != null)
+				{
+					debugsb.Append( " sp1" );
+				}
+
+				// Add hoop1 to list
+				sp0.hoop.ExtractAllVertexInfo( verts, null, null, 0f );
+				for (int i = 0; i <= sp0.hoop.numPoints( ); i++)
+				{
+					if (i % 2 == 0)
+					{
+						uvs.Add( new Vector2( 1f, 0f ) );
+					}
+					else
+					{
+						uvs.Add( new Vector2( 1f, 1f ) );
+					}
+					normals.Add( sp0norm );
+				}
+
+				if (debugsb != null)
+				{
+					debugsb.Append( " h0" );
+				}
+
+				// Add hoop2 to list
+				sp1.hoop.ExtractAllVertexInfo( verts, null, null, 0f );
+				for (int i = 0; i <= sp1.hoop.numPoints( ); i++)
+				{
+					if (i % 2 == 0)
+					{
+						uvs.Add( new Vector2( 1f, 0f ) );
+					}
+					else
+					{
+						uvs.Add( new Vector2( 1f, 1f ) );
+					}
+					normals.Add( sp1norm );
+				}
+
+				if (debugsb != null)
+				{
+					debugsb.Append( " h1" );
+				}
+
+				List<int> triVerts = new List<int>( );
+
+				// Add disc tris spine0
+				sp0.hoop.ExtractDiscTriVerts( triVerts, 0, true );
+
+				if (debugsb != null)
+				{
+					debugsb.Append( " t0" );
+				}
+
+				// Add disc tris spine1
+				sp1.hoop.ExtractDiscTriVerts( triVerts, 1, false );
+
+				if (debugsb != null)
+				{
+					debugsb.Append( " t1" );
+				}
+
+				// Add joining hoops tris
+
+				Hoop.ExtractConnectingTriVerts( sp0.hoop, sp1.hoop, triVerts, false );
+				if (debugsb != null)
+				{
+					debugsb.Append( " wall" );
+				}
+
+				// generate mesh
+				mesh.vertices = verts.ToArray( );
+				mesh.triangles = triVerts.ToArray( );
+				mesh.uv = uvs.ToArray( );
+				mesh.normals = normals.ToArray( );
+
+				mesh.RecalculateBounds( );
+				mesh.Optimize( );
+
+				// reverse normals
+				//			reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
+				//			reverseNormals.Init( Core.ReverseNormals.EState.Inside );
+
+				// set collider mesh
+				meshCollider.convex = true;
+				meshCollider.isTrigger = true;
+				meshCollider.sharedMesh = mesh;
+
+				if (debugsb != null)
+				{
+					debugsb.Append( " MADE MESH" );
+				}
+
+				// Set up flowzone
+				result = go.AddComponent<FlowZone_LinearMesh>( );
+
+				result.Init( sp0 );
+
+				if (debugsb != null)
+				{
+					debugsb.Append( " FZ" );
+				}
+
+				//parentage & position
+				result.transform.parent = sp0.transform.parent;
+				result.transform.position = sp0.transform.position;
+				result.transform.rotation = sp0.transform.rotation;
+
+
 			}
-
-			if (debugsb != null)
-			{
-				debugsb.Append( " h1" );
-			}
-
-			List<int> triVerts = new List<int>( );
-
-			// Add disc tris spine0
-			sp0.hoop.ExtractDiscTriVerts( triVerts, 0, true );
-
-			if (debugsb != null)
-			{
-				debugsb.Append( " t0" );
-			}
-
-			// Add disc tris spine1
-			sp1.hoop.ExtractDiscTriVerts( triVerts, 1, false );
-
-			if (debugsb != null)
-			{
-				debugsb.Append( " t1" );
-			}
-
-			// Add joining hoops tris
-
-			Hoop.ExtractConnectingTriVerts( sp0.hoop, sp1.hoop, triVerts, false);
-			if (debugsb != null)
-			{
-				debugsb.Append( " wall" );
-			}
-
-			// generate mesh
-			mesh.vertices = verts.ToArray( );
-			mesh.triangles = triVerts.ToArray( );
-			mesh.uv = uvs.ToArray( );
-			mesh.normals = normals.ToArray( );
-
-			mesh.RecalculateBounds( );
-			mesh.Optimize( );
-
-			// reverse normals
-			//			reverseNormals = gameObject.AddComponent<RJWard.Core.ReverseNormals>( );
-			//			reverseNormals.Init( Core.ReverseNormals.EState.Inside );
-
-			// set collider mesh
-			meshCollider.convex = true;
-			meshCollider.isTrigger = true;
-			meshCollider.sharedMesh = mesh;
-
-			if (debugsb != null)
-			{
-				debugsb.Append( " MADE MESH" );
-			}
-
-			// Set up flowzone
-			result = go.AddComponent<FlowZone_Linear>( );
-
-			result.Init( sp0 );
-
-			if (debugsb != null)
-			{
-				debugsb.Append( " FZ" );
-			}
-
-			//parentage & position
-			result.transform.parent = sp0.transform;
-
-			
 			return result;
+		}
+
+		public void DeactivateBuildObjects()
+		{
+			for (int i=0; i<spine_.NumSpinePoints; i++)
+			{
+				spine_.GetSpinePoint( i ).gameObject.SetActive( false );
+			}
 		}
 	}
 

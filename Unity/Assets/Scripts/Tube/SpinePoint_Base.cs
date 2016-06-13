@@ -25,6 +25,10 @@ namespace RJWard.Tube
 		{
 			//			if (!fixedRotation_)
 			{
+				if (gameObject.activeSelf == false)
+				{
+//					Debug.LogError( "Setting rot dirty on inactuive spinepoint " + gameObject.name );
+				}
 				rotationIsDirty_ = true;
 			}
 			//			else

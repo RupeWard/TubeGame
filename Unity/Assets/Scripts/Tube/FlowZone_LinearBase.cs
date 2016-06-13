@@ -3,19 +3,32 @@ using System.Collections;
 
 namespace RJWard.Tube
 {
-	public class FlowZone_Linear : MonoBehaviour
+	public abstract class FlowZone_LinearBase : MonoBehaviour
 	{
 		static public readonly int FLOWZONELAYER = 12;
 
-		static readonly bool DEBUG_COLLISIONS = false;
+		static public readonly bool DEBUG_COLLISIONS = false;
 
-		private SpinePoint_Linear firstSpinePoint_;
+		abstract public void Init( SpinePoint_Linear sp );
+
+		private Transform cachedTransform_ = null;
+		public Transform cachedTransform
+		{
+			get { return cachedTransform_; }
+		}
+
+		private void Awake()
+		{
+			cachedTransform_ = transform;
+		}
+
+		protected SpinePoint_Linear firstSpinePoint_;
 		public SpinePoint_Linear firstSpinePoint
 		{
 			get { return firstSpinePoint_; }
 		}
 
-//		private Vector3 directionVector_ = Vector3.zero;
+		//		private Vector3 directionVector_ = Vector3.zero;
 		public Vector3 directionVector
 		{
 			get { return (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized; }
@@ -24,17 +37,17 @@ namespace RJWard.Tube
 		public float weight = 1f;
 		public float speed = 1f;
 
-//		public void HandleDirectionChange()
-//		{
-//			directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
-//		}
+		//		public void HandleDirectionChange()
+		//		{
+		//			directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
+		//		}
 
-		public Vector3 flowAtPosition (Vector3 pos)
+		public Vector3 flowAtPosition( Vector3 pos )
 		{
 			return weight * directionAtPosition( pos );
 		}
 
-		public Vector3 directionAtPosition(Vector3 pos)
+		public Vector3 directionAtPosition( Vector3 pos )
 		{
 			Vector3 result = directionVector;
 
@@ -56,15 +69,15 @@ namespace RJWard.Tube
 					else
 					{
 						Debug.LogWarning( "No Prev flow zone in " + firstSpinePoint_.previousSpinePoint.DebugDescribe( ) +
-							"which is before " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction");
-                    }
+							"which is before " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction" );
+					}
 				}
 				else
 				{
-//					Debug.LogWarning( "No previous spine point when working out flow zone direction" );
+					//					Debug.LogWarning( "No previous spine point when working out flow zone direction" );
 				}
 				Vector3 firstDirection = Vector3.Slerp( directionVector, prevDirection, 0.5f );
-				result = Vector3.Slerp( firstDirection, directionVector, dFraction/0.5f);
+				result = Vector3.Slerp( firstDirection, directionVector, dFraction / 0.5f );
 			}
 			else
 			{
@@ -92,16 +105,6 @@ namespace RJWard.Tube
 
 			return result;
 
-		}
-
-		public void Init( SpinePoint_Linear sp)
-		{
-			sp.flowZone = this;
-			weight = GameManager.Instance.FlowZone_defaultWeight;
-			speed = GameManager.Instance.FlowZone_defaultSpeed;
-
-			firstSpinePoint_ = sp;
-			//directionVector_ = (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized;
 		}
 
 		private void OnTriggerEnter( Collider other )
@@ -136,6 +139,7 @@ namespace RJWard.Tube
 			}
 		}
 
-	}
 
+	}
 }
+

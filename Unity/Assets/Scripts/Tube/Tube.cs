@@ -229,6 +229,11 @@ namespace RJWard.Tube
 			tubeSections_.Add( ts );
 			yield return null;
 			RecalculateInterpolatorsLinear( );
+
+			yield return null;
+//			ts.DeactivateBuildObjects( );
+			yield return null;
+
 			if (finishedAction != null)
 			{
 				finishedAction( );
