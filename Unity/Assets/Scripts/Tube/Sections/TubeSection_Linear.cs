@@ -192,7 +192,7 @@ namespace RJWard.Tube
 				if (hdb != null)
 				{
 					spine_.AddSpinePoint( hdb, i==0 );
-//					yield return null;
+					yield return null;
 					if (DEBUG_CIRCULAR)
 					{
 						debugSb.Append( "\n  " ).Append( i ).Append( ": " ).DebugDescribe( hdb );
@@ -288,7 +288,7 @@ namespace RJWard.Tube
 
 				List<RJWard.Core.CatMullRom3D> spinePointInterpolators = new List<Core.CatMullRom3D>( );
 				List<Vector3> spinePointPositions = RJWard.Core.CatMullRom3D.InterpolateFixedNumCentripetal( oldSpinePtPosns, numPerSection, spinePointInterpolators );
-				// yield return null;
+				yield return null;
 
 				if (spinePointPositions.Count != (spinePointInterpolators.Count * numPerSection +1))
 				{
@@ -331,6 +331,7 @@ namespace RJWard.Tube
 						}
 					}
 				}
+				yield return null;
 
 				if (!abort)
 				{
@@ -389,6 +390,7 @@ namespace RJWard.Tube
 							}
 						}
 						spinePoint.hoop.CheckCentreing( );
+						yield return null;
 					}
 				}
 			}
