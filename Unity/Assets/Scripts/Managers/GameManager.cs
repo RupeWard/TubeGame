@@ -14,6 +14,8 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	#region inspector data
 
+	public int maxTubeSections = 6;
+
 	public RJWard.Tube.RandLinearSectionDefn defaultRandLinearSectionDefn;
 	public float FlowZone_defaultWeight = 1f;
 	public float FlowZone_defaultSpeed = 1f;

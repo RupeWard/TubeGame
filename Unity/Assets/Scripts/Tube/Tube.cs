@@ -11,8 +11,6 @@ namespace RJWard.Tube
 
 		public List<TubeSection_Linear> tubeSections_ = new List<TubeSection_Linear>();
 
-		public int maxTubeSections_ = 6;
-
 		private GameObject tubeEnd_ = null;
 
 		public void DeleteAllSections()
@@ -323,7 +321,7 @@ namespace RJWard.Tube
 
 		void Update( )
 		{
-			PruneFront( maxTubeSections_ );
+			PruneFront( GameManager.Instance.maxTubeSections);
 		}
 	}
 
