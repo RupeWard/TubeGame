@@ -208,9 +208,12 @@ namespace RJWard.Tube
 						{
 							tubeEnd_ = TubeFactory.Instance.CreateTubeEnd( );
 						}
-						tubeEnd_.transform.parent = LastHoop( ).spinePoint.cachedTransform;
-						tubeEnd_.transform.localPosition = Vector3.zero;
-						tubeEnd_.transform.localRotation = Quaternion.identity;
+						tubeEnd_.transform.parent = transform;
+						tubeEnd_.transform.position = ts.LastHoop( ).spinePoint.cachedTransform.position;
+						tubeEnd_.transform.localRotation = ts.LastHoop( ).spinePoint.cachedTransform.rotation;
+						float radius = ts.LastHoop( ).GetMaxDistFromCentre( );
+						float side = 2.1f * radius;
+						tubeEnd_.transform.localScale = new Vector3( side, side, 1f );
 
 						//						Debug.Log( "Rotated by " + lastHoopOfPrevious.transform.rotation +" to give "+ ts.transform.rotation );
 						//						ts.transform.rotation = Quaternion.Euler(-1f*firstHoopRot) * ts.transform.rotation;
