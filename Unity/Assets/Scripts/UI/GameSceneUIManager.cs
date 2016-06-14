@@ -143,9 +143,12 @@ namespace RJWard.Tube.UI
 		private void Start()
 		{
 			GameManager.Instance.SetViewPort( viewPort_ );
+			SetSpeedMultText( );
+			SetControlMultText( );
+
 		}
 
-#region button handlers
+		#region button handlers
 
 		public void HandleBackButtonClicked( )
 		{
