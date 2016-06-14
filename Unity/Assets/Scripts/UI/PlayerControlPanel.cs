@@ -169,35 +169,39 @@ public class PlayerControlPanel : MonoBehaviour
 
 	public void HandleIdle( Touch[] touches )
 	{
-		Touch touch = touches[0];
-		Vector2 v2;
-		if (RectTransformUtility.ScreenPointToLocalPointInRectangle( cachedRT_, touch.position, null, out v2 ))
+		if (touches.Length == 1)
 		{
-			v2.y += halfDims_.y;
-			if (DEBUG_TOUCH)
+			Touch touch = touches[0];
+			Vector2 v2;
+			if (RectTransformUtility.ScreenPointToLocalPointInRectangle( cachedRT_, touch.position, null, out v2 ))
 			{
-				Debug.Log( "Single Touch  at " + touch.position + " ==>" + v2 + ", phase = " + touch.phase );
-			}
+				v2.y += halfDims_.y;
+				if (DEBUG_TOUCH)
+				{
+					Debug.Log( "Single Touch  at " + touch.position + " ==>" + v2 + ", phase = " + touch.phase );
+				}
 
-//			bool bTouchOutsideArea = (v2.sqrMagnitude > halfDimsSqr_.x);
+				//			bool bTouchOutsideArea = (v2.sqrMagnitude > halfDimsSqr_.x);
 
-			switch (touch.phase)
-			{
-				case TouchPhase.Began:
-					{
-						if (!isCentreButtonActive( ) )
+				switch (touch.phase)
+				{
+					case TouchPhase.Began:
 						{
-							if (v2.sqrMagnitude < halfDimsSqr_.x)
+							if (!isCentreButtonActive( ) && !centreButtonReturning_)
 							{
-								SwitchToSimpleForce( v2 );
-								if (DEBUG_CONTROLS)
+								if (v2.sqrMagnitude < halfDimsSqr_.x)
 								{
-									Debug.Log( "Idle: Force started at " + v2);
+									SwitchToSimpleForce( v2 );
+									if (DEBUG_CONTROLS)
+									{
+										Debug.Log( "Idle: Force started at " + v2 );
+									}
 								}
 							}
+							break;
 						}
-						break;
-					}
+				}
+
 			}
 
 		}
@@ -219,66 +223,6 @@ public class PlayerControlPanel : MonoBehaviour
 					break;
 				}
 		}
-		/*
-		for (int i =0; i < touches.Length; i++)
-		{
-			Touch touch = touches[i];
-			Vector2 v2;
-			if (RectTransformUtility.ScreenPointToLocalPointInRectangle(cachedRT_, touch.position, null, out v2))
-			{
-				v2.y += halfDims_.y;
-				if (DEBUG_TOUCH)
-				{
-					Debug.Log( "Touch " + i + " at " + touch.position + " ==>" + v2 + ", phase = " + touch.phase );
-				}
-
-				bool bTouchOutsideArea = (v2.sqrMagnitude > halfDimsSqr_.x);
-				switch (touch.phase)
-				{
-					case TouchPhase.Began:
-						{
-							if (!isCentreButtonActive( ) && !centreButtonReturning_)
-							{
-								if (v2.sqrMagnitude < centreButtonRadiusSqr_)
-								{
-									SetCentreButtonActive( true );
-								}
-							}
-							break;
-						}
-					case TouchPhase.Moved:
-						{
-							if (isCentreButtonActive( ))
-							{
-								if (bTouchOutsideArea)
-								{
-									SetCentreButtonActive( false );
-								}
-								else
-								{
-									centreButtonRT_.anchoredPosition = v2;
-									Vector2 force = centreButtonRT_.anchoredPosition / halfDims_.x;
-									GameManager.Instance.SetControlForce( force );
-									if (DEBUG_CONTROLS)
-									{
-										Debug.Log( "Force set to " + force );
-									}
-								}
-							}
-							break;
-						}
-					case TouchPhase.Ended:
-						{
-							if (isCentreButtonActive( ))
-							{
-								SetCentreButtonActive( false );
-							}
-							break;
-						}
-				}
-
-			}
-		}*/
 	}
 
 	#region centre button
