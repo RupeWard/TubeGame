@@ -12,7 +12,7 @@ namespace RJWard.Tube.Player
 
 		#region inspector hooks
 
-		public ControlPointer controlPointer;
+		public ControlPointer3D controlPointer;
 
 		#endregion inspector hooks
 
@@ -209,8 +209,11 @@ namespace RJWard.Tube.Player
 //			showDebugObjects_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showDebugObjectsSettingId );
 			showControlMovementMarker_ = SettingsStore.retrieveSetting<bool>( SettingsIds.showControlForceMarkerSettingId);
 
-			controlPointer.Init( this );
-			
+			if (controlPointer != null)
+			{
+				controlPointer.Init( this );
+			}
+
 			MessageBus.instance.toggleControlMarkersAction += ToggleShowControlMarker;
 		}
 
@@ -243,26 +246,29 @@ namespace RJWard.Tube.Player
 					audioSource_.Stop( );
 				}
 			}
-			if (showControlMovementMarker_)
+			if (controlPointer != null)
 			{
-				if (currentControlForce_.sqrMagnitude > 0f)
+				if (showControlMovementMarker_)
 				{
-					Vector3 direction = currentControlForce_.normalized;
-					float distance = controlMarkerRange.x + Mathf.Lerp( 0, controlMarkerRange.y- controlMarkerRange.x, currentControlForce_.magnitude );
-					
-					Vector3 pos = cachedTransform_.position - direction * distance;
+					if (currentControlForce_.sqrMagnitude > 0f)
+					{
+						Vector3 direction = currentControlForce_.normalized;
+						float distance = controlMarkerRange.x + Mathf.Lerp( 0, controlMarkerRange.y - controlMarkerRange.x, currentControlForce_.magnitude );
 
-					controlPointer.UpdatePosition( pos );
-					controlPointer.gameObject.SetActive( true );
-                }
+						Vector3 pos = cachedTransform_.position - direction * distance;
+
+						controlPointer.UpdatePosition( pos );
+						controlPointer.gameObject.SetActive( true );
+					}
+					else
+					{
+						controlPointer.gameObject.SetActive( false );
+					}
+				}
 				else
 				{
 					controlPointer.gameObject.SetActive( false );
 				}
-			}
-			else
-			{
-				controlPointer.gameObject.SetActive( false );
 			}
 		}
 

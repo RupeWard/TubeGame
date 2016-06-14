@@ -238,10 +238,13 @@ namespace RJWard.Tube.UI
 
 		}
 
+		public float fourButtonControlMultiplier = 0.1f;
+
 		public void HandleLeftButtonPressed( )
 		{
-			GameManager.Instance.SetControlForce( Vector2.left );
+			GameManager.Instance.SetControlForce( fourButtonControlMultiplier * Vector2.left );
 		}
+
 
 		public void HandleLeftButtonReleased( )
 		{
@@ -250,7 +253,7 @@ namespace RJWard.Tube.UI
 
 		public void HandleRightButtonPressed( )
 		{
-			GameManager.Instance.SetControlForce( Vector2.right );
+			GameManager.Instance.SetControlForce( fourButtonControlMultiplier * Vector2.right );
 		}
 
 		public void HandleRightButtonReleased( )
@@ -260,7 +263,7 @@ namespace RJWard.Tube.UI
 
 		public void HandleUpButtonPressed( )
 		{
-			GameManager.Instance.SetControlForce( Vector2.up);
+			GameManager.Instance.SetControlForce( fourButtonControlMultiplier * Vector2.up);
 		}
 
 		public void HandleUpButtonReleased( )
@@ -270,7 +273,7 @@ namespace RJWard.Tube.UI
 
 		public void HandleDownButtonPressed( )
 		{
-			GameManager.Instance.SetControlForce( Vector2.down );
+			GameManager.Instance.SetControlForce( fourButtonControlMultiplier * Vector2.down );
 		}
 
 		public void HandleDownButtonReleased( )

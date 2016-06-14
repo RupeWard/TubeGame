@@ -6,7 +6,7 @@ namespace RJWard.Tube.Player
 {
 	[RequireComponent( typeof( MeshFilter ) )]
 	[RequireComponent( typeof( MeshRenderer ) )]
-	public class ControlPointer : MonoBehaviour
+	public class ControlPointer3D : MonoBehaviour
 	{
 		#region inspector data
 
