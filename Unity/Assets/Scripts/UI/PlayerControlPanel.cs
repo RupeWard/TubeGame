@@ -4,6 +4,14 @@ using RJWard.Core.UI.Extensions;
 
 public class PlayerControlPanel : MonoBehaviour
 {
+	private enum Emode
+	{
+		Idle,
+		SimpleForce,
+	};
+
+	private Emode mode_ = Emode.Idle;
+
 	static private readonly bool DEBUG_CONTROLS = false;
 	static private readonly bool DEBUG_TOUCH = false;
 
@@ -53,8 +61,165 @@ public class PlayerControlPanel : MonoBehaviour
 		}
 	}
 
+	private void SwitchToIdle()
+	{
+		mode_ = Emode.Idle;
+		SetCentreButtonActive( false );
+		GameManager.Instance.SetControlForce( Vector2.zero );
+	}
+
+	public void HandleSimpleForce(Touch[] touches)
+	{
+		if (touches.Length != 1)
+		{
+			if (DEBUG_CONTROLS)
+			{
+				Debug.Log( "SimpleForce: Switch to idle (" + touches.Length+") touches" );
+			}
+			SwitchToIdle( );
+		}
+		else
+		{
+			Touch touch = touches[0];
+			Vector2 v2;
+			if (RectTransformUtility.ScreenPointToLocalPointInRectangle( cachedRT_, touch.position, null, out v2 ))
+			{
+				v2.y += halfDims_.y;
+				if (DEBUG_TOUCH)
+				{
+					Debug.Log( "SimpleForce: Single Touch  at " + touch.position + " ==>" + v2 + ", phase = " + touch.phase );
+				}
+
+				switch (touch.phase)
+				{					
+					case TouchPhase.Began:
+						{
+							/*
+							if (!isCentreButtonActive( ) && !centreButtonReturning_)
+							{
+								if (v2.sqrMagnitude < halfDimsSqr_.x)
+								{
+									mode_ = Emode.SimpleForce;
+									SetCentreButtonActive( true );
+									centreButtonRT_.anchoredPosition = v2;
+									Vector2 force = centreButtonRT_.anchoredPosition / halfDims_.x;
+									GameManager.Instance.SetControlForce( force );
+									if (DEBUG_CONTROLS)
+									{
+										Debug.Log( "Force started at " + force );
+									}
+								}
+							}*/
+							Debug.LogWarning( "TP = began but mode = " + mode_ );
+							break;
+						}
+					case TouchPhase.Moved:
+						{
+							if (isCentreButtonActive( ))
+							{
+								if (v2.sqrMagnitude > halfDimsSqr_.x)
+								{
+									v2 = v2.normalized * halfDims_.x;
+								}
+								{
+									centreButtonRT_.anchoredPosition = v2;
+									Vector2 force = centreButtonRT_.anchoredPosition / halfDims_.x;
+									GameManager.Instance.SetControlForce( force );
+									if (DEBUG_CONTROLS)
+									{
+										Debug.Log( "SimpleForce: Force set to " + force );
+									}
+								}
+							}
+							break;
+						}
+					case TouchPhase.Ended:
+						{
+							if (DEBUG_CONTROLS)
+							{
+								Debug.Log( "SimpleForce: Switch to idle (" + touches.Length + ") touches" );
+							}
+							SwitchToIdle( );
+							break;
+						}
+
+
+				}
+
+			}
+
+		}
+	}
+
+	private void SwitchToSimpleForce( Vector2 v2 )
+	{
+		if (v2.sqrMagnitude < halfDimsSqr_.x)
+		{
+			mode_ = Emode.SimpleForce;
+			SetCentreButtonActive( true );
+			centreButtonRT_.anchoredPosition = v2;
+			Vector2 force = centreButtonRT_.anchoredPosition / halfDims_.x;
+			GameManager.Instance.SetControlForce( force );
+			if (DEBUG_CONTROLS)
+			{
+				Debug.Log( "Force started at " + force );
+			}
+		}
+	}
+
+	public void HandleIdle( Touch[] touches )
+	{
+		Touch touch = touches[0];
+		Vector2 v2;
+		if (RectTransformUtility.ScreenPointToLocalPointInRectangle( cachedRT_, touch.position, null, out v2 ))
+		{
+			v2.y += halfDims_.y;
+			if (DEBUG_TOUCH)
+			{
+				Debug.Log( "Single Touch  at " + touch.position + " ==>" + v2 + ", phase = " + touch.phase );
+			}
+
+//			bool bTouchOutsideArea = (v2.sqrMagnitude > halfDimsSqr_.x);
+
+			switch (touch.phase)
+			{
+				case TouchPhase.Began:
+					{
+						if (!isCentreButtonActive( ) )
+						{
+							if (v2.sqrMagnitude < halfDimsSqr_.x)
+							{
+								SwitchToSimpleForce( v2 );
+								if (DEBUG_CONTROLS)
+								{
+									Debug.Log( "Idle: Force started at " + v2);
+								}
+							}
+						}
+						break;
+					}
+			}
+
+		}
+
+	}
+
 	public void HandleTouches( Touch[] touches)
 	{
+		switch (mode_)
+		{
+			case Emode.Idle:
+				{
+					HandleIdle( touches );
+					break;
+				}
+			case Emode.SimpleForce:
+				{
+					HandleSimpleForce( touches );
+					break;
+				}
+		}
+		/*
 		for (int i =0; i < touches.Length; i++)
 		{
 			Touch touch = touches[i];
@@ -113,7 +278,7 @@ public class PlayerControlPanel : MonoBehaviour
 				}
 
 			}
-		}
+		}*/
 	}
 
 	#region centre button
