@@ -32,6 +32,9 @@ namespace RJWard.Tube.UI
 		public FloatSettingPanel floatSettingPanel;
 		public RandLinearSectionDefnSettingPanel randLinearTubeDefnSettingPanel;
 
+		public GameObject editorControlPanel;
+		public GameObject deviceControlPanel;
+
 		#endregion inspector hooks
 
 		#region inspector data
@@ -67,6 +70,13 @@ namespace RJWard.Tube.UI
 
 		protected override void PostAwake( )
 		{
+#if UNITY_EDITOR
+			deviceControlPanel.SetActive( false );
+			editorControlPanel.SetActive( true );
+#else
+			deviceControlPanel.SetActive( true);
+			editorControlPanel.SetActive( false );
+#endif
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
 
 			viewPortRT.SetHeight( viewPortRT.GetWidth( ) );
@@ -135,7 +145,7 @@ namespace RJWard.Tube.UI
 			GameManager.Instance.SetViewPort( viewPort_ );
 		}
 
-		#region button handlers
+#region button handlers
 
 		public void HandleBackButtonClicked( )
 		{
@@ -291,9 +301,9 @@ namespace RJWard.Tube.UI
 			floatSettingPanel.Init( "Control Force multiplier", GameManager.Instance.controlForceMultiplier, new Vector2( 0f, float.MaxValue ), OnControlMultChanged );
 		}
 
-		#endregion button handlers
+#endregion button handlers
 
-		#region event handlers
+#region event handlers
 
 		public void OnSpeedMultChanged(float f)
 		{
@@ -310,6 +320,6 @@ namespace RJWard.Tube.UI
 		}
 
 
-		#endregion event handlers
+#endregion event handlers
 	}
 }

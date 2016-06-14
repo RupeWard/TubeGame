@@ -11,6 +11,9 @@ public class UIControlPointer : MonoBehaviour
 
 	public float distFromCentre = 0.6f;
 
+	public Color lowColour = Color.white;
+	public Color highColour = Color.white;
+
 	private void Awake()
 	{
 		cachedRT_ = GetComponent<RectTransform>( );
@@ -39,6 +42,8 @@ public class UIControlPointer : MonoBehaviour
 			cachedRT_.anchoredPosition = actualPos;
 			cachedRT_.rotation = Quaternion.Euler( new Vector3( 0f, 0f, Mathf.Rad2Deg * angle ) );
 			Debug.Log( "Setting achors to " + relpos + " = "+actualPos);
+
+			image_.color = Color.Lerp( lowColour, highColour, v.magnitude );
 			image_.enabled = true;
 		}
 		else
