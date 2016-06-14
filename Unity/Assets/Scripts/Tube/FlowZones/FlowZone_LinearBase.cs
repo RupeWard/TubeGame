@@ -31,7 +31,7 @@ namespace RJWard.Tube
 		//		private Vector3 directionVector_ = Vector3.zero;
 		public Vector3 directionVector
 		{
-			get { return (firstSpinePoint_.nextSpinePoint.transform.position - firstSpinePoint_.transform.position).normalized; }
+			get { return (firstSpinePoint_.nextSpinePoint.cachedTransform.position - firstSpinePoint_.cachedTransform.position).normalized; }
 		}
 
 		public float weight = 1f;
