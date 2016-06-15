@@ -30,8 +30,6 @@ namespace RJWard.Tube.Player
 			cachedTransform_.rotation = player_.cachedTransform.rotation;
 
 			tetheredCamera_.GetComponent<ConfigurableJoint>( ).connectedBody = GetComponent<Rigidbody>();
-
-			GameManager.Instance.SetCameraToViewport( tetheredCamera_.cachedCamera );
 		}
 
 		void Update( )

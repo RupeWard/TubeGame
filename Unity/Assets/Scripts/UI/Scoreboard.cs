@@ -18,12 +18,19 @@ public class Scoreboard : MonoBehaviour
 	{
 		MessageBus.instance.onGameTimeUpdate += UpdateTime;
 		MessageBus.instance.setLevelText += SetLevelText;
+		MessageBus.instance.setTimeText += SetTimeText;
 	}
 
 	private void SetLevelText(string s)
 	{
 		levelText.text = s;
 	}
+
+	private void SetTimeText( string s )
+	{
+		timeText.text = s;
+	}
+
 }
 
 partial class MessageBus

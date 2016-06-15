@@ -208,6 +208,8 @@ namespace RJWard.Tube.Player
 			{
 				tetheredCamera_ = GameObject.Instantiate<GameObject>( tetheredCameraPrefab ).GetComponent<TetheredCamera>( );
 				tetheredCamera_.gameObject.SetActive( true );
+				tetheredCamera_.cachedTransform.LookAt( cachedTransform_ );
+				GameManager.Instance.SetCameraToViewport( tetheredCamera_.cachedCamera );
 			}
 			if (sparks_ == null)
 			{

@@ -4,7 +4,7 @@ using System.Collections;
 public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameManager>
 {
 	private static readonly bool DEBUG_LOCAL = false;
-	static private readonly bool DEBUG_GAMEFLOW = true;
+	static private readonly bool DEBUG_GAMEFLOW = false;
 
 	#region inspector hooks
 
@@ -236,6 +236,12 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		}
 	}
 
+	private void Start()
+	{
+		MessageBus.instance.dispatchSetLevelText( "-" );
+		MessageBus.instance.dispatchSetTimeText( "-" );
+	}
+
 	protected override void PostAwake( )
 	{
 		//		Application.targetFrameRate = 60;
@@ -294,7 +300,8 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 			{
 				numFirstGameSections_ = 0;
 				player.gameObject.SetActive( true );
-
+				MessageBus.instance.dispatchSetLevelText( "STARTING" );
+				MessageBus.instance.dispatchSetTimeText( "WAIT" );
 
 				CreateFirstGameSections( );
 			}
@@ -346,6 +353,15 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 public partial class MessageBus : MonoBehaviour
 {
+	public System.Action<string> setTimeText;
+	public void dispatchSetTimeText( string s )
+	{
+		if (setTimeText  != null)
+		{
+			setTimeText( s );
+		}
+	}
+
 	public System.Action<string> setLevelText;
 	public void dispatchSetLevelText( string s)
 	{
