@@ -73,7 +73,7 @@ namespace RJWard.Core.Unity
 				{
 					float f = intervals_.Dequeue( );
 					accum -= f;
-					if (!doMinMax && f == minMax.x || f == minMax.y)
+					if (!doMinMax && f >= minMax.x || f <= minMax.y)
 					{
 						doMinMax = true;
 					}
@@ -116,6 +116,8 @@ namespace RJWard.Core.Unity
 
 		private void recomputeMinMax()
 		{
+			minMax.x = float.MaxValue;
+			minMax.y = float.MinValue;
 			foreach (float i in intervals_)
 			{
 				if (i < minMax.x)
