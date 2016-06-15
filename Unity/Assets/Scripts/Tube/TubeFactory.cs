@@ -166,7 +166,7 @@ namespace RJWard.Tube
 			}
 		}
 
-		public IEnumerator CreateSplinar(Tube t, string n, TubeSection_Linear ts, int numPerSection, Material mat, System.Action<TubeSection_Linear> onCreatedAction )
+		public IEnumerator CreateSplinarCR(Tube t, string n, TubeSection_Linear ts, int numPerSection, Material mat, System.Action<TubeSection_Linear> onCreatedAction )
 		{
 			if (tmpTubeSection_ != null)
 			{
@@ -234,7 +234,7 @@ namespace RJWard.Tube
 					yield return null;
 					TubeSection_Linear firstTubeSection = tmpTubeSection_;
 					tmpTubeSection_ = null;
-					yield return StartCoroutine(CreateSplinar(t, "SPLINAR", firstTubeSection, numPerSection, tubeWallMaterial, null ));
+					yield return StartCoroutine(CreateSplinarCR(t, "SPLINAR", firstTubeSection, numPerSection, tubeWallMaterial, null ));
 					GameObject.Destroy( firstTubeSection.gameObject );
 					yield return null;
 					if (tmpTubeSection_ != null)
@@ -305,7 +305,7 @@ namespace RJWard.Tube
 					yield return null;
 					TubeSection_Linear firstTubeSection = tmpTubeSection_;
 					tmpTubeSection_ = null;
-					yield return StartCoroutine( CreateSplinar( t, "SPLINAR", firstTubeSection, 5, tubeWallMaterial, null ) );
+					yield return StartCoroutine( CreateSplinarCR( t, "SPLINAR", firstTubeSection, 5, tubeWallMaterial, null ) );
 					GameObject.Destroy( firstTubeSection.gameObject );
 					yield return null;
 					if (tmpTubeSection_ != null)

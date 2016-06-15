@@ -47,59 +47,65 @@ namespace RJWard.Tube
 			return weight * directionAtPosition( pos );
 		}
 
+		private static bool s_doSimpleDirection_ = true;
+
 		public Vector3 directionAtPosition( Vector3 pos )
 		{
 			Vector3 result = directionVector;
 
-			float d0 = Vector3.Distance( pos, firstSpinePoint_.cachedTransform.position );
-			float d1 = Vector3.Distance( pos, firstSpinePoint_.nextSpinePoint.cachedTransform.position );
-			float dtotal = d0 + d1;
-
-			float dFraction = d0 / dtotal;
-
-			if (dFraction < 0.5f)
+			if (!s_doSimpleDirection_)
 			{
-				Vector3 prevDirection = directionVector;
-				if (firstSpinePoint.previousSpinePoint != null)
+				float d0 = Vector3.Distance( pos, firstSpinePoint_.cachedTransform.position );
+				float d1 = Vector3.Distance( pos, firstSpinePoint_.nextSpinePoint.cachedTransform.position );
+				float dtotal = d0 + d1;
+
+				float dFraction = d0 / dtotal;
+
+				if (dFraction < 0.5f)
 				{
-					if (firstSpinePoint_.previousSpinePoint.flowZone != null)
+					Vector3 prevDirection = directionVector;
+					if (firstSpinePoint.previousSpinePoint != null)
 					{
-						prevDirection = firstSpinePoint_.previousSpinePoint.flowZone.directionVector;
+						if (firstSpinePoint_.previousSpinePoint.flowZone != null)
+						{
+							prevDirection = firstSpinePoint_.previousSpinePoint.flowZone.directionVector;
+						}
+						else
+						{
+							Debug.LogWarning( "No Prev flow zone in " + firstSpinePoint_.previousSpinePoint.DebugDescribe( ) +
+								"which is before " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction" );
+						}
 					}
 					else
 					{
-						Debug.LogWarning( "No Prev flow zone in " + firstSpinePoint_.previousSpinePoint.DebugDescribe( ) +
-							"which is before " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction" );
+						//					Debug.LogWarning( "No previous spine point when working out flow zone direction" );
 					}
+					Vector3 firstDirection = Vector3.Slerp( directionVector, prevDirection, 0.5f );
+					result = Vector3.Slerp( firstDirection, directionVector, dFraction / 0.5f );
 				}
 				else
 				{
-					//					Debug.LogWarning( "No previous spine point when working out flow zone direction" );
-				}
-				Vector3 firstDirection = Vector3.Slerp( directionVector, prevDirection, 0.5f );
-				result = Vector3.Slerp( firstDirection, directionVector, dFraction / 0.5f );
-			}
-			else
-			{
-				Vector3 nextDirection = directionVector;
-				if (firstSpinePoint_.nextSpinePoint != null)
-				{
-					if (firstSpinePoint_.nextSpinePoint.flowZone != null)
+					Vector3 nextDirection = directionVector;
+					if (firstSpinePoint_.nextSpinePoint != null)
 					{
-						nextDirection = firstSpinePoint_.nextSpinePoint.flowZone.directionVector;
+						if (firstSpinePoint_.nextSpinePoint.flowZone != null)
+						{
+							nextDirection = firstSpinePoint_.nextSpinePoint.flowZone.directionVector;
+						}
+						else
+						{
+							Debug.LogWarning( "No Next flow zone in " + firstSpinePoint_.nextSpinePoint.DebugDescribe( ) +
+								"which is next after " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction" );
+						}
 					}
 					else
 					{
-						Debug.LogWarning( "No Next flow zone in " + firstSpinePoint_.nextSpinePoint.DebugDescribe( ) +
-							"which is next after " + firstSpinePoint_.DebugDescribe( ) + "when working out flow zone direction" );
+						Debug.LogWarning( "No next spine point when working out flow zone direction" );
 					}
+					Vector3 endDirection = Vector3.Slerp( directionVector, nextDirection, 0.5f );
+					result = Vector3.Slerp( directionVector, endDirection, dFraction / 0.5f );
+
 				}
-				else
-				{
-					Debug.LogWarning( "No next spine point when working out flow zone direction" );
-				}
-				Vector3 endDirection = Vector3.Slerp( directionVector, nextDirection, 0.5f );
-				result = Vector3.Slerp( directionVector, endDirection, dFraction / 0.5f );
 
 			}
 
