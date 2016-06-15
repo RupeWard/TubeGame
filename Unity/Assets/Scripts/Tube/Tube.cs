@@ -11,7 +11,7 @@ namespace RJWard.Tube
 
 		public List<TubeSection_Linear> tubeSections_ = new List<TubeSection_Linear>();
 
-		private GameObject tubeEnd_ = null;
+		private TubeEnd tubeEnd_ = null;
 
 		public void DeleteAllSections()
 		{
@@ -202,16 +202,7 @@ namespace RJWard.Tube
 							throw new System.Exception( "Not implemented spinepoint type " + FirstHoop( ).spinePoint.GetType( ).ToString( ) );
 						}
 
-						if (tubeEnd_ == null)
-						{
-							tubeEnd_ = TubeFactory.Instance.CreateTubeEnd( );
-						}
-						tubeEnd_.transform.parent = transform;
-						tubeEnd_.transform.position = ts.LastHoop( ).spinePoint.cachedTransform.position;
-						tubeEnd_.transform.localRotation = ts.LastHoop( ).spinePoint.cachedTransform.rotation;
-						float radius = ts.LastHoop( ).GetMaxDistFromCentre( );
-						float side = 2.1f * radius;
-						tubeEnd_.transform.localScale = new Vector3( side, side, 1f );
+						tubeEnd_.SetToHoop( ts.LastHoop( ) );
 
 						//						Debug.Log( "Rotated by " + lastHoopOfPrevious.transform.rotation +" to give "+ ts.transform.rotation );
 						//						ts.transform.rotation = Quaternion.Euler(-1f*firstHoopRot) * ts.transform.rotation;
@@ -226,6 +217,10 @@ namespace RJWard.Tube
 					yield return new WaitForSeconds( waitSeconds );
 					Debug.Log( "Done" );
 				}
+			}
+			else
+			{
+				tubeEnd_.SetToHoop( ts.LastHoop( ) );
 			}
 			tubeSections_.Add( ts );
 			yield return null;
@@ -322,6 +317,13 @@ namespace RJWard.Tube
 		void Update( )
 		{
 			PruneFront( GameManager.Instance.maxTubeSections);
+		}
+
+		private void Awake()
+		{
+			tubeEnd_ = TubeFactory.Instance.CreateTubeEnd( ).GetComponent<TubeEnd>( );
+			tubeEnd_.Init( transform );
+
 		}
 	}
 

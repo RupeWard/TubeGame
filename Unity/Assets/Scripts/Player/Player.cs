@@ -121,6 +121,7 @@ namespace RJWard.Tube.Player
 		{
 			InitialiseAt( t.FirstSpinePoint( ).transform );
 			camTether_.Init(this, tetheredCamera_ );
+			running = true;
 		}
 
 		public void GetReadyToStart()
@@ -137,41 +138,45 @@ namespace RJWard.Tube.Player
 
 		private void FixedUpdate()
 		{
-			currentForce_ = Vector3.zero;
-			currentFlowForce_ = Vector3.zero;
-			currentControlForce_ = Vector3.zero;
+			if (running)
+			{
+				currentForce_ = Vector3.zero;
+				currentFlowForce_ = Vector3.zero;
+				currentControlForce_ = Vector3.zero;
 
-			if (currentFlowZone_ != null)
-			{
-				float speedExcess = currentFlowZone_.speed - body_.velocity.magnitude;
-				if (speedExcess > 0)
+				if (currentFlowZone_ != null)
 				{
-					shouldLogNoSpeedExcess_ = true;
-					currentFlowForce_ = speed * speedExcess * currentFlowZone_.flowAtPosition( cachedTransform.position );
-					currentForce_ += currentFlowForce_;
-				}
-				else
-				{
-					if (shouldLogNoSpeedExcess_)
+					float speedExcess = currentFlowZone_.speed - body_.velocity.magnitude;
+					if (speedExcess > 0)
 					{
-						if (DEBUG_FORCE)
-						{
-							Debug.Log( "Stopped adding force" );
-						}
+						shouldLogNoSpeedExcess_ = true;
+						currentFlowForce_ = speed * speedExcess * currentFlowZone_.flowAtPosition( cachedTransform.position );
+						currentForce_ += currentFlowForce_;
 					}
-					shouldLogNoSpeedExcess_ = false;
+					else
+					{
+						if (shouldLogNoSpeedExcess_)
+						{
+							if (DEBUG_FORCE)
+							{
+								Debug.Log( "Stopped adding force" );
+							}
+						}
+						shouldLogNoSpeedExcess_ = false;
+					}
 				}
-			}
-			Vector2 controlVector = GameManager.Instance.currentControlForce;
-            if (controlVector.magnitude > 0f)
-			{
-				Vector3 controlVector3D = new Vector3( controlVector.x, controlVector.y, 0f );
-				currentControlForce_ = tetheredCamera_.cachedTransform.TransformDirection( controlVector3D );
-				currentForce_ += currentControlForce_;
-			}
-			if (currentForce_.sqrMagnitude > 0f)
-			{
-				body.AddForce( currentForce_ * Time.deltaTime, ForceMode.Impulse );
+				Vector2 controlVector = GameManager.Instance.currentControlForce;
+				if (controlVector.magnitude > 0f)
+				{
+					Vector3 controlVector3D = new Vector3( controlVector.x, controlVector.y, 0f );
+					currentControlForce_ = tetheredCamera_.cachedTransform.TransformDirection( controlVector3D );
+					currentForce_ += currentControlForce_;
+				}
+				if (currentForce_.sqrMagnitude > 0f)
+				{
+					body.AddForce( currentForce_ * Time.deltaTime, ForceMode.Impulse );
+				}
+
 			}
 		}
 
@@ -185,9 +190,11 @@ namespace RJWard.Tube.Player
 			return success;
 		}
 
+		private bool running = false;
+
 		private void Awake()
 		{
-//			Debug.Log( "Player.Awake()" );
+			Debug.Log( "Player.Awake()" );
 			cachedTransform_ = transform;
 			body_ = GetComponent<Rigidbody>( );
 			audioSource_ = GetComponent<AudioSource>( );
@@ -220,56 +227,60 @@ namespace RJWard.Tube.Player
 
 		public void Update()
 		{
-			if (sparks_.isPlaying)
+			if (running)
 			{
-				float elapsed = Time.time - sparkStartTime;
-				float fraction = (elapsed > sparkColourShiftDuration)?(1f):( elapsed / sparkColourShiftDuration);
-                sparks_.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
-				sparks_.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
-			}
-			if (tillSparksStop > 0f)
-			{
-				tillSparksStop -= Time.deltaTime;
-				if (tillSparksStop <= 0f)
+				if (sparks_.isPlaying)
 				{
-					if (DEBUG_SPARKS)
+					float elapsed = Time.time - sparkStartTime;
+					float fraction = (elapsed > sparkColourShiftDuration) ? (1f) : (elapsed / sparkColourShiftDuration);
+					sparks_.startColor = Color.Lerp( sparkColourLow, sparkColourHigh, fraction );
+					sparks_.startSize = Mathf.Lerp( sparkStartSize, sparkEndSize, fraction );
+				}
+				if (tillSparksStop > 0f)
+				{
+					tillSparksStop -= Time.deltaTime;
+					if (tillSparksStop <= 0f)
 					{
-						Debug.Log( "Stopped sparks" );
+						if (DEBUG_SPARKS)
+						{
+							Debug.Log( "Stopped sparks" );
+						}
+						sparks_.Stop( );
 					}
-					sparks_.Stop( );
 				}
-			}
-			if (tillRollingSoundStop > 0f)
-			{
-				tillRollingSoundStop -= Time.deltaTime;
-				if (tillRollingSoundStop <= 0f)
+				if (tillRollingSoundStop > 0f)
 				{
-					audioSource_.Stop( );
-				}
-			}
-			if (controlPointer != null)
-			{
-				if (showControlMovementMarker_)
-				{
-					if (currentControlForce_.sqrMagnitude > 0f)
+					tillRollingSoundStop -= Time.deltaTime;
+					if (tillRollingSoundStop <= 0f)
 					{
-						Vector3 direction = currentControlForce_.normalized;
-						float distance = controlMarkerRange.x + Mathf.Lerp( 0, controlMarkerRange.y - controlMarkerRange.x, currentControlForce_.magnitude );
+						audioSource_.Stop( );
+					}
+				}
+				if (controlPointer != null)
+				{
+					if (showControlMovementMarker_)
+					{
+						if (currentControlForce_.sqrMagnitude > 0f)
+						{
+							Vector3 direction = currentControlForce_.normalized;
+							float distance = controlMarkerRange.x + Mathf.Lerp( 0, controlMarkerRange.y - controlMarkerRange.x, currentControlForce_.magnitude );
 
-						Vector3 pos = cachedTransform_.position - direction * distance;
+							Vector3 pos = cachedTransform_.position - direction * distance;
 
-						controlPointer.UpdatePosition( pos );
-						controlPointer.gameObject.SetActive( true );
+							controlPointer.UpdatePosition( pos );
+							controlPointer.gameObject.SetActive( true );
+						}
+						else
+						{
+							controlPointer.gameObject.SetActive( false );
+						}
 					}
 					else
 					{
 						controlPointer.gameObject.SetActive( false );
 					}
 				}
-				else
-				{
-					controlPointer.gameObject.SetActive( false );
-				}
+
 			}
 		}
 
@@ -302,17 +313,19 @@ namespace RJWard.Tube.Player
 				if (newFz != currentFlowZone_)
 				{
 					currentFlowZone_ = newFz;
-
-					SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
-					SpinePoint_Base endSpinePoint = null;
-					int minToGap = spinePoint.MinSpinePointsToEnd( ref endSpinePoint);
-					if (DEBUG_COLLISIONS)
+					if (running)
 					{
-						Debug.Log( "TRIGGER ENTER " + gameObject.name + " in " + other.gameObject.name + " with " + minToGap + " to end " + " from spine point " + spinePoint.DebugDescribe( ) + "' from FZ " + currentFlowZone_ + " with dirn = " + newFz.directionVector );
-					}	
-                    if (minToGap < maxSpinePointsToGap && !endSpinePoint.spine.tubeSection.isExtending)
-					{
-						endSpinePoint.spine.tubeSection.HandlePlayerEnterSection( );
+						SpinePoint_Linear spinePoint = currentFlowZone_.firstSpinePoint;
+						SpinePoint_Base endSpinePoint = null;
+						int minToGap = spinePoint.MinSpinePointsToEnd( ref endSpinePoint );
+						if (DEBUG_COLLISIONS)
+						{
+							Debug.Log( "TRIGGER ENTER " + gameObject.name + " in " + other.gameObject.name + " with " + minToGap + " to end " + " from spine point " + spinePoint.DebugDescribe( ) + "' from FZ " + currentFlowZone_ + " with dirn = " + newFz.directionVector );
+						}
+						if (minToGap < maxSpinePointsToGap && !endSpinePoint.spine.tubeSection.isExtending)
+						{
+							endSpinePoint.spine.tubeSection.HandlePlayerEnterSection( );
+						}
 					}
 				}
 				else
@@ -343,6 +356,10 @@ namespace RJWard.Tube.Player
 
 		private void OnCollisionStay( Collision collision)
 		{
+			if (!running)
+			{
+				return;
+			}
 			if (collision.gameObject.layer == TubeFactory.Instance.tubeWallLayerMask)
 			{
 				if (DEBUG_COLLISIONS || DEBUG_WALLCOLLISIONS)

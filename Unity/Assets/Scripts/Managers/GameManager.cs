@@ -117,15 +117,6 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 			if (game_ != null)
 			{
 				sectionDefn = game_.GetNextTubeSectionDefn( ts );
-				/*
-				if (tube_.LastHoop( ) != null)
-				{
-					sectionDefn.firstHoop = tube_.LastHoop( ).ExplicitDefinition( );
-				}
-				else
-				{
-					Debug.LogWarning( "Where's the last hoop?" );
-				}*/
 			}
 			else
 			{
@@ -196,6 +187,10 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 				{
 					defn.firstHoop = null;
 				}
+				if (tube_.LastSection() != null)
+				{
+					tube_.LastSection( ).doNotExtend = true;
+				}
 				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, defn, HandleFirstGameSectionCreated );
 			}
 			else
@@ -217,8 +212,11 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 			Debug.Log( "Start Player" );
 		}
 
-		player.gameObject.SetActive( true );
+//		player.gameObject.SetActive( true );
 		RJWard.Tube.SpinePoint_Base firstSpinePoint = GetFirstSpinePoint( );
+		startTime_ = Time.time;
+		isPlaying_ = true;
+
 		if (firstSpinePoint != null)
 		{
 			player.StartGame( tube_ );
@@ -292,11 +290,12 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 						break;
 					}
 			}
-			startTime_ = Time.time;
-			isPlaying_ = true;
 			if (tube_.FirstSection( ) == null)
 			{
 				numFirstGameSections_ = 0;
+				player.gameObject.SetActive( true );
+
+
 				CreateFirstGameSections( );
 			}
 			MessageBus.instance.dispatchResetFPS( );

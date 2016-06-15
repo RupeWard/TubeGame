@@ -142,8 +142,15 @@ namespace RJWard.Tube
 			}
 		}
 
+		public bool doNotExtend = false;
+
 		public void ExtendSection(RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )
 		{ 
+			if (doNotExtend)
+			{
+				Debug.LogWarning( "Refusing request to extend TS " + gameObject.name );
+				return;
+			}
 			if (!isExtending_)
 			{
 				if (DEBUG_MESH)
