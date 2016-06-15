@@ -39,6 +39,8 @@ namespace RJWard.Tube.UI
 		public GameObject editorControlPanel;
 		public GameObject deviceControlPanel;
 
+		public GameObject debugBlobsButton;
+
 		#endregion inspector hooks
 
 		#region inspector data
@@ -81,6 +83,7 @@ namespace RJWard.Tube.UI
 			deviceControlPanel.SetActive( true);
 			editorControlPanel.SetActive( false );
 #endif
+			debugBlobsButton.SetActive( !DebugBlob.disable );
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
 
 			viewPortRT.SetHeight( viewPortRT.GetWidth( ) );

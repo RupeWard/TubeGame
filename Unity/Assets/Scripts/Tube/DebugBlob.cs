@@ -6,6 +6,12 @@ namespace RJWard.Tube
 {
 	public class DebugBlob : MonoBehaviour
 	{
+#if UNITY_EDITOR
+		static public readonly bool disable = true;
+#else
+		static public readonly bool disable = true; // Don't change
+#endif
+
 		static private List<GameObject> s_debugBlob_ = new List<GameObject>( );
 		static private bool s_areDebugObjectsShowing_ = false;
 
@@ -48,14 +54,21 @@ namespace RJWard.Tube
 		}
 		public static DebugBlob AddToObject( GameObject go, float s, Color c )
 		{
-			GameObject dbGo = Instantiate( s_prefab ) as GameObject;
-			DebugBlob result = dbGo.GetComponent<DebugBlob>( );
-			result.transform.parent = go.transform;
-			result.transform.localPosition = Vector3.zero;
-			result.transform.localRotation = Quaternion.identity;
-			result.Init( s, c );
+			if (!disable)
+			{
+				GameObject dbGo = Instantiate( s_prefab ) as GameObject;
+				DebugBlob result = dbGo.GetComponent<DebugBlob>( );
+				result.transform.parent = go.transform;
+				result.transform.localPosition = Vector3.zero;
+				result.transform.localRotation = Quaternion.identity;
+				result.Init( s, c );
 
-			return result;
+				return result;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		private Transform cachedTransform_ = null;
