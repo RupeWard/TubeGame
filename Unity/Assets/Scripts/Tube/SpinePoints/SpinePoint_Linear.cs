@@ -70,24 +70,58 @@ namespace RJWard.Tube
 			return result;
 		}
 
+		private SpinePointConnection connectionOut_ = null;
+		private SpinePointConnection connectionIn_ = null;
+		private bool connectionsDirty = false;
+		private bool MakeConnectionsIfDirty()
+		{
+			if (connectionsDirty)
+			{
+				connectionOut_ = new SpinePointConnection( this, nextSpinePoint_, forwardInterpolator );
+				connectionIn_ = new SpinePointConnection( previousSpinePoint_, this, previousSpinePoint_.forwardInterpolator );
+				connectionsDirty = false;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public override SpinePointConnection GetConnectionOut( SpinePointPathChooser chooser )
 		{
+			/*
 			SpinePointConnection connection = null;
             if (nextSpinePoint_ != null)
 			{
 				connection = new SpinePointConnection( this, nextSpinePoint_, forwardInterpolator );
 			}
 			return connection;
+			*/
+			MakeConnectionsIfDirty( );
+			if (connectionOut_ == null)
+			{
+				connectionOut_ = new SpinePointConnection( this, nextSpinePoint_, forwardInterpolator );
+			}
+			return connectionOut_;
 		}
 
 		public override SpinePointConnection GetConnectionIn( SpinePointPathChooser chooser )
 		{
+			/*
 			SpinePointConnection connection = null;
 			if (previousSpinePoint_ != null)
 			{
 				connection = new SpinePointConnection( previousSpinePoint_, this, previousSpinePoint_.forwardInterpolator );
 			}
 			return connection;
+			*/
+			MakeConnectionsIfDirty( );
+			if (connectionIn_ == null)
+			{
+				connectionIn_ = new SpinePointConnection( previousSpinePoint_, this, previousSpinePoint_.forwardInterpolator );
+			}
+			return connectionIn_;
 		}
 
 		override public void DisconnnectFront( )
@@ -113,12 +147,14 @@ namespace RJWard.Tube
 				}
 				if (value != nextSpinePoint_)
 				{
+					connectionsDirty = true;
 					SetRotationDirty();
 				}
 				nextSpinePoint_ = value;
 				if (nextSpinePoint_ != null)
 				{
 					nextSpinePoint_.SetRotationDirty( );
+					nextSpinePoint.connectionsDirty = true;
 					if (nextSpinePoint_.nextSpinePoint != null)
 					{
 						nextSpinePoint_.nextSpinePoint.SetRotationDirty( );
@@ -145,10 +181,12 @@ namespace RJWard.Tube
 				if (value != previousSpinePoint_)
 				{
 					SetRotationDirty();
+					connectionsDirty = true;
 				}
 				previousSpinePoint_ = value;
 				if (previousSpinePoint_ != null)
 				{
+					previousSpinePoint_.connectionsDirty = true;
 					previousSpinePoint_.SetRotationDirty( );
 					if (previousSpinePoint_.previousSpinePoint != null)
 					{
