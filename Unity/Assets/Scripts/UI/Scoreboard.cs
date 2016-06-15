@@ -4,6 +4,7 @@ using System.Collections;
 public class Scoreboard : MonoBehaviour
 {
 	public UnityEngine.UI.Text timeText;
+	public UnityEngine.UI.Text levelText;
 
 	private void UpdateTime(float secs)
 	{
@@ -16,7 +17,18 @@ public class Scoreboard : MonoBehaviour
 	private void Start()
 	{
 		MessageBus.instance.onGameTimeUpdate += UpdateTime;
+		MessageBus.instance.setLevelText += SetLevelText;
 	}
+
+	private void SetLevelText(string s)
+	{
+		levelText.text = s;
+	}
+}
+
+partial class MessageBus
+{
+
 }
 
 

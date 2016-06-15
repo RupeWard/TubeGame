@@ -107,17 +107,33 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	public void ExtendTubeSection( RJWard.Tube.TubeSection_Linear ts )
 	{
-		RJWard.Tube.RandLinearSectionDefn sectionDefn = null;
-		if (game_ != null)
+		if (ts.isExtending)
 		{
-			sectionDefn = game_.GetNextTubeSectionDefn( ts);
+
 		}
 		else
 		{
-			Debug.LogWarning( "No game object, using default from editor" );
-			sectionDefn = defaultRandLinearSectionDefn;
+			RJWard.Tube.RandLinearSectionDefn sectionDefn = null;
+			if (game_ != null)
+			{
+				sectionDefn = game_.GetNextTubeSectionDefn( ts );
+				/*
+				if (tube_.LastHoop( ) != null)
+				{
+					sectionDefn.firstHoop = tube_.LastHoop( ).ExplicitDefinition( );
+				}
+				else
+				{
+					Debug.LogWarning( "Where's the last hoop?" );
+				}*/
+			}
+			else
+			{
+				Debug.LogWarning( "No game object, using default from editor" );
+				sectionDefn = defaultRandLinearSectionDefn;
+			}
+			ts.ExtendSection( sectionDefn, tube_.AddToEnd );
 		}
-		ts.ExtendSection( sectionDefn, tube_.AddToEnd );
 	}
 
 	private void HandleFirstGameSectionCreated( RJWard.Tube.TubeSection_Linear ts )
@@ -171,7 +187,16 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 					Debug.Log( "Created " + numFirstGameSections_ + " with maxD = " + numSpinePoints + " spine points" );
 				}
 				numFirstGameSections_++;
-				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, defaultRandLinearSectionDefn, HandleFirstGameSectionCreated );
+				RJWard.Tube.RandLinearSectionDefn defn = game_.GetNextTubeSectionDefn( null );
+				if (tube_.LastHoop() != null)
+				{
+					defn.firstHoop = tube_.LastHoop( ).ExplicitDefinition( );
+				}
+				else
+				{
+					defn.firstHoop = null;
+				}
+				RJWard.Tube.TubeFactory.Instance.CreateRandomLinearSection( tube_, defn, HandleFirstGameSectionCreated );
 			}
 			else
 			{
@@ -217,7 +242,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 	{
 		//		Application.targetFrameRate = 60;
 
-		Debug.Log( "GameManager waking." );// TFR = "+Application.targetFrameRate );
+		Debug.Log( "GameManager waking. Game type = "+gameType );// TFR = "+Application.targetFrameRate );
 		
 		GameObject tubeGO = new GameObject( "Tube" );
 		tubeGO.transform.position = Vector3.zero;
@@ -228,7 +253,16 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		player.speed = SettingsStore.retrieveSetting<float>( SettingsIds.playerSpeedMultiplierSettingId );
 	}
 
-	public void StartGame()
+	public enum GameType
+	{
+		Unknown,
+		Constant,
+		Sequence
+	}
+	public GameType gameType = GameType.Constant;
+	public static GameType staticGameType = GameType.Unknown;
+
+    public void StartGame()
 	{
 		if (isPlaying_)
 		{
@@ -236,7 +270,28 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		}
 		else
 		{
-			game_ = new RJWard.Tube.Game_Constant( defaultRandLinearSectionDefn );
+			if (staticGameType != GameType.Unknown)
+			{
+				gameType = staticGameType;
+			}
+			switch (gameType)
+			{
+				case GameType.Constant:
+					{
+						game_ = new RJWard.Tube.Game_Constant( defaultRandLinearSectionDefn );
+						break;
+					}
+				case GameType.Sequence:
+					{
+						game_ = sequencesGame;
+						break;
+					}
+				default:
+					{
+						Debug.LogError( "Unhandled game type '" + gameType + "'" );
+						break;
+					}
+			}
 			startTime_ = Time.time;
 			isPlaying_ = true;
 			if (tube_.FirstSection( ) == null)
@@ -292,6 +347,15 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 public partial class MessageBus : MonoBehaviour
 {
+	public System.Action<string> setLevelText;
+	public void dispatchSetLevelText( string s)
+	{
+		if (setLevelText != null)
+		{
+			setLevelText( s);
+		}
+	}
+
 	public System.Action<float> onGameTimeUpdate;
 	public void dispatchGameTimeUpdate( float secs )
 	{

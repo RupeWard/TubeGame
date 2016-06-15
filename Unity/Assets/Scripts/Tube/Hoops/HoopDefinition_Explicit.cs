@@ -8,6 +8,16 @@ namespace RJWard.Tube
 	{
 		private Vector3[] positions_ = null;
 
+		public float radius()
+		{
+			float sum = 0f;
+			foreach( Vector3 v in positions_)
+			{
+				sum += v.magnitude;
+			}
+			return sum / positions_.Length;
+		}
+
 		private void InitialisePositions(int n)
 		{
 			positions_ = new Vector3[n];

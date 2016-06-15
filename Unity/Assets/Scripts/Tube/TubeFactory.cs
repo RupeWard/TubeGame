@@ -91,6 +91,7 @@ namespace RJWard.Tube
 			{
 				defn.AddHoopDefn( settings.firstHoop );
 				previous = settings.firstHoop;
+				radius = settings.firstHoop.radius( );
 				if (sb != null)
 				{
 					sb.Append( "\n COPIED first hoop defn :" ).DebugDescribe( settings.firstHoop );

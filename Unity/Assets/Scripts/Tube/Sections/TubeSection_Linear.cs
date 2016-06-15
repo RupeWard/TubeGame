@@ -128,10 +128,18 @@ namespace RJWard.Tube
 			}
 		}
 
+		public bool isExtending
+		{
+			get { return isExtending_;  }
+		}
+
 		private bool isExtending_ = false;
 		public void HandlePlayerEnterSection()
 		{
-			GameManager.Instance.ExtendTubeSection( this);
+			if (!isExtending_)
+			{
+				GameManager.Instance.ExtendTubeSection( this );
+			}
 		}
 
 		public void ExtendSection(RandLinearSectionDefn randLinearSectionDefn, System.Action<TubeSection_Linear> onCompleteAction )

@@ -310,7 +310,7 @@ namespace RJWard.Tube.Player
 					{
 						Debug.Log( "TRIGGER ENTER " + gameObject.name + " in " + other.gameObject.name + " with " + minToGap + " to end " + " from spine point " + spinePoint.DebugDescribe( ) + "' from FZ " + currentFlowZone_ + " with dirn = " + newFz.directionVector );
 					}	
-                    if (minToGap < maxSpinePointsToGap)
+                    if (minToGap < maxSpinePointsToGap && !endSpinePoint.spine.tubeSection.isExtending)
 					{
 						endSpinePoint.spine.tubeSection.HandlePlayerEnterSection( );
 					}

@@ -11,8 +11,19 @@ public class SceneControllerDevSetup: SceneController_Base
 
 	#region event handlers
 
-	public void HandleGameButtonPressed()
+	public void HandleConstGameButtonPressed( )
 	{
+		HandleGameButtonPressed( GameManager.GameType.Constant );
+	}
+
+	public void HandleSequenceGameButtonPressed( )
+	{
+		HandleGameButtonPressed( GameManager.GameType.Sequence );
+	}
+
+	private void HandleGameButtonPressed(GameManager.GameType gt)
+	{
+		GameManager.staticGameType = gt;
 		SceneManager.Instance.SwitchScene( SceneManager.EScene.Game );
 	}
 
@@ -42,6 +53,7 @@ public class SceneControllerDevSetup: SceneController_Base
 
 	override protected void PostAwake()
 	{
+		GameManager.staticGameType = GameManager.GameType.Unknown;
 	}
 
 #endregion SceneController_Base

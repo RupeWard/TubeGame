@@ -7,7 +7,7 @@ namespace RJWard.Tube
 	[System.Serializable]
 	public class Game_Sequences: Game_Base
 	{
-		private static readonly bool DEBUG_LOCAL = true;
+		private static readonly bool DEBUG_LOCAL = false;
 
 		[System.Serializable]
 		public class Sequence
@@ -30,10 +30,12 @@ namespace RJWard.Tube
 						Debug.Log( "GS: providing FINAL DEFN as Seq = " + currentSequence_ +
 							" (of " + sequences.Length + ")" );
 					}
+					MessageBus.instance.dispatchSetLevelText( sequences.Length+":X" );
 					return sequences[sequences.Length - 1].defn;
 				}
 				else
 				{
+					MessageBus.instance.dispatchSetLevelText( "E" );
 					Debug.LogWarning( "No sequences! return default defn" );
 					return new RandLinearSectionDefn( );
 				}
@@ -47,6 +49,7 @@ namespace RJWard.Tube
 						Debug.Log( "GS: providing #"+currentNinSequence_+" of "+sequences[0].num+" in Seq = " + currentSequence_ +
 							" (of " + sequences.Length + ")" );
 					}
+					MessageBus.instance.dispatchSetLevelText( currentSequence_.ToString()+":"+currentNinSequence_.ToString() );
 					currentNinSequence_++;
 					if (currentNinSequence_ >= sequences[0].num)
 					{
@@ -62,6 +65,7 @@ namespace RJWard.Tube
 				else
 				{
 					Debug.LogWarning( "??? returning default" );
+					MessageBus.instance.dispatchSetLevelText( "D" );
 					return new RandLinearSectionDefn( );
 				}
 			}
@@ -75,6 +79,8 @@ namespace RJWard.Tube
 
 				RandLinearSectionDefn previousDefn = sequences[currentSequence_-1].defn;
 				RandLinearSectionDefn targetDefn = sequences[currentSequence_].defn;
+
+				MessageBus.instance.dispatchSetLevelText( currentSequence_.ToString( ) + ":" + currentNinSequence_.ToString( ) );
 
 				float fraction = (float)currentNinSequence_ / sequences[currentSequence_].num;
 				currentNinSequence_++;
