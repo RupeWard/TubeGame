@@ -20,9 +20,6 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 	public UnityEngine.UI.Text initialRadButtonText;
 	public UnityEngine.UI.Text radRangeButtonText;
 	public UnityEngine.UI.Text maxRadDButtonText;
-	public UnityEngine.UI.Text numHoopPointsButtonText;
-
-	public UnityEngine.UI.Button numHoopPointsButton;
 
 	#endregion inspector hooks
 
@@ -61,7 +58,6 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 
 		SetValue( currentSetting_ );
 
-		numHoopPointsButton.enabled = current.allowNumHoopPointsChange;
 		gameObject.SetActive( true );
 	}
 
@@ -75,7 +71,6 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 		initialRadButtonText.text = "Rad0: " + defn.initialRad.ToString( );
 		radRangeButtonText.text = "Rad Range: " + defn.radRange.ToString( );
 		maxRadDButtonText.text = "Max Rad D: " + defn.maxRadD.ToString( );
-		numHoopPointsButtonText.text = "Hoop Points: " + defn.numHoopPoints;
 	}
 
 	#region handlers
@@ -178,19 +173,6 @@ public class RandLinearSectionDefnSettingPanel : MonoBehaviour
 		SetValue( currentSetting_ );
 		onValueChangedAction( currentSetting_ );
 	}
-
-	public void OnNumHoopsPointsButtonClicked( )
-	{
-		intSettingPanel.Init( "Num Points Per Hoop", currentSetting_.numHoopPoints, new int[] { 3, 40 }, OnNumHoopsPerSectionChanged );
-	}
-
-	public void OnNumHoopPointsChanged( int i )
-	{
-		currentSetting_.SetNumHoopPoints( i);
-		SetValue( currentSetting_ );
-		onValueChangedAction( currentSetting_ );
-	}
-
 
 
 	private void DoChangeAction()

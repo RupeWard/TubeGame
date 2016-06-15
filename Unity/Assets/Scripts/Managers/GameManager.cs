@@ -24,6 +24,10 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	public bool deactivateBuildObjects = true;
 
+	public int numHoopPoints = 16;
+
+	public RJWard.Tube.Game_Sequences sequencesGame = new RJWard.Tube.Game_Sequences( );
+
 	#endregion inspector data
 
 	#region private data
@@ -106,7 +110,7 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 		RJWard.Tube.RandLinearSectionDefn sectionDefn = null;
 		if (game_ != null)
 		{
-			sectionDefn = game_.GetNextTubeSectionDefn( );
+			sectionDefn = game_.GetNextTubeSectionDefn( ts);
 		}
 		else
 		{

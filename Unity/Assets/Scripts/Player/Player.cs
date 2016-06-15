@@ -187,6 +187,7 @@ namespace RJWard.Tube.Player
 
 		private void Awake()
 		{
+//			Debug.Log( "Player.Awake()" );
 			cachedTransform_ = transform;
 			body_ = GetComponent<Rigidbody>( );
 			audioSource_ = GetComponent<AudioSource>( );

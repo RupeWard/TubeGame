@@ -98,7 +98,7 @@ namespace RJWard.Tube
 			}
 			else
 			{
-				HoopDefinition_Circular hdc = new HoopDefinition_Circular( Vector3.zero, Vector3.forward, settings.numHoopPoints, radius );
+				HoopDefinition_Circular hdc = new HoopDefinition_Circular( Vector3.zero, Vector3.forward, GameManager.Instance.numHoopPoints, radius );
 				defn.AddHoopDefn( hdc );
 				previous = hdc;
 				if (sb != null)
@@ -128,7 +128,7 @@ namespace RJWard.Tube
 				}
 				radius += radD;
 
-				HoopDefinition_Circular hdcnew = new HoopDefinition_Circular( pos, null, settings.numHoopPoints, radius );
+				HoopDefinition_Circular hdcnew = new HoopDefinition_Circular( pos, null, GameManager.Instance.numHoopPoints, radius );
 				defn.AddHoopDefn( hdcnew );
 				previous = hdcnew;
 				if (sb != null)

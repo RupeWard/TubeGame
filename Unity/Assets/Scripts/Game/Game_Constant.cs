@@ -7,7 +7,7 @@ namespace RJWard.Tube
 	{
 		public RandLinearSectionDefn sectionDefn = new RandLinearSectionDefn( );
 		
-		public override RandLinearSectionDefn GetNextTubeSectionDefn(  )
+		public override RandLinearSectionDefn GetNextTubeSectionDefn( TubeSection_Linear ts )
 		{
 			return sectionDefn;
 		}

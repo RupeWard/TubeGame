@@ -28,8 +28,12 @@ namespace RJWard.Tube.UI
 
 		public UnityEngine.UI.Text speedMultButtonText;
 		public UnityEngine.UI.Text controlMultButtonText;
+		public UnityEngine.UI.Text numHoopPointsButtonText;
+
+		public GameObject numHoopPointsButton;
 
 		public FloatSettingPanel floatSettingPanel;
+		public IntSettingPanel intSettingPanel;
 		public RandLinearSectionDefnSettingPanel randLinearTubeDefnSettingPanel;
 
 		public GameObject editorControlPanel;
@@ -107,6 +111,7 @@ namespace RJWard.Tube.UI
 			playButtonText.text = "Pause";
 			SetSpeedMultText( );
 			SetControlMultText( );
+			numHoopPointsButton.SetActive( false );
 		}
 
 		private void HandleGamePaused(bool paused)
@@ -139,13 +144,20 @@ namespace RJWard.Tube.UI
 			controlMultButtonText.text = text;
 		}
 
+		private void SetNumHoopPointsText( )
+		{
+			string text = "NHP: ";
+			text += GameManager.Instance.numHoopPoints.ToString( );
+			numHoopPointsButtonText.text = text;
+		}
+
 
 		private void Start()
 		{
 			GameManager.Instance.SetViewPort( viewPort_ );
 			SetSpeedMultText( );
 			SetControlMultText( );
-
+			SetNumHoopPointsText( );
 		}
 
 		#region button handlers
@@ -163,6 +175,7 @@ namespace RJWard.Tube.UI
 		public void HandleSettingsButtonClicked()
 		{
 			settingsPanel.SetActive( true );
+			numHoopPointsButton.SetActive( !GameManager.Instance.isPlaying );
 			if (GameManager.Instance.isPlaying &&  !GameManager.Instance.isPaused)
 			{
 				GameManager.Instance.PlayOrPause( );
@@ -304,9 +317,21 @@ namespace RJWard.Tube.UI
 			floatSettingPanel.Init( "Control Force multiplier", GameManager.Instance.controlForceMultiplier, new Vector2( 0f, float.MaxValue ), OnControlMultChanged );
 		}
 
-#endregion button handlers
+		public void HandleNumHoopPointsButtonClicked( )
+		{
+			if (GameManager.Instance.isPlaying)
+			{
+				Debug.LogError( "Can't change while playing" );
+			}
+			else
+			{
+				intSettingPanel.Init( "Num Hoop Points", GameManager.Instance.numHoopPoints, new int[] { 3, 32 }, OnNumHoopPointsChanged );
+			}
+		}
 
-#region event handlers
+		#endregion button handlers
+
+		#region event handlers
 
 		public void OnSpeedMultChanged(float f)
 		{
@@ -322,7 +347,20 @@ namespace RJWard.Tube.UI
 			SetControlMultText( );
 		}
 
+		public void OnNumHoopPointsChanged( int i )
+		{
+			if (GameManager.Instance.isPlaying)
+			{
+				Debug.LogError( "Can't change while playing" );
+			}
+			else
+			{
+				//			SettingsStore.storeSetting( SettingsIds.controlForceMultiplierSettingId, f );
+				GameManager.Instance.numHoopPoints = i;
+				SetNumHoopPointsText( );
+			}
+		}
 
-#endregion event handlers
+		#endregion event handlers
 	}
 }
