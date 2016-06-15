@@ -83,10 +83,13 @@ namespace RJWard.Tube
 			{
 				cachedTransform_.LookAt( t );
 			}
-			DebugBlob debugBlob = cachedTransform_.GetComponentInChildren<DebugBlob>( );
-			if (debugBlob != null)
+			if (!DebugBlob.disable)
 			{
-				debugBlob.ActivateDirectionPointer( t != null );
+				DebugBlob debugBlob = cachedTransform_.GetComponentInChildren<DebugBlob>( );
+				if (debugBlob != null)
+				{
+					debugBlob.ActivateDirectionPointer( t != null );
+				}
 			}
 		}
 

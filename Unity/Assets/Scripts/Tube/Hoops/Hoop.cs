@@ -164,9 +164,12 @@ namespace RJWard.Tube
 				}
 
 			}
-			foreach (HoopPoint hp in hoopPoints_)
+			if (!DebugBlob.disable)
 			{
-				DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
+				foreach (HoopPoint hp in hoopPoints_)
+				{
+					DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
+				}
 			}
 			if (spinePoint_ != null)
 			{
@@ -254,9 +257,12 @@ namespace RJWard.Tube
 				}
 
 			}
-			foreach (HoopPoint hp in hoopPoints_)
+			if (!DebugBlob.disable)
 			{
-				DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
+				foreach (HoopPoint hp in hoopPoints_)
+				{
+					DebugBlob.AddToObject( hp.gameObject, 0.1f, GetColourForPoint( hp ) );
+				}
 			}
 			spinePoint_.SetDirty( );
 			if (DEBUG_LOCAL)

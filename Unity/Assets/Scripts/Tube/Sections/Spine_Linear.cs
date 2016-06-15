@@ -89,10 +89,13 @@ namespace RJWard.Tube
 				spinePoint.previousSpinePoint = spinePoints_[spinePoints_.Count - 2];
 			}
 
-			DebugBlob debugBlob = DebugBlob.AddToObject( spGo, 0.05f, Color.green );
-			if (debugBlob != null)
+			if (!DebugBlob.disable)
 			{
-				debugBlob.ActivateDirectionPointer( true );
+				DebugBlob debugBlob = DebugBlob.AddToObject( spGo, 0.05f, Color.green );
+				if (debugBlob != null)
+				{
+					debugBlob.ActivateDirectionPointer( true );
+				}
 			}
 
 			return spinePoint;

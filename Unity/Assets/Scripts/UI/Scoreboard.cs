@@ -6,6 +6,8 @@ public class Scoreboard : MonoBehaviour
 	public UnityEngine.UI.Text timeText;
 	public UnityEngine.UI.Text levelText;
 
+	public GameObject[] fpsObjects = new GameObject[0];
+
 	private void UpdateTime(float secs)
 	{
 		int wholeSecs = Mathf.FloorToInt( secs );
@@ -19,6 +21,15 @@ public class Scoreboard : MonoBehaviour
 		MessageBus.instance.onGameTimeUpdate += UpdateTime;
 		MessageBus.instance.setLevelText += SetLevelText;
 		MessageBus.instance.setTimeText += SetTimeText;
+		MessageBus.instance.onShowFPSChanged += OnShowFPSChanged;
+	}
+
+	private void OnShowFPSChanged(bool b)
+	{
+		foreach(GameObject go in fpsObjects)
+		{
+			go.SetActive( b );
+		}
 	}
 
 	private void SetLevelText(string s)

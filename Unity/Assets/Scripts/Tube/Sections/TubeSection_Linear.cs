@@ -391,11 +391,14 @@ namespace RJWard.Tube
 								}
 								//yield return null;
 							}
-							for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
+							if (!DebugBlob.disable)
 							{
-								HoopPoint hp = spinePoint.hoop.GetHoopPoint( hoopPtNum );
-								DebugBlob.AddToObject( hp.gameObject, 0.1f, spinePoint.hoop.GetColourForPoint( hp) );
-								//yield return null;
+								for (int hoopPtNum = 0; hoopPtNum < numHoopPoints; hoopPtNum++)
+								{
+									HoopPoint hp = spinePoint.hoop.GetHoopPoint( hoopPtNum );
+									DebugBlob.AddToObject( hp.gameObject, 0.1f, spinePoint.hoop.GetColourForPoint( hp ) );
+									//yield return null;
+								}
 							}
 
 							if (DEBUG_SPLINAR)

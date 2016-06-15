@@ -13,7 +13,7 @@ namespace RJWard.Tube
 		public Vector2 xAngleChangeRange = new Vector2( -10f, 10f );
 		public Vector2 yAngleChangeRange = new Vector2( -10f, 10f );
 		public float initialRad = 1f;
-		public Vector2 radRange = new Vector2( 0.5f, 3f );
+		public Vector2 radRange = new Vector2( 0.6f, 3f );
 		public float maxRadD = 0.5f;
 //		public int numHoopPoints = 10;
 
@@ -43,7 +43,10 @@ namespace RJWard.Tube
 
 		public RandLinearSectionDefn( )
 		{
-
+			if (radRange.x < 0.6f)
+			{
+				radRange.x = 0.6f;
+			}
 		}
 
         public RandLinearSectionDefn ( RandLinearSectionDefn other )
