@@ -85,7 +85,8 @@ namespace RJWard.Tube.Camera
 				}
 				InitStationary( pointToMod, 0f );
 				SceneControllerTestScene.Instance.SetCameraOffHook();
-			}
+				spinePoint_ = pointToMod;
+            }
 #endif
 			if (Mathf.Abs(currentAcc) > Mathf.Epsilon)
 			{
@@ -252,6 +253,8 @@ namespace RJWard.Tube.Camera
 			{
 				throw new System.InvalidOperationException( "Non spinepointsimple not yet implemented" );
 			}
+
+			spinePoint_ = sp;
 
 			if (lastSpinePoint_ != sp)
 			{
