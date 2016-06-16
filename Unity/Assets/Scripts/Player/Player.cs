@@ -341,52 +341,58 @@ namespace RJWard.Tube.Player
 
 		private void OnTriggerExit( Collider other )
 		{
-			if (DEBUG_COLLISIONS)
+			if (running)
 			{
-				FlowZone_LinearBase fz = other.gameObject.GetComponent<FlowZone_LinearBase>( );
-				if (fz != null)
+				//if (DEBUG_COLLISIONS)
 				{
-					if (fz == currentFlowZone_)
+					FlowZone_LinearBase fz = other.gameObject.GetComponent<FlowZone_LinearBase>( );
+					if (fz != null)
 					{
-						currentFlowZone_ = null;
-					}
-					if (fz.firstSpinePoint != null)
-					{
-						if (lastTubeSection_ == null)
+						if (fz == currentFlowZone_)
 						{
-							lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+							currentFlowZone_ = null;
+							Debug.Log( "Left current FZ" );
 						}
-						else
+						if (fz.firstSpinePoint != null)
 						{
-							if (fz.firstSpinePoint.spine.tubeSection != lastTubeSection_)
+							if (lastTubeSection_ == null)
 							{
-								lastTubeSection_.gameObject.SetActive( false );
 								lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
-								/*
-								SpinePoint_Linear spl = lastTubeSection_.FirstHoop( ).spinePoint as SpinePoint_Linear;
-								if (spl != null)
+							}
+							else
+							{
+								if (fz.firstSpinePoint.spine.tubeSection != lastTubeSection_)
 								{
-									if (spl.previousSpinePoint != null)
+									Debug.Log( "Changing Tubesection from " + lastTubeSection_.gameObject.name + " to " + fz.firstSpinePoint.spine.tubeSection.gameObject.name );
+									lastTubeSection_.gameObject.SetActive( false );
+									lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+									/*
+									SpinePoint_Linear spl = lastTubeSection_.FirstHoop( ).spinePoint as SpinePoint_Linear;
+									if (spl != null)
 									{
-										TubeSection_Linear tsl = spl.previousSpinePoint.spine.tubeSection;
-										if (tsl == lastTubeSection_)
+										if (spl.previousSpinePoint != null)
 										{
-											Debug.LogError( "tsl == lastTubeSection_" );
+											TubeSection_Linear tsl = spl.previousSpinePoint.spine.tubeSection;
+											if (tsl == lastTubeSection_)
+											{
+												Debug.LogError( "tsl == lastTubeSection_" );
+											}
+											else
+											{
+												tsl.gameObject.SetActive( false );
+											}
 										}
-										else
-										{
-											tsl.gameObject.SetActive( false );
-										}
-									}
-								}*/
-                            }
+									}*/
+								}
+							}
 						}
 					}
+					else
+					{
+						Debug.LogWarning( "TRIGGER EXIT: " + gameObject.name + " flowzone '" + other.gameObject.name + "' when currently in fz '" + currentFlowZone_.gameObject.name + "'" );
+					}
 				}
-				else
-				{
-					Debug.LogWarning( "TRIGGER EXIT: " + gameObject.name + " flowzone '" + other.gameObject.name+"' when currently in fz '"+currentFlowZone_.gameObject.name+"'" );
-				}
+
 			}
 		}
 

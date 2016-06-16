@@ -14,6 +14,10 @@ namespace RJWard.Tube
 		{
 			public int num;
 			public RandLinearSectionDefn defn;
+			public int numToUse
+			{
+				get { return num * GameManager.Instance.gameMultiplier; }
+			}
 		}
 
 		public Sequence[] sequences = new Sequence[1];
@@ -42,16 +46,16 @@ namespace RJWard.Tube
 			}
 			else if (currentSequence_ == 0 )
 			{
-				if (currentNinSequence_ < sequences[0].num)
+				if (currentNinSequence_ < sequences[0].numToUse)
 				{
 					if (DEBUG_LOCAL)
 					{
-						Debug.Log( "GS: providing #"+currentNinSequence_+" of "+sequences[0].num+" in Seq = " + currentSequence_ +
+						Debug.Log( "GS: providing #"+currentNinSequence_+" of "+sequences[0].numToUse + " in Seq = " + currentSequence_ +
 							" (of " + sequences.Length + ")" );
 					}
 					MessageBus.instance.dispatchSetLevelText( currentSequence_.ToString()+":"+currentNinSequence_.ToString() );
 					currentNinSequence_++;
-					if (currentNinSequence_ >= sequences[0].num)
+					if (currentNinSequence_ >= sequences[0].numToUse)
 					{
 						currentNinSequence_ = 0;
 						currentSequence_++;
@@ -73,7 +77,7 @@ namespace RJWard.Tube
 			{
 				if (DEBUG_LOCAL)
 				{
-					Debug.Log( "GS: providing #" + currentNinSequence_ + " of " + sequences[currentSequence_].num + " in Seq = " + currentSequence_ +
+					Debug.Log( "GS: providing #" + currentNinSequence_ + " of " + sequences[currentSequence_].numToUse + " in Seq = " + currentSequence_ +
 						" (of " + sequences.Length + ")" );
 				}
 
@@ -82,9 +86,9 @@ namespace RJWard.Tube
 
 				MessageBus.instance.dispatchSetLevelText( currentSequence_.ToString( ) + ":" + currentNinSequence_.ToString( ) );
 
-				float fraction = (float)currentNinSequence_ / sequences[currentSequence_].num;
+				float fraction = (float)currentNinSequence_ / sequences[currentSequence_].numToUse;
 				currentNinSequence_++;
-				if (currentNinSequence_ >= sequences[currentSequence_].num)
+				if (currentNinSequence_ >= sequences[currentSequence_].numToUse)
 				{
 					currentNinSequence_ = 0;
 					currentSequence_++;

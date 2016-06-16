@@ -15,6 +15,35 @@ public partial class SqliteUtils : RJWard.Core.Singleton.SingletonApplicationLif
 		createSettingsTable( );
 	}
 
+	private void checkProgressTableDefaults( )
+	{
+		//		Debug.Log ("prepareProgressTable");
+		SqliteConnection connection = getConnection( "Progress" );
+
+		SqliteCommand insert = connection.CreateCommand( );
+		insert.CommandText = "INSERT OR IGNORE INTO settings ( id, value ) VALUES ( ?, ? )";
+		SqliteParameter idSql = new SqliteParameter( );
+		SqliteParameter valueSql = new SqliteParameter( );
+		insert.Parameters.Add( idSql );
+		insert.Parameters.Add( valueSql );
+
+		foreach (KeyValuePair<string, string> entry in SettingsIds.defaults)
+		{
+			idSql.Value = entry.Key;
+			if (SettingsIds.encrypted.Contains( entry.Key ))
+			{
+				Debug.LogError( "Encryption not implemented" ); // See SS Code below
+																//				valueSql.Value = EncryptionHelper.EncryptString( entry.Key + entry.Value );
+			}
+			else
+			{
+				valueSql.Value = entry.Value;
+			}
+			insert.ExecuteNonQuery( );
+		}
+		insert.Dispose( );
+	}
+
 	private void createSettingsTable( )
 	{
 		SqliteConnection connection = getConnection( "Progress" );

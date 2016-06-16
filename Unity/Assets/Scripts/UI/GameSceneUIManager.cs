@@ -41,6 +41,8 @@ namespace RJWard.Tube.UI
 
 		public GameObject debugBlobsButton;
 
+		public GameSettingsPanel gameSettingsPanel;
+
 		#endregion inspector hooks
 
 		#region inspector data
@@ -83,6 +85,8 @@ namespace RJWard.Tube.UI
 			deviceControlPanel.SetActive( true);
 			editorControlPanel.SetActive( false );
 #endif
+			gameSettingsPanel.gameObject.SetActive( false );
+
 			debugBlobsButton.SetActive( !DebugBlob.disable );
 			mainCanvasRT_ = mainCanvas.GetComponent<RectTransform>( );
 
@@ -161,6 +165,7 @@ namespace RJWard.Tube.UI
 			SetSpeedMultText( );
 			SetControlMultText( );
 			SetNumHoopPointsText( );
+
 		}
 
 		#region button handlers
@@ -213,7 +218,7 @@ namespace RJWard.Tube.UI
 			SetButtonColour( fpsButtonImage, newSetting );
 		}
 
-		public void HandleTubeDefnButton()
+		public void HandleGameButton()
 		{
 			Game_Constant game = GameManager.Instance.GetGame<Game_Constant>( );
 			if (game != null)
@@ -224,9 +229,7 @@ namespace RJWard.Tube.UI
 			}
 			else
 			{
-				randLinearTubeDefnSettingPanel.Init( "Default Linear Tube Defn",
-					GameManager.Instance.defaultRandLinearSectionDefn,
-					HandleTubeDefnChanged );
+				gameSettingsPanel.Init( );
 
 				/*
 				Game_Base gameb = GameManager.Instance.GetGame<Game_Base>( );

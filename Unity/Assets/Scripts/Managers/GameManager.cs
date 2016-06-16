@@ -28,6 +28,8 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 	public RJWard.Tube.Game_Sequences sequencesGame = new RJWard.Tube.Game_Sequences( );
 
+	public int gameMultiplier = 1;
+
 	#endregion inspector data
 
 	#region private data
@@ -246,7 +248,6 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 	{
 		//		Application.targetFrameRate = 60;
 
-		Debug.Log( "GameManager waking. Game type = "+gameType );// TFR = "+Application.targetFrameRate );
 		
 		GameObject tubeGO = new GameObject( "Tube" );
 		tubeGO.transform.position = Vector3.zero;
@@ -255,6 +256,9 @@ public class GameManager : RJWard.Core.Singleton.SingletonSceneLifetime< GameMan
 
 		controlForceMultiplier = SettingsStore.retrieveSetting<float>( SettingsIds.controlForceMultiplierSettingId );
 		player.speed = SettingsStore.retrieveSetting<float>( SettingsIds.playerSpeedMultiplierSettingId );
+		gameMultiplier = SettingsStore.retrieveSetting<int>( SettingsIds.gameMultiplierSettingId );
+
+		Debug.Log( "GameManager waking. Game type = " + gameType+", mult = "+gameMultiplier );// TFR = "+Application.targetFrameRate );
 	}
 
 	public enum GameType

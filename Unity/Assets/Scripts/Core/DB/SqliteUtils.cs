@@ -211,6 +211,8 @@ public partial class SqliteUtils : RJWard.Core.Singleton.SingletonApplicationLif
 			reader.Close( );
 
 			query.Dispose( );
+
+			checkProgressTableDefaults( );
 		}
 		else
 		{
