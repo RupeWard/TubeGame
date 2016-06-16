@@ -194,7 +194,7 @@ namespace RJWard.Tube.Player
 
 		private void Awake()
 		{
-			Debug.Log( "Player.Awake()" );
+//			Debug.Log( "Player.Awake()" );
 			cachedTransform_ = transform;
 			body_ = GetComponent<Rigidbody>( );
 			audioSource_ = GetComponent<AudioSource>( );
@@ -338,6 +338,11 @@ namespace RJWard.Tube.Player
 		}
 
 		private RJWard.Tube.TubeSection_Linear lastTubeSection_ = null;
+		private RJWard.Tube.TubeSection_Linear currentTubeSection_ = null;
+
+		private int numFlowZonesTillDeactivate = 4;
+		private int numFlowZonesSinceChange = 0;
+		private bool doDeactivateLast = false;
 
 		private void OnTriggerExit( Collider other )
 		{
@@ -357,35 +362,63 @@ namespace RJWard.Tube.Player
 						{
 							if (lastTubeSection_ == null)
 							{
-								lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+								currentTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+								lastTubeSection_ = currentTubeSection_;
 							}
+							else
+							{
+								if (currentTubeSection_ != fz.firstSpinePoint.spine.tubeSection)
+								{
+									// changed sections
+									doDeactivateLast = true;
+									numFlowZonesSinceChange = 0;
+									lastTubeSection_ = currentTubeSection_;
+									currentTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+								}
+								else
+								{
+									currentTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+									if (doDeactivateLast)
+									{
+										numFlowZonesSinceChange++;
+										if (numFlowZonesSinceChange > numFlowZonesTillDeactivate)
+										{
+											doDeactivateLast = false;
+											if (lastTubeSection_ != null)
+											{
+												if (lastTubeSection_ == currentTubeSection_)
+												{
+													Debug.LogError( "Refusing to deactivate current TS" );
+												}
+												else
+												{
+													lastTubeSection_.gameObject.SetActive( false );
+													lastTubeSection_ = null;
+												}
+											}
+										}
+									}
+								}
+							}
+
+							/*
 							else
 							{
 								if (fz.firstSpinePoint.spine.tubeSection != lastTubeSection_)
 								{
-									Debug.Log( "Changing Tubesection from " + lastTubeSection_.gameObject.name + " to " + fz.firstSpinePoint.spine.tubeSection.gameObject.name );
-									lastTubeSection_.gameObject.SetActive( false );
-									lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
-									/*
-									SpinePoint_Linear spl = lastTubeSection_.FirstHoop( ).spinePoint as SpinePoint_Linear;
-									if (spl != null)
+									numFlowZonesSinceChange++;
+									//									Debug.Log( "Changing Tubesection from " + lastTubeSection_.gameObject.name + " to " + fz.firstSpinePoint.spine.tubeSection.gameObject.name );
+									if (numFlowZonesSinceChange >= numFlowZonesTillDeactivate)
 									{
-										if (spl.previousSpinePoint != null)
-										{
-											TubeSection_Linear tsl = spl.previousSpinePoint.spine.tubeSection;
-											if (tsl == lastTubeSection_)
-											{
-												Debug.LogError( "tsl == lastTubeSection_" );
-											}
-											else
-											{
-												tsl.gameObject.SetActive( false );
-											}
-										}
-									}*/
+										lastTubeSection_.gameObject.SetActive( false );
+										lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+									}
 								}
 							}
+							*/
 						}
+
+						fz.gameObject.SetActive( false );
 					}
 					else
 					{
