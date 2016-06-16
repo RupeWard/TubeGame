@@ -32,6 +32,11 @@ namespace RJWard.Tube.Player
 			tetheredCamera_.GetComponent<ConfigurableJoint>( ).connectedBody = GetComponent<Rigidbody>();
 		}
 
+		private float maxAngle = 30f;
+		private Vector2 currentAngleOffset = Vector2.zero;
+		private float angleChangeSpeed = 0.1f;
+		private bool reverseDirectionOfAngle = false;
+
 		void Update( )
 		{
 			if (player_ != null && player_.isActiveAndEnabled)
@@ -42,6 +47,17 @@ namespace RJWard.Tube.Player
 				if (tetheredCamera_.cachedTransform != null )
 				{
 					tetheredCamera_.cachedTransform.LookAt( player_.cachedTransform.position );
+					Vector2 ccf = GameManager.Instance.currentControlForce;
+					ccf.x = Mathf.Clamp( ccf.x, -1f, 1f );
+					ccf.y = Mathf.Clamp( ccf.y, -1f, 1f );
+					currentAngleOffset = Vector2.Lerp( currentAngleOffset, ccf, angleChangeSpeed );
+
+                   // if (currentAngleOffset.sqrMagnitude > minAngleToShow)
+					{
+						float directionFactor = reverseDirectionOfAngle ? -1f : 1f;
+						tetheredCamera_.cachedTransform.Rotate( Vector3.up, directionFactor * currentAngleOffset.x * maxAngle, Space.Self);
+						tetheredCamera_.cachedTransform.Rotate( Vector3.left, directionFactor * currentAngleOffset.y * maxAngle, Space.Self );
+					}
 				}
 			}
 		}

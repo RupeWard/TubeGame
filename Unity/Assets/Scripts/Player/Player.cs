@@ -337,6 +337,8 @@ namespace RJWard.Tube.Player
 			}
 		}
 
+		private RJWard.Tube.TubeSection_Linear lastTubeSection_ = null;
+
 		private void OnTriggerExit( Collider other )
 		{
 			if (DEBUG_COLLISIONS)
@@ -347,6 +349,38 @@ namespace RJWard.Tube.Player
 					if (fz == currentFlowZone_)
 					{
 						currentFlowZone_ = null;
+					}
+					if (fz.firstSpinePoint != null)
+					{
+						if (lastTubeSection_ == null)
+						{
+							lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+						}
+						else
+						{
+							if (fz.firstSpinePoint.spine.tubeSection != lastTubeSection_)
+							{
+								lastTubeSection_.gameObject.SetActive( false );
+								lastTubeSection_ = fz.firstSpinePoint.spine.tubeSection;
+								/*
+								SpinePoint_Linear spl = lastTubeSection_.FirstHoop( ).spinePoint as SpinePoint_Linear;
+								if (spl != null)
+								{
+									if (spl.previousSpinePoint != null)
+									{
+										TubeSection_Linear tsl = spl.previousSpinePoint.spine.tubeSection;
+										if (tsl == lastTubeSection_)
+										{
+											Debug.LogError( "tsl == lastTubeSection_" );
+										}
+										else
+										{
+											tsl.gameObject.SetActive( false );
+										}
+									}
+								}*/
+                            }
+						}
 					}
 				}
 				else

@@ -41,7 +41,7 @@ public class UIControlPointer : MonoBehaviour
 
 			cachedRT_.anchoredPosition = actualPos;
 			cachedRT_.rotation = Quaternion.Euler( new Vector3( 0f, 0f, Mathf.Rad2Deg * angle ) );
-			Debug.Log( "Setting achors to " + relpos + " = "+actualPos);
+			//Debug.Log( "Setting anchors to " + relpos + " = "+actualPos);
 
 			image_.color = Color.Lerp( lowColour, highColour, v.magnitude );
 			image_.enabled = true;
